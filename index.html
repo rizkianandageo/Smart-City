@@ -1437,21 +1437,26 @@ function getLast7DaysRangeYMD() {
   return { startYMD: toYMD(start), endYMD: toYMD(end) };
 }
 
-// Coba beberapa nama kolom tanggal di GeoServer (fallback otomatis)
 async function fetchAccidents7D() {
   const { startYMD, endYMD } = getLast7DaysRangeYMD();
+
+  // hitung end eksklusif = end + 1 hari
+  const endLocal = safeParseYMDLocal(endYMD);
+  const endExclusive = toYMD(addDays(endLocal, 1));
+
   const candidates = ['tanggal_kejadian','tanggal','tgl_kejadian','tgl','date','datetime','waktu'];
 
   for (const fld of candidates) {
     try {
       return await fetchAllWFS(URLS.data_kecelakaan, {
-        CQL_FILTER: `${fld} BETWEEN '${startYMD}' AND '${endYMD}'`
+        // inklusif-awal, eksklusif-akhir
+        CQL_FILTER: `${fld} >= '${startYMD}' AND ${fld} < '${endExclusive}'`
       });
     } catch (e) {
-      // Kolom tidak ada/invalid → coba kandidat berikutnya
+      // kolom tidak ada → coba kandidat berikutnya
     }
   }
-  // Fallback terakhir (tanpa filter – tidak ideal, tapi aman)
+  // fallback terakhir tanpa filter
   return await fetchAllWFS(URLS.data_kecelakaan);
 }
 
