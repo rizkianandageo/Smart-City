@@ -1055,24 +1055,18 @@ if (window.Chart) {
 
 <script>
 const URLS = {
-  wilayah:         'wilayah',        
-  troublespot:     'troublespot',
-  blackspot:       'blackspot',
-  traffic:         'traffic',
-  blacklink:       'blacklink',
-  blackarea:       'blackarea',
-  cctv:            'cctv',
-  objek_vital:     'objek_vital',
-  prediksi_risiko: 'risk_prediction',
-  administrasi:    'kependudukan',
-  data_kecelakaan: 'data_kecelakaan'
+  wilayah: 'data/wilayah.geojson',
+  troublespot: 'data/troublespot.geojson',
+  blackspot: 'data/blackspot.geojson',
+  traffic: 'data/traffic.geojson',
+  blacklink: 'data/blacklink.geojson',
+  blackarea: 'data/blackarea.geojson',
+  cctv: 'data/cctv.geojson',
+  objek_vital: 'data/objek_vital.geojson',
+  prediksi_risiko: 'data/risk_prediction.geojson',
+  administrasi: 'data/kependudukan.geojson',
+  data_kecelakaan: 'data/data_kecelakaan.geojson'
 };
-
-const GEOSERVER  = 'http://172.16.91.61:8080/geoserver';  
-const WORKSPACE  = 'smart_city';                  
-const PAGE_SIZE  = 500 ;                       
-
-const USE_SERVER_ATTR_FILTER = true;
 
 // (Opsional) Jika nama kolom Satwil beda-beda per layer, definisikan di sini.
 // Jika ragu, biarkan kosong — fungsi akan mencoba 'Satwil' lalu 'satwil'.
