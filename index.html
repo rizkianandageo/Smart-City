@@ -42,9 +42,9 @@ if (window.Chart) {
   width: 100%;
   height: 100%;
   display: flex;
-  border-radius: 0;                
+  border-radius: 0;        
   overflow: hidden;
-  box-shadow: none;            
+  box-shadow: none;        
 }
   #splash-left { flex:0 0 30%; max-width: 30%; background:linear-gradient(180deg,#12203a,#0b2540); color:#fff; padding:40px; display:flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; }
   #splash-left h2 { margin:0; font-size:24px; line-height:1.3; font-weight:700; }
@@ -62,7 +62,7 @@ if (window.Chart) {
   select { padding:10px; border-radius:6px; border:1px solid rgba(0,0,0,0.12); font-size:14px; text-align:center; }
   #splash-map {
     position: absolute;
-    inset: 0;           
+    inset: 0;        
   }
 
   #filter-panel {
@@ -117,11 +117,11 @@ if (window.Chart) {
 
   #time-slider-wrapper {
     position: absolute;
-    top: 115px; 
+    top: 115px;  
     left: 50%;
     transform: translateX(-50%);
     z-index: 1500;
-    display: none; 
+    display: none;  
   }
 
   #time-slider-panel {
@@ -130,7 +130,7 @@ if (window.Chart) {
     border-radius: 12px;
     box-shadow: var(--shadow);
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;  
     color: #fff;
     font-size: 13px;
     font-weight: 600;
@@ -149,7 +149,7 @@ if (window.Chart) {
   }
 
   #time-slider-header .min-btn {
-    color: #fff; 
+    color: #fff;  
   }
 
   #time-slider-body {
@@ -159,7 +159,7 @@ if (window.Chart) {
   }
 
   #time-slider-minimized-btn {
-    display: none; 
+    display: none;  
     font-size: 14px;
     font-weight: 700;
     border: 3px solid #1a237e;
@@ -371,9 +371,9 @@ if (window.Chart) {
 
   #splash-right .maplibregl-popup-content {
     position: relative;
-    background: #1a237e;      
+    background: #1a237e;    
     color: #fff;
-    border: 2px solid #ffc107; 
+    border: 2px solid #ffc107;  
     border-radius: 12px;
     font-weight: 700;
     font-size: 12px;
@@ -437,11 +437,11 @@ if (window.Chart) {
   }
 
   #splash-left {
-      display: flex; 
-      flex-direction: column; 
+      display: flex;  
+      flex-direction: column;  
       justify-content: center;
-      align-items: center; 
-      padding: 0 20px; 
+      align-items: center;  
+      padding: 0 20px;  
   }
 
   #splash-left-content {
@@ -496,10 +496,10 @@ if (window.Chart) {
     position: absolute;
     top: 20px;
     left: 20px;
-    display: flex;              
-    align-items: center;          
-    flex-direction: row;          
-    gap: 10px;                   
+    display: flex;        
+    align-items: center;      
+    flex-direction: row;      
+    gap: 10px;            
     z-index: 10;
   }
 
@@ -544,7 +544,7 @@ if (window.Chart) {
 
   #splash-left .info-subtext {
     margin-top: 16px;
-    color: #ffffff;   
+    color: #ffffff;    
     font-size: 16px;
     font-weight: 500;
     text-align: center;
@@ -620,8 +620,8 @@ if (window.Chart) {
 
   .border-line {
     position: absolute;
-    background-color: #ffc107; 
-    box-shadow: 0 0 5px #ffc107, 0 0 10px #ffc107; 
+    background-color: #ffc107;  
+    box-shadow: 0 0 5px #ffc107, 0 0 10px #ffc107;  
   }
 
   .line-top {
@@ -631,7 +631,7 @@ if (window.Chart) {
     height: 2px;
   }
   .line-right {
-    top: 0; 
+    top: 0;  
     right: 0;
     width: 2px;
     height: 0;
@@ -690,13 +690,13 @@ if (window.Chart) {
       font-weight: 700;
       color: #000;
       text-decoration: none;
-      display: inline-block; 
-      margin-top: 15px; 
+      display: inline-block;  
+      margin-top: 15px;  
       transition: background-color 0.2s;
   }
 
   .btn-splash-news:hover {
-      background: #ffeb3b; 
+      background: #ffeb3b;  
   }
 
   #btn-show-hint {
@@ -724,7 +724,7 @@ if (window.Chart) {
       opacity: 0;
       transform: translateY(-10px);
       transition: opacity 0.3s ease, transform 0.3s ease;
-      pointer-events: none; 
+      pointer-events: none;  
   }
 
   #hint-text-overlay.visible {
@@ -748,13 +748,13 @@ if (window.Chart) {
   }
 
   .highlight-pin .maplibregl-popup-content {
-      animation: pulse-glow 1.5s ease-in-out 2; 
+      animation: pulse-glow 1.5s ease-in-out 2;  
   }
 
   #extra-dests .field-wrap { position: relative; }
   #btn-add-dest-row { margin-top: 6px; }
 
-  :root { --route-gap: 4px; } 
+  :root { --route-gap: 4px; }  
 
   #route-body { gap: var(--route-gap); }
 
@@ -770,11 +770,11 @@ if (window.Chart) {
     display: flex;
     flex-direction: column;
     gap: var(--route-gap);
-    margin: 0;            
+    margin: 0;        
   }
 
-  #btn-add-dest-row { 
-    margin: 0;             
+  #btn-add-dest-row {  
+    margin: 0;          
   }
 
   .dropdown-results { margin: 0; }
@@ -808,7 +808,7 @@ if (window.Chart) {
             <span class="border-line line-right"></span>
             <span class="border-line line-bottom"></span>
             <span class="border-line line-left"></span>
-            <div class="info-card"> 
+            <div class="info-card">  
                 <img src="assets/logo_STMSPS.png" alt="Logo STMSPS" id="splash-logo" />
                 <h2 id="splash-title">Smart Traffic Management System for Public Safety</h2>
             </div>
@@ -845,8 +845,8 @@ if (window.Chart) {
   
   <div id="route-controls" class="minimized">
     <div id="route-header">
-       <h4>Pencarian Rute</h4>
-       <button id="btn-toggle-route" class="btn" style="padding:4px 8px;">Buka</button>
+        <h4>Pencarian Rute</h4>
+        <button id="btn-toggle-route" class="btn" style="padding:4px 8px;">Buka</button>
     </div>
     <div id="route-body">
       <div class="row" style="justify-content:space-between;">
@@ -1055,22 +1055,24 @@ if (window.Chart) {
 
 <script>
 const URLS = {
-  wilayah:         'wilayah',        
-  troublespot:     'troublespot',
-  blackspot:       'blackspot',
-  traffic:         'traffic',
-  blacklink:       'blacklink',
-  blackarea:       'blackarea',
-  cctv:            'cctv',
-  objek_vital:     'objek_vital',
+  wilayah:        'wilayah',      
+  troublespot:    'troublespot',
+  blackspot:      'blackspot',
+  traffic:        'traffic',
+  blacklink:      'blacklink',
+  blackarea:      'blackarea',
+  cctv:           'cctv',
+  objek_vital:    'objek_vital',
   prediksi_risiko: 'risk_prediction',
   administrasi:    'kependudukan',
   data_kecelakaan: 'data_kecelakaan'
 };
 
-const GEOSERVER  = 'https://geoserver.elingjogja.com/geoserver';  
-const WORKSPACE  = 'smart_city';                  
-const PAGE_SIZE  = 500 ;                       
+// MODIFIKASI: Konstanta WFS tidak lagi digunakan, diganti dengan file statis
+// const GEOSERVER  = 'http://localhost:8080/geoserver';  
+// const WORKSPACE  = 'smart_city';                
+// const PAGE_SIZE  = 500 ;                  
+// const WFS_BASE = (layer) => ...
 
 const USE_SERVER_ATTR_FILTER = true;
 
@@ -1120,29 +1122,26 @@ async function fetchBySatwilOrFallback(layerKey, satwilName, polygon) {
   return { data, method: 'bbox' };
 }
 
-const WFS_BASE = (layer) =>
-  `${GEOSERVER}/${WORKSPACE}/ows?service=WFS&version=1.0.0&request=GetFeature` +
-  `&typeName=${encodeURIComponent(`${WORKSPACE}:${layer}`)}` +
-  `&outputFormat=${encodeURIComponent('application/json')}` +
-  `&srsName=EPSG:4326&maxFeatures=${PAGE_SIZE}`;
-
+// MODIFIKASI: Fungsi ini diubah untuk mengambil file statis .geojson dari folder 'data/'
+// Logika WFS, paginasi, dan extraParams (filter) diabaikan
 async function fetchAllWFS(layer, extraParams = {}) {
-  let startIndex = 0;
-  const all = [];
-  while (true) {
-    const params = new URLSearchParams(extraParams);
-    params.set('startIndex', String(startIndex));
-    const url = `${WFS_BASE(layer)}&${params.toString()}`;
-    console.log(url)
+  const url = `data/${layer}.geojson`;
+  console.log(`Fetching static file: ${url} (params diabaikan)`);
+  
+  try {
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`WFS ${layer} gagal: ${res.status}`);
+    if (!res.ok) {
+      console.error(`Gagal memuat file statis: ${url}. Status: ${res.status}`);
+      throw new Error(`Gagal memuat ${url}: ${res.status}`);
+    }
     const json = await res.json();
-    const feats = Array.isArray(json.features) ? json.features : [];
-    all.push(...feats);
-    if (feats.length < PAGE_SIZE) break;
-    startIndex += PAGE_SIZE;
+    // Mengembalikan langsung GeoJSON, karena file-nya adalah FeatureCollection
+    return json;
+  } catch (e) {
+    console.error(`Error saat fetch ${url}:`, e);
+    // Kembalikan FeatureCollection kosong agar tidak crash di bagian lain
+    return { type: 'FeatureCollection', features: [] };
   }
-  return { type: 'FeatureCollection', features: all };
 }
 
 const basemapTiles = {
@@ -1154,7 +1153,7 @@ const basemapTiles = {
 const ICON_SVGS = {
   'road-closed': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='#d32f2f'/><rect x='10' y='30' width='44' height='6' rx='3' fill='#fff'/></svg>`,
   'road-disturbance': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='#ffc107'/><path fill='#000' d='M11 7h2v6h-2zm0 8h2v2h-2z'/></svg>`,
-  'construction':`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><rect x='1' y='1' width='13' height='13' fill='#ffc107'/><g transform='translate(7.5 7.5) scale(0.7) translate(-7.5 -7.5)'><path fill='#212121' d="M13.5 11h-1.8L8.2.5C8-.2 7-.2 6.8.5L3.3 11H1.5c-.3 0-.5.2-.5.5v1c0 .3.2.5.5.5h12c.3 0 .5-.2.5-.5v-1c0-.3-.2-.5-.5-.5ZM7 3h1l.7 2H6.4L7 3ZM5.7 7h3.6l.7 2H5l.7-2Z"/></g></svg>`,
+  'construction':`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><rect x='1' y='1' width='13' height='13' fill='#ffc107'/><g transform='translate(7.5 7.5) scale(0.7) translate(-7.5 -7.5)'><path fill='#212121' d="M13.5 11h-1.8L8.2.5C8-.2 7-.2 6.8.5L3.3 11H1.5c-.3 0-.5.2-.5.5v1c0 .3.2.5.5.5h12c.3 0 .5-.2.5.5v-1c0-.3-.2-.5-.5-.5ZM7 3h1l.7 2H6.4L7 3ZM5.7 7h3.6l.7 2H5l.7-2Z"/></g></svg>`,
   'kemacetan': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#d32f2f' d='M18.5,4H5.5C4.67,4,4,4.67,4,5.5v3C4,9.33,4.67,10,5.5,10h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,4.67,19.33,4,18.5,4z M18.5,11h-13C4.67,11,4,11.67,4,12.5v3c0,0.83,0.67,1.5,1.5,1.5h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,11.67,19.33,11,18.5,11z'/><rect x='5' y='6' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='6' width='2.8' height='2' fill='#fff'/><rect x='5' y='13' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='13' width='2.8' height='2' fill='#fff'/></svg>`,
   'kecelakaan': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#212121' d='M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11C5.84 5 5.28 5.42 5.08 6.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 12c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9s1.5.67 1.5 1.5S7.33 12 6.5 12zm11 0c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/><path fill='red' d='M5 4L3 8l2 1l2-4zm14 0l-2 4l2 1l2-4z'/></svg>`,
   'crash': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><circle cx='7.5' cy='7.5' r='6.5' fill='red'/><g transform='translate(7.5 7.5) scale(0.5) translate(-7.5 -7.5)'><path fill='#fff' d='M12.6,8.7,11.5,6.5a1.05,1.05,0,0,0-.9-.5H4.4a1.05,1.05,0,0,0-.9.5L2.4,8.7,1.16,9.852a.5.5,0,0,0-.16.366V14.5a.5.5,0,0,0,.5.5h2c.2,0,.5-.2.5-.4V14h7v.5c0,.2.2.5.4.5h2.1a.5.5,0,0,0,.5-.5V10.218a.5.5,0,0,0-.16-.366ZM4.5,7h6l1,2h-8ZM5,11.6c0,.2-.3.4-.5.4H2.4c-.2,0-.4-.3-.4-.5V10.4c.1-.3.3-.5.6-.4l2,.4c.2,0,.4.3.4.5Zm8-.1c0,.2-.2.5-.4.5H10.5c-.2,0-.5-.2-.5-.4v-.7c0-.2.2-.5.4-.5l2-.4c.3-.1.5.1.6.4ZM8,4H7L6,0H9ZM1.1,1.8,3.7.3l1.1,4L4,4.7ZM11.3.3l2.6,1.5L11,4.8l-.9-.5Z'/></g></svg>`,
@@ -1182,7 +1181,7 @@ const ALIAS_MAP = {
   Keterangan:'Keterangan', nama_cctv:'Nama CCTV', status:'Status',
   sumber:'Sumber', nama_jalan:'Nama Jalan', risk_prediction:'Risiko Kecelakaan',
   nama_prop:'Nama Provinsi', nama_kab:'Nama Kabupaten / Kota', nama_kec:'Nama Kecamatan',
-  jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)' 
+  jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)'  
 };
 
 let map;
@@ -1574,7 +1573,7 @@ async function createSplashChart(preloadedAccidentData) {
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: { 
+                        ticks: {  
                             color: 'rgba(255, 255, 255, 0.7)',
                             precision: 0,
                             stepSize: 1
@@ -1665,7 +1664,7 @@ function initSplashMap() {
       layers: [{ id:'base-raster-layer', type:'raster', source:'base-raster' }]
     },
     center: [118.0149, -2.5489],
-    zoom: 4.2, 
+    zoom: 4.2,  
     attributionControl: false,
     renderWorldCopies: false    
   });
@@ -1748,7 +1747,7 @@ if (splashCont) {
 
 Promise.all([
   fetchAllWFS(URLS.wilayah), // wilayah
-  fetchAccidents7D()         // data_kecelakaan sudah terfilter 7 hari di server
+  fetchAccidents7D()        // data_kecelakaan sudah terfilter 7 hari di server
 ]).then(([wil, kec7d]) => {
   wilayahData = wil;
 
@@ -1820,7 +1819,7 @@ function normalizeProperties(layerKey, fc) {
     }
     if (layerKey === 'blackspot') {
       p.SkorBS = Number(p.SkorBS ?? p.skor ?? p.score ?? 0);
-      p.Nama   = p.Nama || p.Nm_Ruas || p.nama || p.nama_ruas || 'Black Spot';
+      p.Nama    = p.Nama || p.Nm_Ruas || p.nama || p.nama_ruas || 'Black Spot';
     }
     f.properties = p;
   }
@@ -1880,7 +1879,7 @@ function initMap(polygon){
           }
           map.flyTo({
             center: [longitude, latitude],
-            zoom: 16, 
+            zoom: 16,  
             speed: 1.5
           });
 
@@ -2001,7 +2000,7 @@ function initMap(polygon){
     panelMinimizeBtn.addEventListener('click', ()=>toggleMinimize(bottomPanel, panelBody, panelMinimizeBtn));
     document.getElementById('panel-header').addEventListener('click', (e) => {
         if (bottomPanel.classList.contains('minimized') && e.target.closest('#panel-tabs')) {
-             toggleMinimize(bottomPanel, panelBody, panelMinimizeBtn);
+            toggleMinimize(bottomPanel, panelBody, panelMinimizeBtn);
         }
     });
 
@@ -2186,7 +2185,7 @@ function clipLineToPolygonRobust(lineFeature, polygon) {
       }
 
       if (!kept.length) {
-        kept = chunkApproxInside(ls, polygon, 0.5); 
+        kept = chunkApproxInside(ls, polygon, 0.5);  
       }
 
       for (const k of kept) {
@@ -2461,7 +2460,7 @@ async function updateForSatwil(polygon){
   await loadAllDataLayersBySatwil(selectedSatwilName, polygon);
 
   // sisanya tetap sama
-  initTimeSlider(); 
+  initTimeSlider();  
   renderLegend();
   updateDashboard();
   window.updateSearchIndex();
@@ -2597,9 +2596,9 @@ function updateDashboard(filterDate = null) {
       listEl.innerHTML = parsed.slice(0, 5).map(({ f, skor }) => {
         const name = (f.properties?.Nama || f.properties?.Nm_Ruas || 'Black Spot') + '';
         return `<div class="blackspot-list-item">
-                  <span>${name.length > 30 ? name.slice(0, 27) + '...' : name}</span>
-                  <span class="score">${skor}</span>
-                </div>`;
+                    <span>${name.length > 30 ? name.slice(0, 27) + '...' : name}</span>
+                    <span class="score">${skor}</span>
+                  </div>`;
       }).join('');
 
       // Catatan "Hanya ada X..." kalau kurang dari 5
@@ -2672,7 +2671,7 @@ function checkRouteForHazards(routeFeature) {
         
         const distanceToRoute = turf.pointToLineDistance(spot, routeFeature, { units: 'meters' });
 
-        if (distanceToRoute < 15) { 
+        if (distanceToRoute < 15) {  
             const keter = (spot.properties?.keterangan ?? spot.properties?.Keterangan ?? spot.properties?.jenis_gangguan ?? spot.properties?.ket ?? '').toLowerCase().trim();
             
             if (keter === 'jalan ditutup') {
@@ -3288,7 +3287,7 @@ function initSearchAndRouting() {
     function renderRouteOptions() {
         const container = document.getElementById('route-options-container');
         container.innerHTML = '';
-        routeResults.forEach((taggedRoute, index) => { 
+        routeResults.forEach((taggedRoute, index) => {  
             const feat = taggedRoute.feature;
             const summary = feat.properties.summary;
             const distKm = (summary.distance / 1000).toFixed(1);
@@ -3464,7 +3463,7 @@ function initSearchAndRouting() {
         }
 
         if (typeof latestFinalDest       !== 'undefined') latestFinalDest = null;
-        if (typeof latestIntermediates   !== 'undefined') latestIntermediates = [];
+        if (typeof latestIntermediates    !== 'undefined') latestIntermediates = [];
 
         if (typeof activeField !== 'undefined') activeField = 'from';
     };
