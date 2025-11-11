@@ -71,6 +71,9 @@ if (window.Chart) {
     border-radius:12px; box-shadow:var(--shadow);
     display:none; align-items:center; gap:10px;
   }
+  
+  .hidden { display: none !important; }
+
   #filter-panel label { font-weight:600; color: #ffc107; }
 
   #bottom-panel-wrapper { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); z-index:1500; display:none; }
@@ -122,6 +125,10 @@ if (window.Chart) {
     transform: translateX(-50%);
     z-index: 1500;
     display: none; 
+  }
+
+  #time-slider-wrapper.go-top{
+    top: 50px !important;
   }
 
   #time-slider-panel {
@@ -1751,7 +1758,20 @@ Promise.all([
   fetchAccidents7D()         // data_kecelakaan sudah terfilter 7 hari di server
 ]).then(([wil, kec7d]) => {
   wilayahData = wil;
+  const params = new URLSearchParams(window.location.search);
+  reqSatwil = params.get('satwil') ?? 0;
+  if (reqSatwil.length > 0) {
+    let elFilterPanel = document.getElementById('filter-panel');
+    let elTimeSlider = document.getElementById('time-slider-wrapper')
+    if (elFilterPanel && elTimeSlider) {
+      elFilterPanel.classList.add('hidden');
+      elTimeSlider.classList.add('go-top');
+    }
 
+    let satwil = (wilayahData?.features || []).find(f => (f.properties?.Satwil ?? f.properties?.satwil) === reqSatwil);
+    wil = satwil
+    startAppWithSatwil(satwil);
+  }
   // isi dropdown Satwil (seperti semula)
   const panelSel = document.getElementById('wilayah-select');
   const seen = new Set();
@@ -1765,7 +1785,6 @@ Promise.all([
   }
 
   initSplashMap();
-
   // panggil createSplashChart dengan data yang sudah di-fetch
   createSplashChart(kec7d);
 }).catch(err => {
@@ -2454,6 +2473,7 @@ function applyVisibility(layerPrefix) {
   }
 }
 async function updateForSatwil(polygon){
+  // console.log(polygon);
   if (!map) return;
   addOrUpdateSatwilLayer(polygon);
 
