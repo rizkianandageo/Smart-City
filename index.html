@@ -2335,7 +2335,7 @@ function applyVisibility(layerPrefix) {
       const dataNorm = normalizeProperties(key, fetchResult.data);
 
       // **BEDA UTAMA:** TIDAK dipanggil filterData()/clip di klien.
-      filteredLayerData[key] = filterData(key, dataNorm, polygon.geometry);
+      filteredLayerData[key] = dataNorm;
 
       // Time slider material
       if (['blackspot','blacklink','blackarea'].includes(key)) {
