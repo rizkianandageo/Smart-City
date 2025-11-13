@@ -2300,15 +2300,13 @@ function applyVisibility(layerPrefix) {
           const fullGeoJSON = await fetchGeoJSONLayer(key);
 
           // 2. (LANGKAH BARU) Filter cepat berdasarkan atribut "Satwil"
-          //    'selectedSatwilName' adalah variabel global yang sudah ada
           const attrFilteredFC = filterDataByAttribute(key, fullGeoJSON, selectedSatwilName);
 
-          // 3. (DIMODIFIKASI) Jalankan filter geometris HANYA pada data kecil
-          //    yang sudah tersaring oleh 'attrFilteredFC'
-          const finalFilteredFC = filterData(key, attrFilteredFC, polygon);
+          // 3. (DIHAPUS) Kita tidak lagi menjalankan filter geometris 'filterData'
+          // const finalFilteredFC = filterData(key, attrFilteredFC, polygon); // <--- BARIS INI DIHAPUS/DIKOMENTARI
 
-          // 4. Normalisasi properti dari data yang SUDAH terfilter
-          const dataNorm = normalizeProperties(key, finalFilteredFC);
+          // 4. (DIUBAH) Normalisasi properti langsung dari data hasil filter atribut
+          const dataNorm = normalizeProperties(key, attrFilteredFC); // <--- DIUBAH MENJADI attrFilteredFC
 
       filteredLayerData[key] = dataNorm;
 
