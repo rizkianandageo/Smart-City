@@ -1067,6 +1067,18 @@ const URLS = {
   data_kecelakaan: 'data_kecelakaan'
 };
 
+const SATWIL_FIELD = {
+  troublespot: 'Satwil',
+  blackspot: 'Satwil',
+  traffic: 'Satwil',
+  blacklink: 'Satwil',
+  blackarea: 'Satwil',
+  cctv: 'Satwil',
+  objek_vital: 'Satwil',
+  prediksi_risiko: 'Satwil',
+  administrasi: 'Satwil',
+};
+
 let selectedSatwilName = null;
 
 /**
@@ -1099,6 +1111,40 @@ async function fetchGeoJSONLayer(layerKey) {
     // Kembalikan data kosong jika file tidak ditemukan atau ada error
     return { type: 'FeatureCollection', features: [] };
   }
+}
+
+/**
+ * Fungsi "query" cepat untuk filter berdasarkan atribut 'Satwil'
+ * @param {string} layerKey - Kunci layer (mis: 'cctv')
+ * @param {object} fullGeoJSON - Seluruh data GeoJSON
+ * @param {string} satwilName - Nama Satwil yang dipilih (mis: 'Polda Bali')
+ * @returns {object} - GeoJSON yang sudah difilter
+ */
+function filterDataByAttribute(layerKey, fullGeoJSON, satwilName) {
+  // Ambil nama field dari konstanta yang kita buat di Langkah 1
+  const fieldName = SATWIL_FIELD[layerKey];
+
+  // Jika layer ini tidak punya mapping 'Satwil',
+  // kita kembalikan saja semua datanya (untuk keamanan)
+  if (!fieldName) {
+    console.warn(`[${layerKey}] Tidak punya mapping 'Satwil'. Menampilkan semua data.`);
+    return fullGeoJSON;
+  }
+
+  const filteredFeatures = fullGeoJSON.features.filter(f => {
+    const prop = f.properties;
+    if (!prop) return false;
+
+    // Cek jika nilai di fieldnya = nama Satwil yang dipilih
+    // Kita cek beberapa kemungkinan nama field untuk jaga-jaga
+    return (
+      prop[fieldName] === satwilName || 
+      prop.Satwil === satwilName || 
+      prop.satwil === satwilName
+    );
+  });
+
+  return { type: 'FeatureCollection', features: filteredFeatures };
 }
 
 const basemapTiles = {
@@ -2253,12 +2299,16 @@ function applyVisibility(layerPrefix) {
           // 1. Ambil SELURUH data dari file GeoJSON statis
           const fullGeoJSON = await fetchGeoJSONLayer(key);
 
-          // 2. Filter data di sisi klien (browser) menggunakan polygon Satwil
-          //    (Fungsi filterData() sudah ada di skrip Anda sekitar baris 1204)
-          const filteredFC = filterData(key, fullGeoJSON, polygon);
+          // 2. (LANGKAH BARU) Filter cepat berdasarkan atribut "Satwil"
+          //    'selectedSatwilName' adalah variabel global yang sudah ada
+          const attrFilteredFC = filterDataByAttribute(key, fullGeoJSON, selectedSatwilName);
 
-          // 3. Normalisasi properti dari data yang SUDAH terfilter
-          const dataNorm = normalizeProperties(key, filteredFC);
+          // 3. (DIMODIFIKASI) Jalankan filter geometris HANYA pada data kecil
+          //    yang sudah tersaring oleh 'attrFilteredFC'
+          const finalFilteredFC = filterData(key, attrFilteredFC, polygon);
+
+          // 4. Normalisasi properti dari data yang SUDAH terfilter
+          const dataNorm = normalizeProperties(key, finalFilteredFC);
 
       filteredLayerData[key] = dataNorm;
 
