@@ -1081,6 +1081,11 @@ const SATWIL_FIELD = {
 
 let selectedSatwilName = null;
 
+function sanitizeForURL(name) {
+    if (!name) return '';
+    return String(name).trim().replace(/\s+/g, '-');
+}
+
 /**
  * Fungsi baru untuk mengambil file GeoJSON statis dari folder 'data/'.
  * @param {string} layerKey - Kunci layer dari konstanta URLS (mis: 'troublespot')
@@ -1601,6 +1606,15 @@ function startAppWithSatwil(feature) {
 
   selectedSatwilName = sat || null;
 
+  if (sat) {
+      const newHash = '#' + sanitizeForURL(sat);
+      // Cek apakah hash sudah sama, agar tidak menambah history jika tidak perlu
+      if (window.location.hash !== newHash) {
+          // Mengubah URL di address bar tanpa me-reload halaman
+          history.pushState({ satwil: sat }, document.title, window.location.pathname + window.location.search + newHash);
+      }
+    }
+
   try { if (splashMap) { splashMap.remove(); splashMap = null; } } catch {}
   showOverlay();
   document.getElementById('filter-screen').style.display = 'none';
@@ -1752,9 +1766,37 @@ Promise.all([
   initSplashMap();
 
   createSplashChart(kec7d);
+
+  const hash = window.location.hash.substring(1); // misal: "Polda-Bali"
+    let featureFromHash = null;
+
+    if (hash) {
+      // 2. Cari data wilayah yang cocok dengan hash
+      featureFromHash = (wil.features || []).find(f => {
+          const sat = f.properties?.Satwil ?? f.properties?.satwil;
+          return sat && sanitizeForURL(sat) === hash;
+      });
+    }
+
+    if (featureFromHash) {
+      // 3. JIKA DITEMUKAN: Langsung mulai aplikasi, lewati splash screen
+      console.log('Satwil ditemukan di URL, melewati splash:', featureFromHash.properties.Satwil);
+      startAppWithSatwil(featureFromHash);
+    } else {
+      // 4. JIKA TIDAK DITEMUKAN: Tampilkan splash screen seperti biasa
+      console.log('Tidak ada Satwil valid di URL, tampilkan splash screen.');
+      initSplashMap(); 
+    }
+  
 }).catch(err => {
   console.error('Gagal init paralel wilayah + kecelakaan', err);
   alert('Gagal memuat wilayah atau data kecelakaan');
+});
+
+window.addEventListener('hashchange', () => {
+  // Me-reload halaman adalah cara termudah agar logika di
+  // Promise.all (Langkah 4) bisa membaca hash URL yang baru.
+  location.reload();
 });
 
 document.getElementById('btn-ganti').addEventListener('click', async ()=>{
@@ -1762,6 +1804,12 @@ document.getElementById('btn-ganti').addEventListener('click', async ()=>{
   if (!v) return alert('Pilih Satwil');
   const feat = (wilayahData?.features || []).find(f => (f.properties?.Satwil ?? f.properties?.satwil) === v);
   if (!feat) return alert('Satwil tidak ditemukan');
+  
+  const newHash = '#' + sanitizeForURL(v);
+  if (window.location.hash !== newHash) {
+      history.pushState({ satwil: v }, document.title, window.location.pathname + window.location.search + newHash);
+  }
+  
   showOverlay();
   selectedPolygon = feat;
 
