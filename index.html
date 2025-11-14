@@ -2449,7 +2449,6 @@ function applyVisibility(layerPrefix) {
           map.addLayer({ id:'prediksi_risiko-outline', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-color':'#000', 'line-opacity':0.5 }});
           map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':1, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#ffeb3b', 2,'#f44336', '#cccccc' ] }});
           setLayerInteractivity('prediksi_risiko-line');
-          applyVisibility(key);
           break;
         }
         case 'administrasi': {
@@ -2466,6 +2465,7 @@ function applyVisibility(layerPrefix) {
           break;
         }
       }
+      applyVisibility(key);
     } catch (e) {
       console.error(`${key} load error`, e);
     }
@@ -3580,3 +3580,4 @@ function initMeasureTools(map) {
 </script>
 </body>
 </html>
+
