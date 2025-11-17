@@ -780,6 +780,10 @@ if (window.Chart) {
 
   #troublespot-note { margin-top: 6px; }
   #blackspot-total { font-weight: 600; }
+
+  .blackspot-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  }
 </style>
 </head>
 <body>
@@ -1199,6 +1203,7 @@ let selectedPolygon = null;
 let administrasiColorMap = {};
 let popup = new maplibregl.Popup({ closeButton:true, closeOnClick:true, offset:12 });
 let troublespotChart, cctvChart;
+let highlightMarker = null;
 let filteredLayerData = {};
 let timeSliderData = {
     allFeatures: { blackspot: [], blacklink: [], blackarea: [] },
@@ -2659,25 +2664,57 @@ function updateDashboard(filterDate = null) {
 
     if (!bs.length) {
       listEl.innerHTML = `<div class="no-data-info">Tidak ada data black spot pada tanggal ini.</div>`;
-      if (noteEl)  noteEl.textContent  = '';
+      if (noteEl) noteEl.textContent = '';
       if (totalEl) totalEl.textContent = '';
-    } else {
-      const parsed = bs
-        .map(f => ({ f, skor: Number(f.properties?.SkorBS ?? 0), d: new Date(f.properties?.tanggal || 0) }))
-        .sort((a, b) => b.skor - a.skor || b.d - a.d);
 
-      listEl.innerHTML = parsed.slice(0, 5).map(({ f, skor }) => {
+    } else {
+     const parsed = bs
+      .map(f => ({ f, skor: Number(f.properties?.SkorBS ?? 0), d: new Date(f.properties?.tanggal || 0) }))
+      .sort((a, b) => b.skor - a.skor || b.d - a.d);
+
+      listEl.innerHTML = parsed.slice(0, 5).map(({ f, skor }, index) => {
         const name = (f.properties?.Nama || f.properties?.Nm_Ruas || 'Black Spot') + '';
-        return `<div class="blackspot-list-item">
+        return `<div class="blackspot-list-item" 
+                     style="cursor: pointer;" 
+                     data-index="${index}">
                   <span>${name.length > 30 ? name.slice(0, 27) + '...' : name}</span>
                   <span class="score">${skor}</span>
-                </div>`;
+              </div>`;
       }).join('');
+      listEl.querySelectorAll('.blackspot-list-item[data-index]').forEach(item => {
+        item.addEventListener('click', () => {
+          try {
+            const index = parseInt(item.dataset.index, 10);
+            const { f } = parsed[index];
+            if (!f) return;
+            const center = turf.centroid(f).geometry.coordinates;
+            if (highlightMarker) {
+              highlightMarker.remove();
+            }
+            const el = document.createElement('div');
+            el.className = 'highlight-pulse';
+            highlightMarker = new maplibregl.Marker({
+              element: el,
+              anchor: 'center'
+            })
+            .setLngLat(center)
+            .addTo(map);
+            showFeaturePopup(map, f, center, 'blackspot');
+            popup.once('close', () => {
+              if (highlightMarker) {
+                highlightMarker.remove();
+                highlightMarker = null;
+              }
+            });
 
+          } catch (e) {
+            console.error('Gagal menyorot Black Spot:', e);
+          }
+        });
+      });
       if (noteEl) noteEl.textContent = parsed.length < 5
         ? `Hanya ada ${parsed.length} Black Spot pada tanggal ini.`
         : '';
-
       if (totalEl) {
         if (parsed.length >= 5) {
           const dateText = targetDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -2687,7 +2724,7 @@ function updateDashboard(filterDate = null) {
         }
       }
     }
-        const trendEl = document.getElementById('blackspot-trend');
+    const trendEl = document.getElementById('blackspot-trend');
     if (trendEl) {
       const allDates = timeSliderData.uniqueDates;
       const allBlackspots = timeSliderData.allFeatures.blackspot || [];
