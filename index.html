@@ -2523,22 +2523,6 @@ function applyVisibility(layerPrefix) {
               .setLngLat(centerCoord)
               .addTo(map);
 
-            riskExclamationMarkers.push(marker);
-            el.addEventListener('click', () => {
-              popup
-                .setLngLat(centerCoord)
-                .setHTML(`
-                  <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
-                  <div class="popup-content">
-                    <p><b>Satwil:</b> ${feature.properties.satwil}</p>
-                    <p><b>Jalan:</b> ${feature.properties.nama_jalan}</p>
-                    <p><b>Risiko:</b> Tinggi (2)</p>
-                    <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
-                  </div>
-                `)
-                .addTo(map);
-            });
-
               riskExclamationMarkers.push(marker);
               el.addEventListener('click', () => {
                 popup
