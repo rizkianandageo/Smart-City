@@ -2782,27 +2782,37 @@ function esc(s){ return String(s)
   .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
   .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-function showFeaturePopup(map, feature, coordinates){
-  if (popup && popup.isOpen()) popup.remove();
-  const titleMap = { /* … */ };
-  const layerId = feature.layer?.id || '';
-  const prefix = Object.keys(titleMap).find(p => layerId.startsWith(p) || (feature.properties?._layerKey === p));
-  if (!prefix) return;
-  let title = titleMap[prefix] || 'Informasi';
-  if (prefix === 'objek_vital'){
-    const ovLabel = OV_META[ovKeyFromKeterangan(feature.properties)]?.label || 'Lainnya';
-    title = `Objek Vital • ${esc(ovLabel)}`;
-  }
-  let bodyHtml = '';
-  for (const key in ALIAS_MAP){
-    if (Object.prototype.hasOwnProperty.call(feature.properties, key)){
-      bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> ${esc(feature.properties[key])}</div>`;
+function showFeaturePopup(map, feature, coordinates, layerKey) {
+    if (popup && popup.isOpen()) popup.remove();
+    const titleMap = {
+      troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
+      objek_vital:'Objek Vital', prediksi_risiko:'Prediksi Risiko Kecelakaan',
+      administrasi:'Wilayah Administrasi', traffic:'Kemacetan',
+      blacklink:'Black Link', blackarea:'Black Area'
+    };
+    const prefix = layerKey; 
+    if (!prefix || !titleMap[prefix]) {
+      console.warn('showFeaturePopup: Kunci layer tidak valid atau tidak ada.', layerKey);
+      return; 
     }
-  }
-  if (!bodyHtml) bodyHtml = '<div>Tidak ada informasi detail.</div>';
-  popup.setLngLat(coordinates)
-       .setHTML(`<div class="popup-header">${esc(title)}</div><div class="popup-body">${bodyHtml}</div>`)
-       .addTo(map);
+
+    let title = titleMap[prefix] || 'Informasi';
+
+    if (prefix === 'objek_vital'){
+      const ovLabel = OV_META[ovKeyFromKeterangan(feature.properties)]?.label || 'Lainnya';
+      title = `Objek Vital • ${ovLabel}`;
+    }
+    
+    let bodyHtml = '';
+    for (const key in ALIAS_MAP){
+      if (feature.properties.hasOwnProperty(key)){
+        bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> ${esc(feature.properties[key])}</div>`;
+      }
+    }
+    if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
+    
+    const popupHtml = `<div class="popup-header">${esc(title)}</div><div class="popup-body">${bodyHtml}</div>`;
+    popup.setLngLat(coordinates).setHTML(popupHtml).addTo(map);
 }
 
 function checkRouteForHazards(routeFeature) {
