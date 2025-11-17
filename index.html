@@ -2382,11 +2382,29 @@ function applyVisibility(layerPrefix) {
         case 'traffic': {
           map.addSource('traffic',{ type:'geojson', data:dataNorm });
           map.addLayer({
-            id:'traffic-line', type:'line', source:'traffic',
+            id:'traffic-outline',
+            type:'line', 
+            source:'traffic',
             layout:{ 'line-join':'round', 'line-cap':'round' },
-            paint:{ 'line-width':2, 'line-opacity':0.75, 'line-color':['interpolate',['linear'],['get','level'],1,'#ffeb3b',3,'#f44336',5,'#5d4037'] }
+            paint:{ 
+              'line-width': 4,
+              'line-opacity': 0.75,
+              'line-color': '#000000'
+            }
+          });
+          map.addLayer({
+            id:'traffic-line',
+            type:'line', 
+            source:'traffic',
+            layout:{ 'line-join':'round', 'line-cap':'round' },
+            paint:{ 
+              'line-width': 3,
+              'line-opacity': 1,
+              'line-color':['interpolate',['linear'],['get','level'],1,'#ffeb3b',3,'#f44336',5,'#5d4037'] 
+            }
           });
           setLayerInteractivity('traffic-line');
+          setLayerInteractivity('traffic-outline'); 
           break;
         }
         case 'blacklink': {
@@ -2444,8 +2462,8 @@ function applyVisibility(layerPrefix) {
         }
         case 'prediksi_risiko': {
           map.addSource('prediksi_risiko', { type:'geojson', data:dataNorm });
-          map.addLayer({ id:'prediksi_risiko-outline', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-color':'#000', 'line-opacity':0.5 }});
-          map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':1, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#ffeb3b', 2,'#f44336', '#cccccc' ] }});
+          map.addLayer({ id:'prediksi_risiko-outline', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':3, 'line-color':'#000', 'line-opacity':0.5 }});
+          map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#ffeb3b', 2,'#f44336', '#cccccc' ] }});
           setLayerInteractivity('prediksi_risiko-line');
           break;
         }
@@ -2489,14 +2507,58 @@ function renderLegend(){
   if (show('troublespot')) { html += `<div class="legend-title">Troublespot</div>${legendRow('road-closed','Jalan Ditutup')}${legendRow('construction','Gangguan Jalan')}${legendRow('kecelakaan','Titik Kemacetan')}${legendRow('crash','Kecelakaan')}`; }
   if (show('blackspot')) { html += `<div class="legend-title">Black Spot</div>${legendRow('blackspot','Black Spot')}`; }
   if (show('prediksi_risiko')) {
+    const colors = [
+      '#4caf50',
+      '#ffeb3b',
+      '#f44336',
+    ];
+    const labels = [
+      'Risiko Rendah',
+      'Risiko Sedang',
+      'Risiko Tinggi'
+      ];  
     html += `<div class="legend-title">Prediksi Risiko Kecelakaan</div>
-      <div class="legend-item"><div style="width:100%; height:14px; border-radius:4px; background:linear-gradient(to right,#4caf50,#ffeb3b,#f44336)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;line-height:1.2;"><span>Rendah</span><span>Tinggi</span></div>`;
+     <div style="width: 100%; margin-bottom: 4px;">
+            <div style="display: flex; width: 100%; height: 16px; border-radius: 4px; overflow: hidden; border: 1px solid #000;">`;
+    for (let i = 0; i < colors.length; i++) {
+      const dividerStyle = (i > 0) ? 'border-left: 1px solid #333;' : '';
+      html += `<div style="flex: 1; background-color: ${colors[i]}; ${dividerStyle}"></div>`;
+    }
+      html += `</div></div>`;
+      html += `<div style="display: flex; width: 100%; font-size: 10px; line-height: 1.1; justify-content: space-between;">`;
+        for (const label of labels) {
+      html += `<span style="flex: 1; text-align: center; white-space: nowrap;">${label}</span>`;
+    }
+      html += `</div>`;
   }
   if (show('traffic')) {
+  const colors = [
+      '#ffeb3b',
+      '#f9a825',
+      '#f44336',
+      '#a94136',
+      '#5d4037'
+    ];
+  const labels = [
+      'Ringan',
+      'Sedang',
+      'Padat',
+      'Sangat Padat',
+      'Stop Total'
+      ];
     html += `<div class="legend-title">Kemacetan</div>
-      <div class="legend-item"><div style="width:100%; height:14px; border-radius:4px; background:linear-gradient(to right,#ffeb3b,#f44336,#5d4037)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;line-height:1.2;"><span style="text-align:center;">Cukup Padat</span><span style="text-align:center;">Sangat Padat</span></div>`;
+     <div style="width: 100%; margin-bottom: 4px;">
+            <div style="display: flex; width: 100%; height: 16px; border-radius: 4px; overflow: hidden; border: 1px solid #000;">`;
+    for (let i = 0; i < colors.length; i++) {
+      const dividerStyle = (i > 0) ? 'border-left: 1px solid #333;' : '';
+      html += `<div style="flex: 1; background-color: ${colors[i]}; ${dividerStyle}"></div>`;
+    }
+      html += `</div></div>`;
+      html += `<div style="display: flex; width: 100%; font-size: 10px; line-height: 1.1; justify-content: space-between;">`;
+        for (const label of labels) {
+      html += `<span style="flex: 1; text-align: center; white-space: nowrap;">${label}</span>`;
+    }
+      html += `</div>`;
   }
   if (show('blacklink')) {
     html += `<div class="legend-title">Black Link</div>
@@ -3578,5 +3640,3 @@ function initMeasureTools(map) {
 </script>
 </body>
 </html>
-
-
