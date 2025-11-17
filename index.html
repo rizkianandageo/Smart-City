@@ -1091,22 +1091,14 @@ function sanitizeForURL(name) {
     return String(name).trim().replace(/\s+/g, '-');
 }
 
-/**
- * Fungsi baru untuk mengambil file GeoJSON statis dari folder 'data/'.
- * @param {string} layerKey - Kunci layer dari konstanta URLS (mis: 'troublespot')
- * @returns {Promise<object>} - Konten GeoJSON yang sudah di-parse
- */
 async function fetchGeoJSONLayer(layerKey) {
-  // Menggunakan mapping dari konstanta URLS Anda di baris 949
   const fileName = URLS[layerKey]; 
   
   if (!fileName) {
      console.error(`Nama file tidak ditemukan di URLS untuk key: ${layerKey}`);
-     // Kembalikan data kosong agar aplikasi tidak crash
      return { type: 'FeatureCollection', features: [] };
   }
 
-  // Membuat path ke folder data/
   const url = `data/${fileName}.geojson`;
   console.log(`Fetching: ${url}`);
   
@@ -1118,24 +1110,12 @@ async function fetchGeoJSONLayer(layerKey) {
     return await res.json();
   } catch (error) {
     console.error(`Fetch error untuk ${url}:`, error);
-    // Kembalikan data kosong jika file tidak ditemukan atau ada error
     return { type: 'FeatureCollection', features: [] };
   }
 }
 
-/**
- * Fungsi "query" cepat untuk filter berdasarkan atribut 'Satwil'
- * @param {string} layerKey - Kunci layer (mis: 'cctv')
- * @param {object} fullGeoJSON - Seluruh data GeoJSON
- * @param {string} satwilName - Nama Satwil yang dipilih (mis: 'Polda Bali')
- * @returns {object} - GeoJSON yang sudah difilter
- */
 function filterDataByAttribute(layerKey, fullGeoJSON, satwilName) {
-  // Ambil nama field dari konstanta yang kita buat di Langkah 1
   const fieldName = SATWIL_FIELD[layerKey];
-
-  // Jika layer ini tidak punya mapping 'Satwil',
-  // kita kembalikan saja semua datanya (untuk keamanan)
   if (!fieldName) {
     console.warn(`[${layerKey}] Tidak punya mapping 'Satwil'. Menampilkan semua data.`);
     return fullGeoJSON;
@@ -1144,9 +1124,6 @@ function filterDataByAttribute(layerKey, fullGeoJSON, satwilName) {
   const filteredFeatures = fullGeoJSON.features.filter(f => {
     const prop = f.properties;
     if (!prop) return false;
-
-    // Cek jika nilai di fieldnya = nama Satwil yang dipilih
-    // Kita cek beberapa kemungkinan nama field untuk jaga-jaga
     return (
       prop[fieldName] === satwilName || 
       prop.Satwil === satwilName || 
@@ -1204,6 +1181,11 @@ let administrasiColorMap = {};
 let popup = new maplibregl.Popup({ closeButton:true, closeOnClick:true, offset:12 });
 let troublespotChart, cctvChart;
 let highlightMarker = null;
+let riskExclamationMarkers = [];
+let isExclamationAnimationRunning = false;
+let exclamationAnimationStartTime = 0;
+let isRiskAnimationRunning = false;
+let riskAnimationStartTime = 0;
 let filteredLayerData = {};
 let timeSliderData = {
     allFeatures: { blackspot: [], blacklink: [], blackarea: [] },
@@ -1451,11 +1433,8 @@ function getLast7DaysRangeYMD() {
 }
 
 async function fetchAccidents7D() {
-  // Kita ambil semua data. Pemfilteran tanggal akan ditangani
-  // oleh fungsi 'createSplashChart' saat memproses data.
   console.log('Fetching data kecelakaan untuk splash chart...');
   
-  // Gunakan 'data_kecelakaan' sebagai key yang ada di konstanta URLS
   return await fetchGeoJSONLayer('data_kecelakaan'); 
 }
 
@@ -1614,9 +1593,7 @@ function startAppWithSatwil(feature) {
 
   if (sat) {
       const newHash = '#' + sanitizeForURL(sat);
-      // Cek apakah hash sudah sama, agar tidak menambah history jika tidak perlu
       if (window.location.hash !== newHash) {
-          // Mengubah URL di address bar tanpa me-reload halaman
           history.pushState({ satwil: sat }, document.title, window.location.pathname + window.location.search + newHash);
       }
     }
@@ -1771,11 +1748,10 @@ Promise.all([
 
   createSplashChart(kec7d);
 
-  const hash = window.location.hash.substring(1); // misal: "Polda-Bali"
+  const hash = window.location.hash.substring(1);
     let featureFromHash = null;
 
     if (hash) {
-      // 2. Cari data wilayah yang cocok dengan hash
       featureFromHash = (wil.features || []).find(f => {
           const sat = f.properties?.Satwil ?? f.properties?.satwil;
           return sat && sanitizeForURL(sat) === hash;
@@ -1783,11 +1759,9 @@ Promise.all([
     }
 
     if (featureFromHash) {
-      // 3. JIKA DITEMUKAN: Langsung mulai aplikasi, lewati splash screen
       console.log('Satwil ditemukan di URL, melewati splash:', featureFromHash.properties.Satwil);
       startAppWithSatwil(featureFromHash);
     } else {
-      // 4. JIKA TIDAK DITEMUKAN: Tampilkan splash screen seperti biasa
       console.log('Tidak ada Satwil valid di URL, tampilkan splash screen.');
       initSplashMap(); 
     }
@@ -1798,8 +1772,6 @@ Promise.all([
 });
 
 window.addEventListener('hashchange', () => {
-  // Me-reload halaman adalah cara termudah agar logika di
-  // Promise.all (Langkah 4) bisa membaca hash URL yang baru.
   location.reload();
 });
 
@@ -1963,6 +1935,27 @@ function initMap(polygon){
         btn.classList.toggle('active');
         const isActive = btn.classList.contains('active');
         const layerName = btn.dataset.layer;
+
+        if (layerName === 'prediksi_risiko') {
+          if (isActive) {
+            if (!isRiskAnimationRunning) {
+              isRiskAnimationRunning = true;
+              riskAnimationStartTime = 0;
+              requestAnimationFrame(animateRiskSpotlight);
+            }
+            if (!isExclamationAnimationRunning) {
+              isExclamationAnimationRunning = true;
+              exclamationAnimationStartTime = 0;
+              requestAnimationFrame(animateExclamationMarkers);
+            }
+            riskExclamationMarkers.forEach(marker => marker.getElement().style.display = 'block');
+
+          } else {
+            isRiskAnimationRunning = false;
+            isExclamationAnimationRunning = false;
+            riskExclamationMarkers.forEach(marker => marker.getElement().style.display = 'none');
+          }
+        }
 
         (map.getStyle().layers || []).forEach(l => {
           if (l.id.startsWith(layerName)) {
@@ -2312,7 +2305,6 @@ function setLayerInteractivity(layerId){
   map.on('mouseleave', layerId, ()=>{ map.getCanvas().style.cursor=''; });
 }
 async function loadAllDataLayersBySatwil(satwilName, polygon) {
-  // Bersihkan sumber & layer lama seperti di loader lama
   const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','prediksi_risiko','administrasi'];
   for (const p of prefixes) {
     (map.getStyle().layers || [])
@@ -2325,7 +2317,6 @@ async function loadAllDataLayersBySatwil(satwilName, polygon) {
   }
 
   filteredLayerData = {};
-  // Urutan agar tampilan konsisten
   const layerOrder = ['administrasi','blackarea','traffic','prediksi_risiko','blacklink','cctv','objek_vital','blackspot','troublespot'];
 
 function applyVisibility(layerPrefix) {
@@ -2334,7 +2325,6 @@ function applyVisibility(layerPrefix) {
     ?.classList.contains('active');
 
   const ids = (map.getStyle().layers || []).map(l => l.id);
-  // Jangkau semua id layer yang berkaitan (termasuk sub-prefix)
   const matches = ids.filter(id =>
     id.startsWith(layerPrefix) ||
     (layerPrefix === 'cctv' && (id.startsWith('cctv-on') || id.startsWith('cctv-off'))) ||
@@ -2344,21 +2334,37 @@ function applyVisibility(layerPrefix) {
   matches.forEach(id => {
     map.setLayoutProperty(id, 'visibility', isActive ? 'visible' : 'none');
   });
+
+  if (layerPrefix === 'prediksi_risiko') {
+    const displayValue = isActive ? 'block' : 'none';
+    
+    riskExclamationMarkers.forEach(marker => {
+        marker.getElement().style.display = displayValue;
+    });
+
+    if (isActive) {
+      if (!isRiskAnimationRunning) {
+        isRiskAnimationRunning = true;
+        riskAnimationStartTime = 0;
+        requestAnimationFrame(animateRiskSpotlight);
+      }
+      if (!isExclamationAnimationRunning) {
+        isExclamationAnimationRunning = true;
+        exclamationAnimationStartTime = 0;
+        requestAnimationFrame(animateExclamationMarkers);
+      }
+    } else {
+      isRiskAnimationRunning = false;
+      isExclamationAnimationRunning = false;
+    }
+  }
 }
 
   for (const key of layerOrder) {
     try {
-          // 1. Ambil SELURUH data dari file GeoJSON statis
           const fullGeoJSON = await fetchGeoJSONLayer(key);
-
-          // 2. (LANGKAH BARU) Filter cepat berdasarkan atribut "Satwil"
           const attrFilteredFC = filterDataByAttribute(key, fullGeoJSON, selectedSatwilName);
-
-          // 3. (DIHAPUS) Kita tidak lagi menjalankan filter geometris 'filterData'
-          // const finalFilteredFC = filterData(key, attrFilteredFC, polygon); // <--- BARIS INI DIHAPUS/DIKOMENTARI
-
-          // 4. (DIUBAH) Normalisasi properti langsung dari data hasil filter atribut
-          const dataNorm = normalizeProperties(key, attrFilteredFC); // <--- DIUBAH MENJADI attrFilteredFC
+          const dataNorm = normalizeProperties(key, attrFilteredFC);
 
       filteredLayerData[key] = dataNorm;
 
@@ -2470,6 +2476,86 @@ function applyVisibility(layerPrefix) {
           map.addSource('prediksi_risiko', { type:'geojson', data:dataNorm });
           map.addLayer({ id:'prediksi_risiko-outline', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':3, 'line-color':'#000', 'line-opacity':0.5 }});
           map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#ffeb3b', 2,'#f44336', '#cccccc' ] }});
+          map.addLayer({
+            id: 'prediksi_risiko-spotlight',
+            type: 'line',
+            source: 'prediksi_risiko',
+            filter: ['==', 'risk_prediction', 2], 
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+              'line-color': '#f44336',
+              'line-width': 5,
+              'line-opacity': 0.8,
+              'line-blur': 2
+            }
+          });
+          riskExclamationMarkers.forEach(m => m.remove());
+          riskExclamationMarkers = [];
+          
+          dataNorm.features.forEach(feature => {
+            if (feature.properties.risk_prediction === 2) {
+              const coords = feature.geometry.coordinates;
+              let centerCoord;
+              if (coords.length > 1) {
+                  const totalLat = coords.reduce((sum, c) => sum + c[1], 0);
+                  const totalLon = coords.reduce((sum, c) => sum + c[0], 0);
+                  centerCoord = [totalLon / coords.length, totalLat / coords.length];
+              } else if (coords.length === 1) {
+                  centerCoord = coords[0];
+              } else {
+                  return;
+              }
+          const el = document.createElement('div');
+            el.className = 'risk-exclamation-container';
+            el.style.display = 'none'; 
+            el.style.cursor = 'pointer';
+            const innerEl = document.createElement('div');
+            innerEl.className = 'risk-exclamation-icon';
+            innerEl.style.backgroundImage = `url("assets/alert.png")`;
+            innerEl.style.width = '30px';
+            innerEl.style.height = '30px';
+            innerEl.style.backgroundSize = 'contain';
+            innerEl.style.backgroundRepeat = 'no-repeat';
+            innerEl.style.backgroundPosition = 'center';
+
+            el.appendChild(innerEl);
+            const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+              .setLngLat(centerCoord)
+              .addTo(map);
+
+            riskExclamationMarkers.push(marker);
+            el.addEventListener('click', () => {
+              popup
+                .setLngLat(centerCoord)
+                .setHTML(`
+                  <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
+                  <div class="popup-content">
+                    <p><b>Satwil:</b> ${feature.properties.satwil}</p>
+                    <p><b>Jalan:</b> ${feature.properties.nama_jalan}</p>
+                    <p><b>Risiko:</b> Tinggi (2)</p>
+                    <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
+                  </div>
+                `)
+                .addTo(map);
+            });
+
+              riskExclamationMarkers.push(marker);
+              el.addEventListener('click', () => {
+                popup
+                  .setLngLat(centerCoord)
+                  .setHTML(`
+                    <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
+                    <div class="popup-content">
+                      <p><b>Satwil:</b> ${feature.properties.satwil}</p>
+                      <p><b>Jalan:</b> ${feature.properties.nama_jalan}</p>
+                      <p><b>Risiko:</b> Tinggi (2)</p>
+                      <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
+                    </div>
+                  `)
+                  .addTo(map);
+              });
+            }
+          });
           setLayerInteractivity('prediksi_risiko-line');
           break;
         }
@@ -2890,6 +2976,48 @@ function calculateLinearRegressionSlope(data) {
 
   const slope = ((n * sumXY) - (sumX * sumY)) / denominator;
   return slope;
+}
+
+function animateRiskSpotlight(timestamp) {
+  if (!isRiskAnimationRunning) return; 
+
+  if (!riskAnimationStartTime) riskAnimationStartTime = timestamp;
+  const elapsed = timestamp - riskAnimationStartTime;
+  
+  const pulse = (Math.sin(elapsed / 500) + 1) / 2;
+  const opacity = 0.4 + pulse * 0.6; 
+  const width = 4 + pulse * 4;
+
+  try {
+    if (map.getLayer('prediksi_risiko-spotlight')) {
+      map.setPaintProperty('prediksi_risiko-spotlight', 'line-opacity', opacity);
+      map.setPaintProperty('prediksi_risiko-spotlight', 'line-width', width);
+    }
+  } catch (e) {
+  }
+  requestAnimationFrame(animateRiskSpotlight);
+}
+
+function animateExclamationMarkers(timestamp) {
+  if (!isExclamationAnimationRunning) return;
+
+  if (!exclamationAnimationStartTime) exclamationAnimationStartTime = timestamp;
+  const elapsed = timestamp - exclamationAnimationStartTime;
+  const pulse = (Math.sin(elapsed / 400) + 1) / 2;
+  const scale = 0.8 + pulse * 0.4;
+  const opacity = 0.7 + pulse * 0.3;
+
+riskExclamationMarkers.forEach(marker => {
+    const outerEl = marker.getElement();
+    const innerEl = outerEl.querySelector('.risk-exclamation-icon');
+
+    if (innerEl) {
+      innerEl.style.transform = `scale(${scale})`;
+      innerEl.style.opacity = opacity;
+    }
+  });
+
+  requestAnimationFrame(animateExclamationMarkers);
 }
 
 function initSearchAndRouting() {
