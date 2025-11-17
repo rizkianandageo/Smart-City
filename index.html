@@ -967,6 +967,7 @@ if (window.Chart) {
         <div id="blackspot-list"></div>
         <div id="blackspot-note" class="note-info"></div>
         <div id="blackspot-total" class="note-info" aria-live="polite"></div>
+        <div id="blackspot-trend" class="note-info" style="font-weight: 600; margin-top: 6px;"></div>
       </div>
     </div>
   </div>
@@ -2686,6 +2687,40 @@ function updateDashboard(filterDate = null) {
         }
       }
     }
+        const trendEl = document.getElementById('blackspot-trend');
+    if (trendEl) {
+      const allDates = timeSliderData.uniqueDates;
+      const allBlackspots = timeSliderData.allFeatures.blackspot || [];
+
+      if (allDates.length < 3) {
+        trendEl.innerHTML = '';
+      } else {
+        const dailyCounts = allDates.map((date, index) => {
+          const ymd = toYMD(date);
+          const count = allBlackspots.filter(f => f.properties.tanggal === ymd).length;
+          return { x: index, y: count };
+        });
+        const dataForTrend = dailyCounts.slice(-7);
+        const slope = calculateLinearRegressionSlope(dataForTrend);
+        let trendIcon = '↔️';
+        let trendText = 'Stabil';
+        let trendColor = '#ffffff';
+        const threshold = 0.1; 
+        if (slope > threshold) {
+          trendIcon = '⬆️';
+          trendText = 'Meningkat';
+          trendColor = '#ff5252';
+        } else if (slope < -threshold) {
+          trendIcon = '⬇️';
+          trendText = 'Menurun';
+          trendColor = '#4caf50';
+        }
+        const satwilName = selectedSatwilName || 'Wilayah Ini';
+        trendEl.innerHTML = 
+          `<span style="font-size: 16px; font-weight: 700; color: ${trendColor};">${trendIcon} Tren Black Spot ${trendText}</span>
+           <br>di ${satwilName} (${dataForTrend.length} Hari Data Terakhir)`;
+      }
+    }
 }
 
 function decodePolyline5(str) {
@@ -2785,6 +2820,29 @@ function formatDuration(seconds) {
             return `${hours} jam ${minutes} mnt`;
         }
     }
+}
+
+function calculateLinearRegressionSlope(data) {
+  if (!data || data.length < 2) return 0;
+
+  const n = data.length;
+  let sumX = 0;
+  let sumY = 0;
+  let sumXY = 0;
+  let sumX2 = 0;
+
+  for (const p of data) {
+    sumX += p.x;
+    sumY += p.y;
+    sumXY += p.x * p.y;
+    sumX2 += p.x * p.x;
+  }
+
+  const denominator = (n * sumX2) - (sumX * sumX);
+  if (denominator === 0) return 0;
+
+  const slope = ((n * sumXY) - (sumX * sumY)) / denominator;
+  return slope;
 }
 
 function initSearchAndRouting() {
