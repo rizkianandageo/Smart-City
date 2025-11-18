@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js?v=99"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
@@ -2489,57 +2489,116 @@ function applyVisibility(layerPrefix) {
               'line-blur': 2
             }
           });
+
           riskExclamationMarkers.forEach(m => m.remove());
           riskExclamationMarkers = [];
+          const markerCandidatePoints = [];
+          const highRiskPoints = dataNorm.features.filter(f =>
+            f.properties.risk_prediction === 2 &&
+            f.geometry &&
+            f.geometry.type === 'Point'
+          );
           
-          dataNorm.features.forEach(feature => {
-            if (feature.properties.risk_prediction === 2) {
-              const coords = feature.geometry.coordinates;
-              let centerCoord;
-              if (coords.length > 1) {
-                  const totalLat = coords.reduce((sum, c) => sum + c[1], 0);
-                  const totalLon = coords.reduce((sum, c) => sum + c[0], 0);
-                  centerCoord = [totalLon / coords.length, totalLat / coords.length];
-              } else if (coords.length === 1) {
-                  centerCoord = coords[0];
-              } else {
-                  return;
-              }
-          const el = document.createElement('div');
-            el.className = 'risk-exclamation-container';
-            el.style.display = 'none'; 
-            el.style.cursor = 'pointer';
-            const innerEl = document.createElement('div');
-            innerEl.className = 'risk-exclamation-icon';
-            innerEl.style.backgroundImage = `url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Error.svg/1200px-Error.svg.png")`;
-            innerEl.style.width = '30px';
-            innerEl.style.height = '30px';
-            innerEl.style.backgroundSize = 'contain';
-            innerEl.style.backgroundRepeat = 'no-repeat';
-            innerEl.style.backgroundPosition = 'center';
-
-            el.appendChild(innerEl);
-            const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-              .setLngLat(centerCoord)
-              .addTo(map);
-
-              riskExclamationMarkers.push(marker);
-              el.addEventListener('click', () => {
-                popup
-                  .setLngLat(centerCoord)
-                  .setHTML(`
-                    <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
-                    <div class="popup-content">
-                      <p><b>Satwil:</b> ${feature.properties.satwil}</p>
-                      <p><b>Jalan:</b> ${feature.properties.nama_jalan}</p>
-                      <p><b>Risiko:</b> Tinggi (2)</p>
-                      <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
-                    </div>
-                  `)
-                  .addTo(map);
-              });
-            }
+          highRiskPoints.forEach(pointFeature => {
+            markerCandidatePoints.push(
+              turf.point(pointFeature.geometry.coordinates, pointFeature.properties)
+            );
           });
+          const highRiskLines = dataNorm.features.filter(f => 
+            f.properties.risk_prediction === 2 && 
+            f.geometry && 
+            (f.geometry.type === 'LineString' || f.geometry.type === 'MultiLineString')
+          );
+          if (highRiskLines.length > 0) {
+            try {
+              const allLinesCollection = turf.featureCollection(highRiskLines);
+              let mergedLinesRaw;
+              if (typeof turf.lineMerge === 'function') {
+                mergedLinesRaw = turf.lineMerge(allLinesCollection);
+              } else if (typeof turf.lineCombine === 'function') {
+                mergedLinesRaw = turf.lineCombine(allLinesCollection);
+              } else {
+                const coords = [];
+                for (const f of (allLinesCollection.features || [])) {
+                  if (!f || !f.geometry) continue;
+                  if (f.geometry.type === 'LineString') coords.push(f.geometry.coordinates);
+                  else if (f.geometry.type === 'MultiLineString') coords.push(...(f.geometry.coordinates || []));
+                }
+                mergedLinesRaw = turf.multiLineString(coords);
+              }
+
+              let mergedFeature;
+              if (mergedLinesRaw == null) {
+                mergedFeature = turf.multiLineString([]);
+              } else if (mergedLinesRaw.type === 'Feature') {
+                mergedFeature = mergedLinesRaw;
+              } else if (mergedLinesRaw.type === 'FeatureCollection') {
+                const coords = (mergedLinesRaw.features || []).flatMap(f => {
+                  if (!f || !f.geometry) return [];
+                  if (f.geometry.type === 'LineString') return [f.geometry.coordinates];
+                  if (f.geometry.type === 'MultiLineString') return f.geometry.coordinates;
+                  return [];
+                });
+                mergedFeature = turf.multiLineString(coords);
+              } else if (mergedLinesRaw.geometry) {
+                mergedFeature = mergedLinesRaw;
+              } else {
+                mergedFeature = turf.multiLineString([]);
+              }
+
+              const mergedLines = mergedFeature;
+              let segmentsToProcess = [];
+
+              if (mergedLines.geometry.type === 'LineString') {
+                segmentsToProcess.push(mergedLines);
+              } else if (mergedLines.geometry.type === 'MultiLineString') {
+                mergedLines.geometry.coordinates.forEach(coords => {
+                  segmentsToProcess.push(turf.lineString(coords, mergedLines.properties));
+                });
+              }
+              segmentsToProcess.forEach(lineSegment => {
+                try {
+                  const lineLength = turf.length(lineSegment, { units: 'kilometers' });
+                  const centerPoint = turf.along(lineSegment, lineLength / 2, { units: 'kilometers' });
+              
+                  markerCandidatePoints.push(
+                    turf.point(centerPoint.geometry.coordinates, lineSegment.properties)
+                  );
+                } catch (e) {
+                  console.error('Gagal memproses segmen gabungan:', e, lineSegment);
+                }
+              });
+
+            } catch (e) {
+              console.error("Error saat menggabungkan (merge) garis risiko:", e, highRiskLines);
+            }
+          }
+          if (markerCandidatePoints.length > 0) {
+            const candidatesFC = turf.featureCollection(markerCandidatePoints);
+            const maxClusterDistance = 0.1;
+            const clustered = turf.clustersDbscan(candidatesFC, maxClusterDistance, { minPoints: 1 });
+            const clusterMap = new Map();
+            clustered.features.forEach(f => {
+              const clusterId = f.properties.cluster;
+              if (clusterId === undefined) return;
+              
+              if (!clusterMap.has(clusterId)) {
+                clusterMap.set(clusterId, []);
+              }
+              clusterMap.get(clusterId).push(f);
+            });
+            clusterMap.forEach((pointsInCluster, clusterId) => {
+              try {
+                const clusterFC = turf.featureCollection(pointsInCluster);
+                const centerOfCluster = turf.centerOfMass(clusterFC);
+                const representativeProps = pointsInCluster[0].properties;
+                createRiskMarker(centerOfCluster.geometry.coordinates, representativeProps);
+              
+              } catch (e) {
+                console.error(`Gagal membuat marker untuk cluster ${clusterId}:`, e, pointsInCluster);
+              }
+            });
+          }
           setLayerInteractivity('prediksi_risiko-line');
           break;
         }
@@ -3002,6 +3061,54 @@ riskExclamationMarkers.forEach(marker => {
   });
 
   requestAnimationFrame(animateExclamationMarkers);
+}
+
+function createRiskMarker(coordinates, properties) {
+  try {
+    if (!coordinates || isNaN(coordinates[0]) || isNaN(coordinates[1])) {
+      console.warn('Koordinat marker tidak valid (NaN):', coordinates);
+      return;
+    }
+
+    const el = document.createElement('div');
+    el.className = 'risk-exclamation-container';
+    el.style.display = 'none';
+    el.style.cursor = 'pointer';
+    
+    const innerEl = document.createElement('div');
+    innerEl.className = 'risk-exclamation-icon';
+    innerEl.style.backgroundImage = `url("http://localhost:8000/alert.png")`; 
+    innerEl.style.width = '30px';
+    innerEl.style.height = '30px';
+    innerEl.style.backgroundSize = 'contain';
+    innerEl.style.backgroundRepeat = 'no-repeat';
+    innerEl.style.backgroundPosition = 'center';
+    el.appendChild(innerEl);
+    
+    const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+      .setLngLat(coordinates)
+      .addTo(map);
+
+    riskExclamationMarkers.push(marker);
+    
+    el.addEventListener('click', () => {
+      popup
+        .setLngLat(coordinates)
+        .setHTML(`
+          <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
+          <div class="popup-content">
+            <p><b>Satwil:</b> ${properties.satwil}</p>
+            <p><b>Jalan:</b> ${properties.nama_jalan}</p>
+            <p><b>Risiko:</b> Tinggi (2)</p>
+            <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
+          </div>
+        `)
+        .addTo(map);
+    });
+    
+  } catch (e) {
+    console.error('Gagal membuat marker risiko:', e, coordinates);
+  }
 }
 
 function initSearchAndRouting() {
