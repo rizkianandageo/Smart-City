@@ -1002,8 +1002,10 @@ if (window.Chart) {
       <div id="basemap-content" class="panel-content active">
         <h4>Pilih Basemap</h4>
         <div id="basemap-tabs" class="tab-control-group">
-          <button class="tab-btn" data-value="esri">ESRI World Topo</button>
           <button class="tab-btn active" data-value="osm">OpenStreetMap</button>
+          <button class="tab-btn" data-value="esri">ESRI World Topo</button>
+          <button class="tab-btn" data-value="google">Google Maps</button>
+          <button class="tab-btn" data-value="google_hybrid">Google Hybrid</button>
           <button class="tab-btn" data-value="imagery">Imagery</button>
         </div>
       </div>
@@ -1020,8 +1022,12 @@ if (window.Chart) {
             <button class="tab-btn" data-layer="prediksi_risiko">Prediksi Risiko Kecelakaan</button>
             <button class="tab-btn active" data-layer="administrasi">Wilayah Administrasi</button>
         </div>
+        <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 8px;">
+          <button id="btn-toggle-all-layers" class="tab-btn" style="background: #e0e0e0; color: #333; font-weight: 700; text-align: center; width: 100%;">
+            Matikan Semua Layer
+          </button>
       </div>
-      <div id="legend-content" class="panel-content"></div>
+      </div><div id="legend-content" class="panel-content"></div>
     </div>
   </div>
 </div>
@@ -1137,6 +1143,8 @@ function filterDataByAttribute(layerKey, fullGeoJSON, satwilName) {
 const basemapTiles = {
   osm: { tiles:['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256 },
   esri:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'], tileSize:256 },
+  google: { tiles:['https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'], tileSize: 256 },  
+  google_hybrid: { tiles:['https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'], tileSize: 256 },
   imagery:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize:256 }
 };
 
@@ -1965,6 +1973,25 @@ function initMap(polygon){
         renderLegend();
       });
     });
+
+    const btnToggleAll = document.getElementById('btn-toggle-all-layers');
+    if (btnToggleAll) {
+      btnToggleAll.addEventListener('click', () => {
+        const allButtons = Array.from(document.querySelectorAll('#layer-tabs .tab-btn'));
+        const isAnyActive = allButtons.some(btn => btn.classList.contains('active'));
+        const shouldTurnOn = !isAnyActive;
+
+        allButtons.forEach(btn => {
+          const isActive = btn.classList.contains('active');
+          if ((shouldTurnOn && !isActive) || (!shouldTurnOn && isActive)) {
+            btn.click(); 
+          }
+        });
+
+        btnToggleAll.textContent = shouldTurnOn ? "Matikan Semua Layer" : "Hidupkan Semua Layer";
+        btnToggleAll.style.backgroundColor = shouldTurnOn ? "#e0e0e0" : "#ffc107"; 
+      });
+    }
 
     map.on('click', (e)=>{
       if (popup && popup.isOpen()) popup.remove();
