@@ -1020,6 +1020,8 @@ if (window.Chart) {
             <button class="tab-btn active" data-layer="objek_vital">Objek Vital</button>
             <button class="tab-btn active" data-layer="cctv">CCTV</button>
             <button class="tab-btn" data-layer="prediksi_risiko">Prediksi Risiko Kecelakaan</button>
+            <button class="tab-btn" data-layer="speedlimit">Batas Kecepatan</button>
+            <button class="tab-btn" data-layer="geofencing">Geofencing</button>
             <button class="tab-btn active" data-layer="administrasi">Wilayah Administrasi</button>
         </div>
         <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 8px;">
@@ -1074,6 +1076,8 @@ const URLS = {
   cctv:            'cctv',
   objek_vital:     'objek_vital',
   prediksi_risiko: 'risk_prediction',
+  speedlimit:      'speedlimit',
+  geofencing:      'geofencing',
   administrasi:    'kependudukan',
   data_kecelakaan: 'data_kecelakaan'
 };
@@ -1087,6 +1091,8 @@ const SATWIL_FIELD = {
   cctv: 'Satwil',
   objek_vital: 'Satwil',
   prediksi_risiko: 'Satwil',
+  speedlimit: 'Satwil',
+  geofencing: 'Satwil',
   administrasi: 'Satwil',
 };
 
@@ -1172,14 +1178,16 @@ const ICON_SVGS = {
 
 const ALIAS_MAP = {
   city:'Kabupaten / Kota', street:'Jalan', keterangan:'Keterangan',
-  Nm_Ruas:'Nama Ruas Jalan', Status:'Status Jalan', Propinsi:'Provinsi',
+  Nm_Ruas:'Nama Ruas Jalan', nm_ruas:'Nama Ruas Jalan', Status:'Status Jalan', Propinsi:'Provinsi',
   Kab_Kot:'Kabupaten / Kota', SkorBS:'Skor Black Spot', Ket:'Keterangan',
   Coverage:'Keterangan Blindspot', tanggal:'Tanggal', Wilayah:'Wilayah',
   level:'Level Kemacetan', speedKMH:'Kecepatan', Nama:'Nama',
   Keterangan:'Keterangan', nama_cctv:'Nama CCTV', status:'Status',
   sumber:'Sumber', nama_jalan:'Nama Jalan', risk_prediction:'Risiko Kecelakaan',
   nama_prop:'Nama Provinsi', nama_kab:'Nama Kabupaten / Kota', nama_kec:'Nama Kecamatan',
-  jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)' 
+  jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)', speed_limit: 'Batas Kecepatan (km/jam)',
+  tipe_zona: 'Tipe Zona Geofencing', nama_zona: 'Zona Geofencing', keterangan_status: 'Keterangan Zona Geofencing', geofence_limit: 'Batas Kecepatan (km/jam)',
+  jam_mulai: 'Waktu Mulai Berlaku Batas Kecepatan', jam_selesai: 'Waktu Selesai Berlaku Batas Kecepatan'
 };
 
 let map;
@@ -1828,6 +1836,12 @@ function normalizeProperties(layerKey, fc) {
       p.SkorBS = Number(p.SkorBS ?? p.skor ?? p.score ?? 0);
       p.Nama   = p.Nama || p.Nm_Ruas || p.nama || p.nama_ruas || 'Black Spot';
     }
+    if (layerKey === 'speedlimit') {
+      p.speed_limit = Number(p.speed_limit || p.speed || 0);
+    }
+    if (layerKey === 'geofencing') {
+      p.tipe_zona = p.tipe_zona || p.zone_type || 'Lainnya';
+    }
     f.properties = p;
   }
   return fc;
@@ -2016,7 +2030,8 @@ function initMap(polygon){
         troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
         objek_vital:'Objek Vital', prediksi_risiko:'Prediksi Risiko Kecelakaan',
         administrasi:'Wilayah Administrasi', traffic:'Kemacetan',
-        blacklink:'Black Link', blackarea:'Black Area'
+        blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
+        geofencing: 'Geofencing Area'
       };
       const prefix = Object.keys(titleMap).find(p => layerId.startsWith(p));
       if (!prefix) return;
@@ -2332,7 +2347,7 @@ function setLayerInteractivity(layerId){
   map.on('mouseleave', layerId, ()=>{ map.getCanvas().style.cursor=''; });
 }
 async function loadAllDataLayersBySatwil(satwilName, polygon) {
-  const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','prediksi_risiko','administrasi'];
+  const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','prediksi_risiko','speedlimit','geofencing','administrasi'];
   for (const p of prefixes) {
     (map.getStyle().layers || [])
       .map(l => l.id)
@@ -2344,7 +2359,7 @@ async function loadAllDataLayersBySatwil(satwilName, polygon) {
   }
 
   filteredLayerData = {};
-  const layerOrder = ['administrasi','blackarea','traffic','prediksi_risiko','blacklink','cctv','objek_vital','blackspot','troublespot'];
+  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','cctv','objek_vital','blackspot','troublespot'];
 
 function applyVisibility(layerPrefix) {
   const isActive = document
@@ -2629,6 +2644,69 @@ function applyVisibility(layerPrefix) {
           setLayerInteractivity('prediksi_risiko-line');
           break;
         }
+        case 'speedlimit': {
+          map.addSource('speedlimit', { type: 'geojson', data: dataNorm });
+          map.addLayer({ id:'speedlimit-outline', type:'line', source:'speedlimit', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':3, 'line-color':'#000', 'line-opacity':0.5 }});
+          map.addLayer({
+            id: 'speedlimit-line',
+            type: 'line',
+            source: 'speedlimit',
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+              'line-width': 2,
+              'line-color': [
+                'step',
+                ['get', 'speed_limit'],
+                '#0d47a1', 20,
+                '#1565c0', 40,
+                '#1976d2', 60,
+                '#42a5f5', 80,
+                '#90caf9'
+              ],
+              'line-opacity': 0.8
+            }
+          });
+          setLayerInteractivity('speedlimit-line');
+          break;
+        }
+        case 'geofencing': {
+          map.addSource('geofencing', { type: 'geojson', data: dataNorm });
+          const softColors = [
+            'match',
+            ['get', 'tipe_zona'],
+            'Fasilitas Pendidikan', '#f48fb1',
+            'Fasilitas Kesehatan', '#ffcc80',
+            'Kantor Pemerintahan', '#a5d6a7',
+            'Kantor Polisi', '#90caf9',
+            'Bandara', '#b0bec5',
+            'Stasiun', '#ce93d8',
+            'Terminal', '#81d4fa',
+            'Pelabuhan', '#80cbc4',
+            'Pariwisata', '#ffe082',
+            '#eeeeee'
+          ];
+          map.addLayer({
+            id: 'geofencing-fill',
+            type: 'fill',
+            source: 'geofencing',
+            paint: {
+              'fill-color': softColors,
+              'fill-opacity': 0.2 
+            }
+          });
+          map.addLayer({
+            id: 'geofencing-outline',
+            type: 'line',
+            source: 'geofencing',
+            paint: {
+              'line-color': softColors,
+              'line-width': 1.5,
+              'line-opacity': 0.5
+            }
+          });
+          setLayerInteractivity('geofencing-fill');
+          break;
+        }
         case 'administrasi': {
           map.addSource('administrasi', { type:'geojson', data:dataNorm });
           const kecamatans = [...new Set(dataNorm.features.map(f => f.properties.nama_kec).filter(Boolean))];
@@ -2731,6 +2809,48 @@ function renderLegend(){
     html += `<div class="legend-title">Black Area</div>
       <div class="legend-item"><div class="legend-icon" style="background:rgba(192,192,192,0.5); border:1px solid #000; border-radius:50%; height:20px; width:20px;"></div><div class="legend-label">Black Area</div></div>`;
   }
+  if (show('speedlimit')) {
+    const colors = ['#0d47a1', '#1565c0', '#1976d2', '#42a5f5', '#90caf9'];
+    const labels = ['<20', '20-40', '40-60', '60-80', '>80'];
+    
+    html += `<div class="legend-title">Batas Kecepatan (km/h)</div>
+      <div style="width: 100%; margin-bottom: 4px;">
+        <div style="display: flex; width: 100%; height: 16px; border-radius: 4px; overflow: hidden; border: 1px solid #000;">`;
+    for (let i = 0; i < colors.length; i++) {
+      html += `<div style="flex: 1; background-color: ${colors[i]};"></div>`;
+    }
+    html += `</div></div>
+      <div style="display: flex; width: 100%; font-size: 10px; line-height: 1.1; justify-content: space-between;">`;
+    for (const label of labels) {
+      html += `<span style="flex: 1; text-align: center;">${label}</span>`;
+    }
+    html += `</div>`;
+  }
+  if (show('geofencing')) {
+    html += `<div class="legend-title">Geofencing Area</div>`;
+    html += legendRowCustom('#f48fb1', 'Fasilitas Pendidikan');
+    html += legendRowCustom('#ffcc80', 'Fasilitas Kesehatan');
+    html += legendRowCustom('#a5d6a7', 'Kantor Pemerintahan');
+    html += legendRowCustom('#90caf9', 'Kantor Polisi');
+    html += legendRowCustom('#b0bec5', 'Bandara');
+    html += legendRowCustom('#ce93d8', 'Stasiun');
+    html += legendRowCustom('#81d4fa', 'Terminal');
+    html += legendRowCustom('#80cbc4', 'Pelabuhan');
+    html += legendRowCustom('#ffe082', 'Pariwisata');
+  }
+function legendRowCustom(color, label){
+return `<div class="legend-item">
+            <div class="legend-icon" style="
+              background:${color}; 
+              opacity:0.7; 
+              border:1px solid #555; 
+              width:20px; 
+              height:20px; 
+              border-radius: 50%;
+            "></div>
+            <div class="legend-label">${label}</div>
+          </div>`;
+}
   if (show('objek_vital')) {
     html += `<div class="legend-title">Objek Vital</div>
       ${legendRow('ov-plane','Bandara')} ${legendRow('ov-hospital','Fasilitas Kesehatan')}
@@ -2738,7 +2858,7 @@ function renderLegend(){
       ${legendRow('ov-police','Kantor Polisi')} ${legendRow('ov-train','Stasiun')}
       ${legendRow('ov-bus','Terminal')} ${legendRow('ov-pariwisata','Tempat Pariwisata')}
       ${legendRow('ov-port','Pelabuhan')}`;
-  }
+  }  
   if (show('cctv')) {
     html += `<div class="legend-title">CCTV</div> ${legendRow('cctv-on','Hidup')} ${legendRow('cctv-off','Mati')}`;
   }
@@ -2911,7 +3031,7 @@ function updateDashboard(filterDate = null) {
         const satwilName = selectedSatwilName || 'Wilayah Ini';
         trendEl.innerHTML = 
           `<span style="font-size: 16px; font-weight: 700; color: ${trendColor};">${trendIcon} Tren Black Spot ${trendText}</span>
-           <br>di ${satwilName} (${dataForTrend.length} Hari Data Terakhir)`;
+           <br>di Wilayah ${satwilName} (Dalam ${dataForTrend.length} Hari Terakhir)`;
       }
     }
 }
@@ -2944,7 +3064,8 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
       troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
       objek_vital:'Objek Vital', prediksi_risiko:'Prediksi Risiko Kecelakaan',
       administrasi:'Wilayah Administrasi', traffic:'Kemacetan',
-      blacklink:'Black Link', blackarea:'Black Area'
+      blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
+      geofencing: 'Geofencing Area'
     };
     const prefix = layerKey; 
     if (!prefix || !titleMap[prefix]) {
