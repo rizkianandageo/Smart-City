@@ -3919,20 +3919,35 @@ function initSearchAndRouting() {
         routeResultsBody.innerHTML = html;
 
         const tsHazards = getTroublespotHazardsOnRoute(feat);
-        const isFoot = (uiMode === 'foot');
-
+        const isFoot = (uiMode === 'foot'); 
+        let contentHtml = '';
         if (!isFoot && tsHazards.length > 0) {
-          const msg = buildWarningSentence(tsHazards);
-          alertPopup.innerHTML = `<span>${msg}</span>
-            <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>`;
+           const tsMsg = buildWarningSentence(tsHazards);
+           if (tsMsg) {
+               contentHtml += `<div>${tsMsg}</div>`;
+           }
+        }
+        const geoHazards = getGeofenceHazardsOnRoute(feat);
+        if (!isFoot && geoHazards.length > 0) {
+           const geoMsg = buildComplexGeofenceMessage(geoHazards);
+           if (geoMsg) {
+               if (contentHtml !== '') {
+                   contentHtml += `<hr style="margin: 8px 0; border: 0; border-top: 1px solid rgba(133, 100, 4, 0.4);">`;
+               }
+               contentHtml += `<div style="margin-top:2px; line-height:1.4;">${geoMsg}</div>`;
+           }
+        }
+        if (contentHtml !== '') {
+          alertPopup.innerHTML = `
+            <div style="padding-right: 15px;">${contentHtml}</div>
+            <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+          `;
           alertPopup.style.display = 'block';
         } else {
           alertPopup.style.display = 'none';
         }
     }
-
     const TROUBLESPOT_NEAR_METERS = 15;
-
     function categorizeTroublespot(k) {
       const v = (k || '').toLowerCase().trim();
       if (v === 'jalan ditutup') return 'Jalan Ditutup';
@@ -4108,6 +4123,87 @@ function initMeasureTools(map) {
     const _enableDbl = () => { try{ map.doubleClickZoom.enable(); }catch{} };
     measurePanel.addEventListener('transitionend', _enableDbl);
     window.addEventListener('beforeunload', _enableDbl);
+}
+function isTimeActive(startStr, endStr) {
+  if (!startStr || !endStr) return true;
+  
+  const now = new Date();
+  const curTotalMins = now.getHours() * 60 + now.getMinutes();
+
+  const [sh, sm] = startStr.split(':').map(Number);
+  const [eh, em] = endStr.split(':').map(Number);
+  
+  if (isNaN(sh) || isNaN(eh)) return true;
+
+  const startTotal = sh * 60 + sm;
+  const endTotal = eh * 60 + em;
+  if (endTotal > startTotal) {
+    return curTotalMins >= startTotal && curTotalMins <= endTotal;
+  } 
+  else {
+    return curTotalMins >= startTotal || curTotalMins <= endTotal;
+  }
+}
+function getGeofenceHazardsOnRoute(routeFeature) {
+  const hazards = [];
+  const geofences = filteredLayerData.geofencing?.features || [];
+  
+  for (const zone of geofences) {
+    try {
+      if (turf.booleanIntersects(routeFeature, zone)) {
+        const p = zone.properties || {};
+        const jamMulai = p.jam_mulai || '00:00';
+        const jamSelesai = p.jam_selesai || '23:59';
+        if (isTimeActive(jamMulai, jamSelesai)) {
+          hazards.push({
+            tipe: p.tipe_zona || 'Zona Khusus',
+            mulai: jamMulai,
+            selesai: jamSelesai
+          });
+        }
+      }
+    } catch (e) {}
+  }
+  return hazards;
+}
+function formatNameList(names) {
+  const formatted = names.map(n => `(${n})`);
+  if (formatted.length === 0) return '';
+  if (formatted.length === 1) return formatted[0];
+  if (formatted.length === 2) return `${formatted[0]} dan ${formatted[1]}`;
+  const last = formatted.pop();
+  return `${formatted.join(', ')} dan ${last}`;
+}
+
+function formatSentenceList(sentences) {
+  if (sentences.length === 0) return '';
+  if (sentences.length === 1) return sentences[0];
+  if (sentences.length === 2) return `${sentences[0]} dan ${sentences[1]}`;
+  
+  const last = sentences.pop();
+  return `${sentences.join(', ')} dan ${last}`;
+}
+
+function buildComplexGeofenceMessage(hazards) {
+  if (!hazards.length) return '';
+  const groups = {};
+  
+  hazards.forEach(h => {
+    const key = `${h.mulai}|${h.selesai}`;
+    if (!groups[key]) groups[key] = [];
+    if (!groups[key].includes(h.tipe)) {
+      groups[key].push(h.tipe);
+    }
+  });
+  const clauses = [];
+  
+  for (const key in groups) {
+    const [start, end] = key.split('|');
+    const names = groups[key];
+    const nameString = formatNameList(names);
+    clauses.push(`Zona Geofencing ${nameString} yang berlaku mulai pukul ${start} sampai ${end}`);
+  }
+  return "Rute Anda melewati " + formatSentenceList(clauses);
 }
 </script>
 </body>
