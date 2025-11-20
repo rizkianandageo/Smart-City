@@ -2748,12 +2748,10 @@ function renderLegend(){
   if (show('blackspot')) { html += `<div class="legend-title">Black Spot</div>${legendRow('blackspot','Black Spot')}`; }
   if (show('prediksi_risiko')) {
     const colors = [
-      '#4caf50',
       '#ffeb3b',
-      '#f44336',
+      '#f44336'
     ];
     const labels = [
-      'Risiko Rendah',
       'Risiko Sedang',
       'Risiko Tinggi'
       ];  
@@ -4167,7 +4165,7 @@ function getGeofenceHazardsOnRoute(routeFeature) {
   return hazards;
 }
 function formatNameList(names) {
-  const formatted = names.map(n => `(${n})`);
+  const formatted = [...names];
   if (formatted.length === 0) return '';
   if (formatted.length === 1) return formatted[0];
   if (formatted.length === 2) return `${formatted[0]} dan ${formatted[1]}`;
