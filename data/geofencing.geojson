@@ -22728,7 +22728,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -346283,7 +346283,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -554964,7 +554964,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -570195,7 +570195,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
