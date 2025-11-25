@@ -784,6 +784,43 @@ if (window.Chart) {
   .blackspot-list-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
   }
+
+    #geofence-status-panel {
+    position: absolute;
+    top: 180px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1500;
+    display: none;
+    animation: slide-down-fade 0.5s ease-out;
+    pointer-events: none;
+  }
+
+  #geofence-alert-content {
+    background: rgba(211, 47, 47, 0.95);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    border: 2px solid #ffc107;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  #geofence-alert-content::before {
+    content: "⚠️";
+    font-size: 18px;
+  }
+
+  @keyframes slide-down-fade {
+    from { transform: translate(-50%, -20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+  }
 </style>
 </head>
 <body>
@@ -935,6 +972,10 @@ if (window.Chart) {
   </div>
 
   <button id="time-slider-minimized-btn" class="btn">Informasi Temporal Black Spot</button>
+</div>
+
+<div id="geofence-status-panel">
+  <div id="geofence-alert-content"></div>
 </div>
 
 <div id="dashboard-panel">
@@ -4202,6 +4243,91 @@ function buildComplexGeofenceMessage(hazards) {
     clauses.push(`Zona Geofencing ${nameString} yang berlaku mulai pukul ${start} sampai ${end}`);
   }
   return "Rute Anda melewati " + formatSentenceList(clauses);
+}
+
+let geoWatchId = null;
+
+function checkUserGeofence(coords) {
+  const geofences = filteredLayerData.geofencing?.features || [];
+  const panel = document.getElementById('geofence-status-panel');
+  const content = document.getElementById('geofence-alert-content');
+  if (!panel || !content) return;
+  const userPoint = turf.point(coords);
+  let activeMatches = [];
+  for (const zone of geofences) {
+    try {
+      if (turf.booleanPointInPolygon(userPoint, zone)) {
+        const p = zone.properties || {};
+        
+        const jamMulai = p.jam_mulai || '00:00';
+        const jamSelesai = p.jam_selesai || '23:59';
+
+        if (isTimeActive(jamMulai, jamSelesai)) {
+          activeMatches.push({
+            tipe: p.tipe_zona || 'Zona Khusus',
+            limit: parseInt(p.geofence_limit || p.speed_limit || 999)
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('Error logic geofence:', e);
+    }
+  }
+  if (activeMatches.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  const limits = activeMatches.map(m => m.limit);
+  const minLimit = Math.min(...limits);
+  const displayLimit = (minLimit === 999) ? '--' : minLimit;
+  const uniqueNames = [...new Set(activeMatches.map(m => m.tipe))];
+  
+  let zonaString = '';
+  if (uniqueNames.length === 1) {
+    zonaString = uniqueNames[0];
+  } else if (uniqueNames.length === 2) {
+    zonaString = `${uniqueNames[0]} dan ${uniqueNames[1]}`;
+  } else {
+    const lastZone = uniqueNames.pop();
+    zonaString = `${uniqueNames.join(', ')} dan ${lastZone}`;
+  }
+  const finalMessage = `Anda berada di Zona Geofencing ${zonaString} dengan batas kecepatan ${displayLimit} km/jam`;
+  content.innerHTML = finalMessage;
+  panel.style.display = 'block';
+}
+function startGeofenceWatch() {
+  if (!navigator.geolocation) return;
+  if (geoWatchId) navigator.geolocation.clearWatch(geoWatchId);
+
+  geoWatchId = navigator.geolocation.watchPosition(
+    (position) => {
+      const lng = position.coords.longitude;
+      const lat = position.coords.latitude;
+      checkUserGeofence([lng, lat]);
+    },
+    (err) => {
+      console.warn('Geofence Watch Error:', err);
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 5000,
+      timeout: 10000
+    }
+  );
+}
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(startGeofenceWatch, 3000);
+});
+const originalLocBtn = document.getElementById('my-location-btn');
+if (originalLocBtn) {
+    originalLocBtn.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                checkUserGeofence([pos.coords.longitude, pos.coords.latitude]);
+            });
+        }
+    });
 }
 </script>
 </body>
