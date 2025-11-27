@@ -1156,11 +1156,26 @@ if (window.Chart) {
       <div id="basemap-content" class="panel-content active">
         <h4>Pilih Basemap</h4>
         <div id="basemap-tabs" class="tab-control-group">
-          <button class="tab-btn active" data-value="osm">OpenStreetMap</button>
-          <button class="tab-btn" data-value="esri">ESRI World Topo</button>
-          <button class="tab-btn" data-value="google">Google Maps</button>
-          <button class="tab-btn" data-value="google_hybrid">Google Hybrid</button>
-          <button class="tab-btn" data-value="imagery">Imagery</button>
+          <div class="layer-row">
+            <button class="tab-btn active" data-value="osm">OpenStreetMap</button>
+            <button class="btn-info-layer" data-info="basemap_osm" title="Info OpenStreetMap">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="esri">ESRI World Topo</button>
+            <button class="btn-info-layer" data-info="basemap_esri" title="Info ESRI World Topo">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="google">Google Maps</button>
+            <button class="btn-info-layer" data-info="basemap_google" title="Info Google Maps">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="imagery">Google Imagery (Satellite)</button>
+            <button class="btn-info-layer" data-info="basemap_imagery" title="Info Imagery">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="google_hybrid">Google Hybrid</button>
+            <button class="btn-info-layer" data-info="basemap_hybrid" title="Info Google Hybrid">i</button>
+          </div>
         </div>
       </div>
       <div id="layer-content" class="panel-content">
@@ -1347,9 +1362,9 @@ const basemapTiles = {
   osm: { tiles:['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256 },
   esri:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'], tileSize:256 },
   google: { tiles:['https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'], tileSize: 256 },  
-  google_hybrid: { tiles:['https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'], tileSize: 256 },
-  imagery:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize:256 }
-};
+  imagery:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize:256 },
+  google_hybrid: { tiles:['https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'], tileSize: 256 }
+  };
 
 const ICON_SVGS = {
   'road-closed': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='#d32f2f'/><rect x='10' y='30' width='44' height='6' rx='3' fill='#fff'/></svg>`,
@@ -2714,7 +2729,7 @@ function applyVisibility(layerPrefix) {
         case 'prediksi_risiko': {
           map.addSource('prediksi_risiko', { type:'geojson', data:dataNorm });
           map.addLayer({ id:'prediksi_risiko-outline', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':3, 'line-color':'#000', 'line-opacity':0.5 }});
-          map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#ffeb3b', 2,'#f44336', '#cccccc' ] }});
+          map.addLayer({ id:'prediksi_risiko-line', type:'line', source:'prediksi_risiko', layout:{ 'line-join':'round', 'line-cap':'round' }, paint:{ 'line-width':2, 'line-opacity':0.95, 'line-color':[ 'match', ['get', 'risk_prediction'], 0,'#4caf50', 1,'#bfb100', 2,'#b8005c', '#cccccc' ] }});
           map.addLayer({
             id: 'prediksi_risiko-spotlight',
             type: 'line',
@@ -2722,7 +2737,7 @@ function applyVisibility(layerPrefix) {
             filter: ['==', 'risk_prediction', 2], 
             layout: { 'line-join': 'round', 'line-cap': 'round' },
             paint: {
-              'line-color': '#f44336',
+              'line-color': '#b8005c',
               'line-width': 5,
               'line-opacity': 0.8,
               'line-blur': 2
@@ -2945,8 +2960,8 @@ function renderLegend(){
   if (show('blackspot')) { html += `<div class="legend-title">Black Spot</div>${legendRow('blackspot','Black Spot')}`; }
   if (show('prediksi_risiko')) {
     const colors = [
-      '#ffeb3b',
-      '#f44336'
+      '#bfb100',
+      '#b8005c'
     ];
     const labels = [
       'Risiko Sedang',
@@ -3420,7 +3435,7 @@ function createRiskMarker(coordinates, properties) {
     
     const innerEl = document.createElement('div');
     innerEl.className = 'risk-exclamation-icon';
-    innerEl.style.backgroundImage = `url("assets/alert.png")`;
+    innerEl.style.backgroundImage = `url("http://localhost:8000/alert.png")`; 
     innerEl.style.width = '30px';
     innerEl.style.height = '30px';
     innerEl.style.backgroundSize = 'contain';
@@ -3432,21 +3447,32 @@ function createRiskMarker(coordinates, properties) {
       .setLngLat(coordinates)
       .addTo(map);
 
-    riskExclamationMarkers.push(marker);
+    if (typeof riskExclamationMarkers !== 'undefined') {
+        riskExclamationMarkers.push(marker);
+    }
     
-    el.addEventListener('click', () => {
-      popup
-        .setLngLat(coordinates)
-        .setHTML(`
-          <div class="popup-title">Titik Risiko Kecelakaan Tinggi</div>
-          <div class="popup-content">
-            <p><b>Satwil:</b> ${properties.satwil}</p>
-            <p><b>Jalan:</b> ${properties.nama_jalan}</p>
-            <p><b>Risiko:</b> Tinggi (2)</p>
-            <p><b>Keterangan:</b> Titik ini diidentifikasi memiliki risiko kecelakaan tinggi. Harap berhati-hati.</p>
-          </div>
-        `)
-        .addTo(map);
+    el.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        e.preventDefault();
+
+        console.log("Marker Risiko Diklik!");
+        if (typeof popup !== 'undefined') {
+            popup
+            .setLngLat(coordinates)
+            .setHTML(`
+              <div style="text-align: center; padding: 5px;">
+                  <div style="color: #d32f2f; font-weight: 800; font-size: 14px; margin-bottom: 6px; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 4px;">
+                    ⚠️ Peringatan
+                  </div>
+                  <div style="font-size: 13px; line-height: 1.4; color: #333; font-weight: 600;">
+                    Prediksi risiko kecelakaan di ruas jalan ini tinggi, harap berhati-hati jika melintas.
+                  </div>
+              </div>
+            `)
+            .addTo(map);
+        } else {
+            console.error("Variabel global 'popup' tidak ditemukan.");
+        }
     });
     
   } catch (e) {
@@ -4486,6 +4512,37 @@ if (originalLocBtn) {
     });
 }
 const LAYER_INFO_DATA = {
+    basemap_osm: {
+    title: "OpenStreetMap (OSM)",
+    desc: "Peta Detail Berbasis Komunitas.",
+    detail: `OpenStreetMap merupakan peta digital yang dibangun secara kolaboratif oleh komunitas di seluruh dunia. Keunggulan utamanya terletak pada tingkat detail yang sangat tinggi, terutama untuk area perkotaan. Peta ini tidak hanya menampilkan jalan raya utama, tetapi sering kali mencakup detail spesifik seperti jalan setapak, jejak bangunan (building footprints), hingga fasilitas umum yang kecil.`,
+    source: "OpenStreetMap Contributors"
+  },
+  basemap_esri: {
+    title: "ESRI World Topographic Map",
+    desc: "Peta Topografi & Kontur.",
+    detail: `Peta ini dirancang oleh Esri dengan estetika yang sangat rapi dan profesional. Fokus utamanya adalah menampilkan bentuk permukaan bumi—seperti kontur ketinggian tanah, tutupan lahan (hutan, taman, area terbangun), dan hidrografi (sungai/danau), namun dengan tampilan yang diredam (muted). Label jalan dan nama tempat tetap ada, tetapi tidak mendominasi tampilan peta.`,
+    source: "ESRI, HERE, Garmin, FAO, USGS"
+  },
+  basemap_google: {
+    title: "Google Maps",
+    desc: "Peta Navigasi & Lokasi Bisnis.",
+    detail: `Basemap dengan tampilan peta standar yang paling familiar bagi hampir semua orang. Desainnya dioptimalkan untuk navigasi dan orientasi cepat. Fitur yang paling menonjol adalah kejelasan jaringan jalan, label nama tempat yang mudah dibaca, serta penanda lokasi penting (Points of Interest) seperti gedung perkantoran, sekolah, dan tempat komersial.`,
+    source: "Google Maps"
+  },
+  basemap_imagery: {
+    title: "Google Imagery (Satellite)",
+    desc: "Citra Satelit Murni.",
+    detail: `Peta ini menyajikan potret nyata permukaan bumi yang diambil dari satelit. Tampilannya adalah representasi fotografi sesungguhnya dari kondisi lapangan, memperlihatkan atap bangunan, pepohonan, lahan kosong, hingga kepadatan lalu lintas.`,
+    source: "Google Earth / Satellite Providers"
+  },
+  basemap_hybrid: {
+    title: "Google Hybrid",
+    desc: "Citra Satelit dengan Label.",
+    detail: `Basemap ini menampilkan lapisan jalan transparan, nama tempat dan batas wilayah di atas citra satelit. User bisa melihat kondisi fisik lapangan yang nyata, namun tetap tahu nama jalan dan lokasi daerah tersebut.`,
+    source: "Google Maps"
+  },
+  
   troublespot: {
     title: "Troublespot",
     desc: "Titik gangguan lalu lintas yang dipantau dan dilaporkan secara langsung (real-time).",
