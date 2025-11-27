@@ -821,6 +821,119 @@ if (window.Chart) {
     from { transform: translate(-50%, -20px); opacity: 0; }
     to { transform: translate(-50%, 0); opacity: 1; }
   }
+
+    .layer-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    align-items: stretch;
+  }
+  
+  .layer-row .tab-btn {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .btn-info-layer {
+    flex: 0 0 32px;
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+
+  .btn-info-layer:hover {
+    background: #2196f3;
+    color: #fff;
+    border-color: #1e88e5;
+  }
+
+  #info-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 20000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+
+  #info-modal-box {
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modal-pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  #info-modal-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #ffc107;
+  }
+
+  #info-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  #info-modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  #info-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .info-section { margin-bottom: 15px; }
+  .info-label { font-weight: 700; color: #1a237e; display: block; margin-bottom: 4px; }
+  .info-content ul { margin: 5px 0 5px 20px; padding: 0; }
+  .info-content li { margin-bottom: 4px; }
+  .source-badge {
+    display: inline-block;
+    background: #f1f8e9;
+    color: #33691e;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #c5e1a5;
+    margin-top: 5px;
+  }
 </style>
 </head>
 <body>
@@ -1052,18 +1165,61 @@ if (window.Chart) {
       </div>
       <div id="layer-content" class="panel-content">
         <h4>Pilih Layer Spasial</h4>
-        <div id="layer-tabs" class="tab-control-group">
-            <button class="tab-btn active" data-layer="troublespot">Troublespot</button>
-            <button class="tab-btn active" data-layer="blackspot">Black Spot</button>
-            <button class="tab-btn active" data-layer="traffic">Kemacetan</button>
-            <button class="tab-btn active" data-layer="blacklink">Black Link</button>
-            <button class="tab-btn active" data-layer="blackarea">Black Area</button>
-            <button class="tab-btn active" data-layer="objek_vital">Objek Vital</button>
-            <button class="tab-btn active" data-layer="cctv">CCTV</button>
-            <button class="tab-btn" data-layer="prediksi_risiko">Prediksi Risiko Kecelakaan</button>
-            <button class="tab-btn" data-layer="speedlimit">Batas Kecepatan</button>
-            <button class="tab-btn" data-layer="geofencing">Geofencing</button>
-            <button class="tab-btn active" data-layer="administrasi">Wilayah Administrasi</button>
+          <div id="layer-tabs" class="tab-control-group">
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="troublespot">Troublespot</button>
+             <button class="btn-info-layer" data-info="troublespot" title="Info Troublespot">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="blackspot">Black Spot</button>
+             <button class="btn-info-layer" data-info="blackspot" title="Info Black Spot">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="traffic">Kemacetan</button>
+             <button class="btn-info-layer" data-info="traffic" title="Info Kemacetan">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="blacklink">Black Link</button>
+             <button class="btn-info-layer" data-info="blacklink" title="Info Black Link">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="blackarea">Black Area</button>
+             <button class="btn-info-layer" data-info="blackarea" title="Info Black Area">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="objek_vital">Objek Vital</button>
+             <button class="btn-info-layer" data-info="objek_vital" title="Info Objek Vital">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="cctv">CCTV</button>
+             <button class="btn-info-layer" data-info="cctv" title="Info CCTV">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn" data-layer="prediksi_risiko">Prediksi Risiko Kecelakaan</button>
+             <button class="btn-info-layer" data-info="prediksi_risiko" title="Info Prediksi Risiko">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn" data-layer="speedlimit">Batas Kecepatan</button>
+             <button class="btn-info-layer" data-info="speedlimit" title="Info Batas Kecepatan">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn" data-layer="geofencing">Geofencing</button>
+             <button class="btn-info-layer" data-info="geofencing" title="Info Geofencing">i</button>
+           </div>
+
+           <div class="layer-row">
+             <button class="tab-btn active" data-layer="administrasi">Wilayah Administrasi</button>
+             <button class="btn-info-layer" data-info="administrasi" title="Info Wilayah Administrasi">i</button>
+           </div>
         </div>
         <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 8px;">
           <button id="btn-toggle-all-layers" class="tab-btn" style="background: #e0e0e0; color: #333; font-weight: 700; text-align: center; width: 100%;">
@@ -4329,6 +4485,203 @@ if (originalLocBtn) {
         }
     });
 }
+const LAYER_INFO_DATA = {
+  troublespot: {
+    title: "Troublespot",
+    desc: "Titik gangguan lalu lintas yang dipantau dan dilaporkan secara langsung (real-time).",
+    detail: `Troublespot mencakup 4 jenis gangguan, yaitu:
+      <ul>
+        <li><b>Jalan Ditutup:</b> Area yang ditutup petugas dan tidak bisa dilewati kendaraan apapun.</li>
+        <li><b>Titik Kemacetan:</b> Lokasi macet yang sulit terurai.</li>
+        <li><b>Titik Kecelakaan:</b> Lokasi kecelakaan yang berpotensi menghambat arus lalu lintas.</li>
+        <li><b>Gangguan Jalan:</b> Hambatan fisik seperti kendaraan mogok, jalan rusak/licin, atau sedang ada perbaikan.</li>
+      </ul>`,
+    source: "Waze"
+  },
+  blackspot: {
+    title: "Black Spot",
+    desc: "Titik lokasi dengan konsentrasi kecelakaan yang tinggi dalam 2 tahun terakhir.",
+    detail: `Penentuan titik black spot dihitung menggunakan sistem bobot nilai berdasarkan tingkat keparahan korban di tiap kecelakaan, yaitu:
+      <ul>
+        <li><b>Meninggal Dunia:</b> bobot 10.</li>
+        <li><b>Luka Berat:</b> bobot 5.</li>
+        <li><b>Luka Ringan:</b> bobot 1.</li>
+      </ul>`,
+    source: "Analisis data kecelakaan IRSMS"
+  },
+  traffic: {
+    title: "Kemacetan",
+    desc: "Informasi kondisi kepadatan lalu lintas yang terjadi saat ini (real-time).",
+    detail: `Tingkat kemacetan dibagi menjadi 5 level, yaitu:
+      <ul>
+        <li><b>Level 1 (Light Traffic):</b> Lancar/ringan, yaitu lalu lintas normal dan kecepatan mendekati kecepatan bebas hambatan.</li>
+        <li><b>Level 2 (Moderate Traffic):</b> Sedang, yaitu kecepatan sedikit menurun, namun arus kendaraan masih mengalir lancar.</li>
+        <li><b>Level 3 (Heavy Traffic):</b> Padat, yaitu kecepatan turun drastis dan mulai terasa macet.</li>
+        <li><b>Level 4 (Very Heavy Traffic):</b> Sangat padat, yaitu kendaraan bergerak sangat lambat dan sering berhenti (stop & go).</li>
+        <li><b>Level 5 (Standstill):</b> Macet total, yaitu lalu lintas benar-benar berhenti.</li>
+      </ul>`,
+    source: "Waze"
+  },
+  blacklink: {
+    title: "Black Link",
+    desc: "Ruas jalan dengan konsentrasi kecelakaan yang tinggi dalam 2 tahun terakhir.",
+    detail: `Black link ditentukan dengan memetakan lokasi kecelakaan ke dalam dua kategori jalan:
+      <ul>
+        <li>Persimpangan jalan sepanjang 0 – 100 meter.</li>
+        <li>Jalan lurus/menikung sepanjang 0 – 500 meter.</li>
+      </ul>`,
+    source: "Analisis data kecelakaan IRSMS"
+  },
+  blackarea: {
+    title: "Black Area",
+    desc: "Cakupan kawasan black spot.",
+    detail: "Area ini mencakup radius 500 meter dari titik black spot.",
+    source: "Analisis data kecelakaan IRSMS"
+  },
+  objek_vital: {
+    title: "Objek Vital",
+    desc: "Lokasi strategis yang menjadi pusat aktivitas dan keramaian masyarakat.",
+    detail: `Objek Vital dikategorikan dalam 3 kelompok:
+      <ul>
+        <li><b>Transportasi & Perhubungan:</b> Bandara, Stasiun, Terminal dan Pelabuhan.</li>
+        <li><b>Layanan Publik:</b> Fasilitas Pendidikan, Fasilitas Kesehatan, Kantor Pemerintahan dan Kantor Polisi.</li>
+        <li><b>Rekreasi & Ekonomi:</b> Tempat Pariwisata.</li>
+      </ul>`,
+    source: "Geocode Location Google"
+  },
+  cctv: {
+    title: "CCTV",
+    desc: "Sebaran lokasi kamera pemantau kondisi lalu lintas.",
+    detail: `Status CCTV dibagi menjadi dua, yaitu:
+      <ul>
+        <li><b>Hidup:</b> CCTV aktif dan sedang memantau lalu lintas.</li>
+        <li><b>Mati:</b> CCTV sedang dalam gangguan dan tidak aktif.</li>
+      </ul>`,
+    source: "Smart City"
+  },
+  prediksi_risiko: {
+    title: "Prediksi Risiko Kecelakaan",
+    desc: "Sistem peringatan dini (early warning) yang memperkirakan potensi kecelakaan di masa depan. Analisis ini menggabungkan data historis kecelakaan dengan kondisi lingkungan saat ini (real-time) untuk membantu pencegahan kecelakaan.",
+    detail: `Model prediksi ini menggunakan metode <b>Random Forest</b> untuk mempelajari pola dari riwayat kecelakaan sebelumnya. Sistem akan menganalisis hubungan antara kondisi jalan, kepadatan lalu lintas, cuaca dan waktu kejadian untuk menemukan faktor penyebab utama kecelakaan. Hasil analisis tersebut digunakan untuk memprediksi risiko kecelakaan di masa depan dengan tingkat klasifikasi sebagai berikut:
+      <br><br><b>Klasifikasi Risiko:</b>
+      <ul>
+        <li>Skor < 1 : <b>Risiko Kecelakaan Rendah</b></li>
+        <li>Skor 1 – 2 : <b>Risiko Kecelakaan Sedang</b></li>
+        <li>Skor > 2 : <b>Risiko Kecelakaan Tinggi</b></li>
+      </ul>
+      <b>Dengan faktor penentu utama yaitu:</b>
+      <ul>
+        <li>Kepadatan Lalu Lintas (Bobot 58%) merupakan faktor paling dominan. Semakin macet dan rapat jarak antar kendaraan, risiko kecelakaan semakin besar.</li>
+        <li>Cuaca Buruk (Bobot 29%), yaitu kondisi seperti hujan atau kabut meningkatkan risiko terjadinya kecelakaan karena jarak pandang terganggu.</li>
+        <li>Waktu (Bobot 13%) meningkatkan risiko kecelakaan di jam sibuk (06.00–09.00 & 16.00–19.00) dan tengah malam (00.00–03.00) karena faktor kelelahan pengemudi.</li>`,
+    source: "Hasil analisis model prediksi risiko"
+  },
+  speedlimit: {
+    title: "Batas Kecepatan",
+    desc: "Informasi batas kecepatan maksimum yang diizinkan pada ruas jalan tertentu.",
+    detail: `Penentuan batas kecepatan ini mengacu pada regulasi pemerintah serta kondisi lingkungan jalan, yaitu:
+      <ul>
+        <li><b>Jalan Tol:</b> 100 km/jam.</li>
+        <li><b>Jalan Nasional (Luar Kota):</b> 80 km/jam.</li>
+        <li><b>Jalan Nasional (Dalam Kota):</b> 60 km/jam.</li>
+        <li><b>Jalan Provinsi:</b> 60 km/jam.</li>
+        <li><b>Jalan Kota/Kabupaten:</b> 40 km/jam.</li>
+      </ul>`,
+    source: "PM 111/2015 Kementerian Perhubungan"
+  },
+  geofencing: {
+    title: "Geofencing",
+    desc: "Zona virtual yang berfungsi sebagai pemicu otomatis untuk mengubah aturan batas kecepatan saat kendaraan memasuki kawasan tertentu.",
+    detail: `Radius zona dan batas kecepatan diatur berdasarkan jenis lokasi dan jam operasionalnya, yaitu:
+    <ul>
+      <li><b>Zona Kecepatan Maksimal 30 km/jam:</b></li>
+        <ul>
+          <li>Fasilitas Pendidikan:Radius 200 m (Pukul 06:30 – 14:30).</li>
+          <li>Tempat Pariwisata: Radius 100 m (Pukul 08:00 – 18:00).</li>
+          <li>Terminal, Stasiun dan Pelabuhan: Radius 300 m (24 Jam).</li>
+        </ul>  
+      <li><b>Zona Kecepatan Maksimal 40 km/jam:</b></li>
+        <ul>
+          <li>Fasilitas Kesehatan: Radius 150 m (24 Jam).</li>
+          <li>Kantor Pemerintahan: Radius 100 m (Pukul 07:00 – 17:00).</li>
+          <li>Kantor Polisi: Radius 100 m (24 Jam).</li>
+        </ul> 
+      <li><b>Zona Kecepatan Maksimal 60 km/jam:</b></li>
+        <ul>
+          <li>Bandara: Radius 500 m (24 Jam).</li>
+        </ul> `,
+    source: "Analisis spasial geofencing"
+  },
+  administrasi: {
+    title: "Wilayah Administrasi",
+    desc: "Peta batas wilayah resmi yang mengacu pada Keputusan Menteri Dalam Negeri No. 100.1.1-6117 Tahun 2022.",
+    detail: "Peta ini memuat batas wilayah mulai dari tingkat Provinsi, Kabupaten/Kota, hingga Kecamatan. Selain itu, peta ini juga dilengkapi informasi jumlah penduduk di setiap Kecamatan.",
+    source: "Dukcapil Kemendagri Tahun 2024"
+  }
+};
+
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.btn-info-layer');
+  
+  if (btn) {
+    e.preventDefault();
+    e.stopPropagation();
+    const key = btn.getAttribute('data-info');
+    openInfoModal(key);
+  }
+  if (e.target.id === 'info-modal-close' || e.target.closest('#info-modal-close')) {
+    closeInfoModal();
+  }
+  if (e.target.id === 'info-modal-overlay') {
+    closeInfoModal();
+  }
+});
+
+function openInfoModal(layerKey) {
+  const modalOverlay = document.getElementById('info-modal-overlay');
+  const modalTitle = document.getElementById('info-modal-title');
+  const modalBody = document.getElementById('info-modal-body');
+  
+  const info = LAYER_INFO_DATA[layerKey];
+
+  if (info && modalOverlay && modalTitle && modalBody) {
+    modalTitle.textContent = info.title;
+    modalBody.innerHTML = `
+      <div class="info-section">
+        <span class="info-label">Deskripsi Singkat:</span>
+        <div class="info-content">${info.desc}</div>
+      </div>
+      <div class="info-section">
+        <span class="info-label">Detail:</span>
+        <div class="info-content">${info.detail}</div>
+      </div>
+      <div class="info-section">
+        <span class="info-label">Sumber Data:</span>
+        <span class="source-badge">${info.source}</span>
+      </div>
+    `;
+    modalOverlay.style.display = 'flex';
+  } else {
+    console.warn('Data Info tidak ditemukan untuk:', layerKey);
+  }
+}
+
+function closeInfoModal() {
+  const modalOverlay = document.getElementById('info-modal-overlay');
+  if (modalOverlay) {
+    modalOverlay.style.display = 'none';
+  }
+}
 </script>
+<div id="info-modal-overlay">
+  <div id="info-modal-box">
+    <div id="info-modal-header">
+      <h3 id="info-modal-title">Judul Layer</h3>
+      <button id="info-modal-close">&times;</button>
+    </div>
+    <div id="info-modal-body">
+      </div>
+  </div>
+</div>
 </body>
 </html>
