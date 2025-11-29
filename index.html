@@ -1192,8 +1192,8 @@ if (window.Chart) {
            </div>
 
            <div class="layer-row">
-             <button class="tab-btn active" data-layer="traffic">Kemacetan</button>
-             <button class="btn-info-layer" data-info="traffic" title="Info Kemacetan">i</button>
+             <button class="tab-btn active" data-layer="traffic">Perlambatan</button>
+             <button class="btn-info-layer" data-info="traffic" title="Info Perlambatan">i</button>
            </div>
 
            <div class="layer-row">
@@ -1370,7 +1370,7 @@ const ICON_SVGS = {
   'road-closed': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='#d32f2f'/><rect x='10' y='30' width='44' height='6' rx='3' fill='#fff'/></svg>`,
   'road-disturbance': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='#ffc107'/><path fill='#000' d='M11 7h2v6h-2zm0 8h2v2h-2z'/></svg>`,
   'construction':`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><rect x='1' y='1' width='13' height='13' fill='#ffc107'/><g transform='translate(7.5 7.5) scale(0.7) translate(-7.5 -7.5)'><path fill='#212121' d="M13.5 11h-1.8L8.2.5C8-.2 7-.2 6.8.5L3.3 11H1.5c-.3 0-.5.2-.5.5v1c0 .3.2.5.5.5h12c.3 0 .5-.2.5-.5v-1c0-.3-.2-.5-.5-.5ZM7 3h1l.7 2H6.4L7 3ZM5.7 7h3.6l.7 2H5l.7-2Z"/></g></svg>`,
-  'kemacetan': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#d32f2f' d='M18.5,4H5.5C4.67,4,4,4.67,4,5.5v3C4,9.33,4.67,10,5.5,10h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,4.67,19.33,4,18.5,4z M18.5,11h-13C4.67,11,4,11.67,4,12.5v3c0,0.83,0.67,1.5,1.5,1.5h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,11.67,19.33,11,18.5,11z'/><rect x='5' y='6' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='6' width='2.8' height='2' fill='#fff'/><rect x='5' y='13' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='13' width='2.8' height='2' fill='#fff'/></svg>`,
+  'perlambatan': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#d32f2f' d='M18.5,4H5.5C4.67,4,4,4.67,4,5.5v3C4,9.33,4.67,10,5.5,10h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,4.67,19.33,4,18.5,4z M18.5,11h-13C4.67,11,4,11.67,4,12.5v3c0,0.83,0.67,1.5,1.5,1.5h13c0.83,0,1.5-0.67,1.5-1.5v-3C20,11.67,19.33,11,18.5,11z'/><rect x='5' y='6' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='6' width='2.8' height='2' fill='#fff'/><rect x='5' y='13' width='2.8' height='2' fill='#fff'/><rect x='16.2' y='13' width='2.8' height='2' fill='#fff'/></svg>`,
   'kecelakaan': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='#212121' d='M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11C5.84 5 5.28 5.42 5.08 6.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 12c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9s1.5.67 1.5 1.5S7.33 12 6.5 12zm11 0c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/><path fill='red' d='M5 4L3 8l2 1l2-4zm14 0l-2 4l2 1l2-4z'/></svg>`,
   'crash': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'><circle cx='7.5' cy='7.5' r='6.5' fill='red'/><g transform='translate(7.5 7.5) scale(0.5) translate(-7.5 -7.5)'><path fill='#fff' d='M12.6,8.7,11.5,6.5a1.05,1.05,0,0,0-.9-.5H4.4a1.05,1.05,0,0,0-.9.5L2.4,8.7,1.16,9.852a.5.5,0,0,0-.16.366V14.5a.5.5,0,0,0,.5.5h2c.2,0,.5-.2.5-.4V14h7v.5c0,.2.2.5.4.5h2.1a.5.5,0,0,0,.5-.5V10.218a.5.5,0,0,0-.16-.366ZM4.5,7h6l1,2h-8ZM5,11.6c0,.2-.3.4-.5.4H2.4c-.2,0-.4-.3-.4-.5V10.4c.1-.3.3-.5.6-.4l2,.4c.2,0,.4.3.4.5Zm8-.1c0,.2-.2.5-.4.5H10.5c-.2,0-.5-.2-.5-.4v-.7c0-.2.2-.5.4-.5l2-.4c.3-.1.5.1.6.4ZM8,4H7L6,0H9ZM1.1,1.8,3.7.3l1.1,4L4,4.7ZM11.3.3l2.6,1.5L11,4.8l-.9-.5Z'/></g></svg>`,
   'blackspot': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><polygon points='32,6 58,54 6,54' fill='#212121' stroke='#e53935' stroke-width='5' stroke-linejoin='round'/><path fill='#fff' d='M30,22 h4 v14 h-4 z M30,40 h4 v4 h-4 z'/></svg>`,
@@ -1393,7 +1393,7 @@ const ALIAS_MAP = {
   Nm_Ruas:'Nama Ruas Jalan', nm_ruas:'Nama Ruas Jalan', Status:'Status Jalan', Propinsi:'Provinsi',
   Kab_Kot:'Kabupaten / Kota', SkorBS:'Skor Black Spot', Ket:'Keterangan',
   Coverage:'Keterangan Blindspot', tanggal:'Tanggal', Wilayah:'Wilayah',
-  level:'Level Kemacetan', speedKMH:'Kecepatan', Nama:'Nama',
+  level:'Level Perlambatan', speedKMH:'Kecepatan', Nama:'Nama',
   Keterangan:'Keterangan', nama_cctv:'Nama CCTV', status:'Status',
   sumber:'Sumber', nama_jalan:'Nama Jalan', risk_prediction:'Risiko Kecelakaan',
   nama_prop:'Nama Provinsi', nama_kab:'Nama Kabupaten / Kota', nama_kec:'Nama Kecamatan',
@@ -2241,7 +2241,7 @@ function initMap(polygon){
       const titleMap = {
         troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
         objek_vital:'Objek Vital', prediksi_risiko:'Prediksi Risiko Kecelakaan',
-        administrasi:'Wilayah Administrasi', traffic:'Kemacetan',
+        administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
         blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
         geofencing: 'Geofencing Area'
       };
@@ -2631,7 +2631,7 @@ function applyVisibility(layerPrefix) {
           map.addSource('troublespot', { type:'geojson', data:dataNorm });
           map.addLayer({
             id:'troublespot-symbol', type:'symbol', source:'troublespot',
-            layout:{ 'icon-image':['match',['get','keterangan'],'Jalan Ditutup','road-closed','Gangguan Jalan','construction','Titik Kemacetan','kecelakaan','Kecelakaan','crash','construction'], 'icon-size':0.15, 'icon-allow-overlap':true }
+            layout:{ 'icon-image':['match',['get','keterangan'],'Jalan Ditutup','road-closed','Gangguan Jalan','construction','Titik Perlambatan','kecelakaan','Kecelakaan','crash','construction'], 'icon-size':0.15, 'icon-allow-overlap':true }
           });
           setLayerInteractivity('troublespot-symbol');
           break;
@@ -2956,7 +2956,7 @@ function renderLegend(){
   const show = (id)=>document.querySelector(`.tab-btn[data-layer="${id}"]`)?.classList.contains('active');
   let html = '<h4>Legenda</h4>';
 
-  if (show('troublespot')) { html += `<div class="legend-title">Troublespot</div>${legendRow('road-closed','Jalan Ditutup')}${legendRow('construction','Gangguan Jalan')}${legendRow('kecelakaan','Titik Kemacetan')}${legendRow('crash','Kecelakaan')}`; }
+  if (show('troublespot')) { html += `<div class="legend-title">Troublespot</div>${legendRow('road-closed','Jalan Ditutup')}${legendRow('construction','Gangguan Jalan')}${legendRow('kecelakaan','Titik Perlambatan')}${legendRow('crash','Kecelakaan')}`; }
   if (show('blackspot')) { html += `<div class="legend-title">Black Spot</div>${legendRow('blackspot','Black Spot')}`; }
   if (show('prediksi_risiko')) {
     const colors = [
@@ -2996,7 +2996,7 @@ function renderLegend(){
       'Sangat Padat',
       'Stop Total'
       ];
-    html += `<div class="legend-title">Kemacetan</div>
+    html += `<div class="legend-title">Perlambatan</div>
      <div style="width: 100%; margin-bottom: 4px;">
             <div style="display: flex; width: 100%; height: 16px; border-radius: 4px; overflow: hidden; border: 1px solid #000;">`;
     for (let i = 0; i < colors.length; i++) {
@@ -3273,7 +3273,7 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
     const titleMap = {
       troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
       objek_vital:'Objek Vital', prediksi_risiko:'Prediksi Risiko Kecelakaan',
-      administrasi:'Wilayah Administrasi', traffic:'Kemacetan',
+      administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
       blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
       geofencing: 'Geofencing Area'
     };
@@ -3317,8 +3317,8 @@ function checkRouteForHazards(routeFeature) {
                 hazardReasons.add("Jalan Ditutup");
             } else if (keter === 'kecelakaan') {
                 hazardReasons.add("Kecelakaan");
-            } else if (keter === 'titik kemacetan') {
-                hazardReasons.add("Titik Kemacetan");
+            } else if (keter === 'titik perlambatan') {
+                hazardReasons.add("Titik Perlambatan");
             }
         }
     }
@@ -3329,7 +3329,7 @@ function checkRouteForHazards(routeFeature) {
 
         if (level === 5) {
             if (turf.booleanIntersects(routeFeature, line)) {
-                hazardReasons.add("Kemacetan Parah");
+                hazardReasons.add("Perlambatan Parah");
             }
         }
     }
@@ -3923,7 +3923,7 @@ function initSearchAndRouting() {
             const keter = (f.properties?.keterangan || '').toLowerCase().trim();
             let causeText = null;
             if (keter === 'jalan ditutup') causeText = 'jalan ditutup';
-            else if (keter === 'titik kemacetan') causeText = 'titik kemacetan';
+            else if (keter === 'titik perlambatan') causeText = 'titik perlambatan';
             else if (keter === 'kecelakaan') causeText = 'Kecelakaan';
 
             if (causeText) {
@@ -3937,7 +3937,7 @@ function initSearchAndRouting() {
             if (Number(f.properties?.level) === 5) {
                 if (turf.booleanIntersects(f, areaOfInterest)) {
                     featuresToAvoid.push(f);
-                    causes.add('kemacetan parah');
+                    causes.add('perlambatan parah');
                 }
             }
         });
@@ -3964,7 +3964,7 @@ function initSearchAndRouting() {
     }
 
     function estimateDelaySeconds(routeGeoJSON, mode) {
-        if (mode === 'foot') return { seconds: 0, note: 'Pejalan kaki tidak terpengaruh kemacetan.' };
+        if (mode === 'foot') return { seconds: 0, note: 'Pejalan kaki tidak terpengaruh perlambatan.' };
         const trFC = filteredLayerData?.traffic || { features: [] };
         let total = 0;
         for (const seg of (trFC.features || [])) {
@@ -3974,7 +3974,7 @@ function initSearchAndRouting() {
                 }
             } catch {}
         }
-        return { seconds: total, note: 'Estimasi berdasarkan tingkat kemacetan di jalan.' };
+        return { seconds: total, note: 'Estimasi berdasarkan tingkat perlambatan di jalan.' };
     }
     
     function hasSevereTrafficOnRoute(routeGeoJSON) {
@@ -4125,7 +4125,7 @@ function initSearchAndRouting() {
         if (uiMode === 'foot') {
           finalMessage = `<b>${delayText}</b><br><small>${delayInfo.note || 'Pejalan kaki tidak terkena delay.'}</small>`;
         } else {
-          finalMessage = `<b>${delayText}</b><br><small>Estimasi berdasarkan tingkat kemacetan di jalan.</small>`;
+          finalMessage = `<b>${delayText}</b><br><small>Estimasi berdasarkan tingkat perlambatan di jalan.</small>`;
         }
                 
         let html = `<b>Jarak:</b> ${distKm} km<br><b>Waktu Tempuh:</b> ${durationText}<br>`;
@@ -4173,7 +4173,7 @@ function initSearchAndRouting() {
       const v = (k || '').toLowerCase().trim();
       if (v === 'jalan ditutup') return 'Jalan Ditutup';
       if (v === 'kecelakaan')    return 'Kecelakaan';
-      if (v === 'titik kemacetan') return 'Titik Kemacetan';
+      if (v === 'titik perlambatan') return 'Titik Perlambatan';
       return 'Gangguan Jalan';
     }
 
@@ -4549,7 +4549,7 @@ const LAYER_INFO_DATA = {
     detail: `Troublespot mencakup 4 jenis gangguan, yaitu:
       <ul>
         <li><b>Jalan Ditutup:</b> Area yang ditutup petugas dan tidak bisa dilewati kendaraan apapun.</li>
-        <li><b>Titik Kemacetan:</b> Lokasi macet yang sulit terurai.</li>
+        <li><b>Titik Perlambatan:</b> Lokasi macet yang sulit terurai.</li>
         <li><b>Titik Kecelakaan:</b> Lokasi kecelakaan yang berpotensi menghambat arus lalu lintas.</li>
         <li><b>Gangguan Jalan:</b> Hambatan fisik seperti kendaraan mogok, jalan rusak/licin, atau sedang ada perbaikan.</li>
       </ul>`,
@@ -4567,9 +4567,9 @@ const LAYER_INFO_DATA = {
     source: "Analisis data kecelakaan IRSMS"
   },
   traffic: {
-    title: "Kemacetan",
+    title: "Perlambatan",
     desc: "Informasi kondisi kepadatan lalu lintas yang terjadi saat ini (real-time).",
-    detail: `Tingkat kemacetan dibagi menjadi 5 level, yaitu:
+    detail: `Tingkat perlambatan dibagi menjadi 5 level, yaitu:
       <ul>
         <li><b>Level 1 (Light Traffic):</b> Lancar/ringan, yaitu lalu lintas normal dan kecepatan mendekati kecepatan bebas hambatan.</li>
         <li><b>Level 2 (Moderate Traffic):</b> Sedang, yaitu kecepatan sedikit menurun, namun arus kendaraan masih mengalir lancar.</li>
