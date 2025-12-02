@@ -1389,7 +1389,7 @@ const ICON_SVGS = {
 };
 
 const ALIAS_MAP = {
-  city:'Kabupaten / Kota', street:'Jalan', keterangan:'Keterangan',
+  city:'Kabupaten / Kota', street:'Jalan', 
   Nm_Ruas:'Nama Ruas Jalan', nm_ruas:'Nama Ruas Jalan', Status:'Status Jalan', Propinsi:'Provinsi',
   Kab_Kot:'Kabupaten / Kota', SkorBS:'Skor Black Spot', Ket:'Keterangan',
   Coverage:'Keterangan Blindspot', tanggal:'Tanggal', Wilayah:'Wilayah',
@@ -1399,7 +1399,7 @@ const ALIAS_MAP = {
   nama_prop:'Nama Provinsi', nama_kab:'Nama Kabupaten / Kota', nama_kec:'Nama Kecamatan',
   jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)', speed_limit: 'Batas Kecepatan (km/jam)',
   tipe_zona: 'Tipe Zona Geofencing', nama_zona: 'Zona Geofencing', keterangan_status: 'Keterangan Zona Geofencing', geofence_limit: 'Batas Kecepatan (km/jam)',
-  jam_mulai: 'Waktu Mulai Berlaku Batas Kecepatan', jam_selesai: 'Waktu Selesai Berlaku Batas Kecepatan'
+  jam_mulai: 'Waktu Mulai Berlaku Batas Kecepatan', jam_selesai: 'Waktu Selesai Berlaku Batas Kecepatan', keterangan:'Keterangan'
 };
 
 let map;
@@ -4618,19 +4618,14 @@ const LAYER_INFO_DATA = {
   },
   prediksi_risiko: {
     title: "Prediksi Risiko Kecelakaan",
-    desc: "Sistem peringatan dini (early warning) yang memperkirakan potensi kecelakaan di masa depan. Analisis ini menggabungkan data historis kecelakaan dengan kondisi lingkungan saat ini (real-time) untuk membantu pencegahan kecelakaan.",
-    detail: `Model prediksi ini menggunakan metode <b>Random Forest</b> untuk mempelajari pola dari riwayat kecelakaan sebelumnya. Sistem akan menganalisis hubungan antara kondisi jalan, kepadatan lalu lintas, cuaca dan waktu kejadian untuk menemukan faktor penyebab utama kecelakaan. Hasil analisis tersebut digunakan untuk memprediksi risiko kecelakaan di masa depan dengan tingkat klasifikasi sebagai berikut:
+    desc: "Sistem peringatan dini (early warning) yang memperkirakan potensi kecelakaan di setiap segmen jalan. Analisis ini menggabungkan data historis kecelakaan dengan kondisi lingkungan saat ini (real-time) untuk membantu pencegahan kecelakaan.",
+    detail: `Model prediksi ini menggunakan metode <b>Random Forest</b> dengan memanfaatkan data historis kecelakaan dan kondisi lingkungan jalan. Sistem akan menganalisis hubungan antara kondisi lalu lintas, kepadatan penduduk di sekitar jalan, keberadaan fasilitas penting, cuaca dan waktu kejadian serta riwayat kecelakaan yang pernah terjadi di sekitar lokasi tersebut untuk menemukan faktor penyebab utama kecelakaan. Hasil analisis tersebut digunakan untuk memprediksi risiko kecelakaan dengan tingkat klasifikasi sebagai berikut:
       <br><br><b>Klasifikasi Risiko:</b>
       <ul>
-        <li>Skor < 1 : <b>Risiko Kecelakaan Rendah</b></li>
-        <li>Skor 1 – 2 : <b>Risiko Kecelakaan Sedang</b></li>
-        <li>Skor > 2 : <b>Risiko Kecelakaan Tinggi</b></li>
-      </ul>
-      <b>Dengan faktor penentu utama yaitu:</b>
-      <ul>
-        <li>Kepadatan Lalu Lintas (Bobot 58%) merupakan faktor paling dominan. Semakin terjadi perlambatan dan kerapatan jarak antar kendaraan, risiko kecelakaan semakin besar.</li>
-        <li>Cuaca Buruk (Bobot 29%), yaitu kondisi seperti hujan atau kabut meningkatkan risiko terjadinya kecelakaan karena jarak pandang terganggu.</li>
-        <li>Waktu (Bobot 13%) meningkatkan risiko kecelakaan di jam sibuk (06.00–09.00 & 16.00–19.00) dan tengah malam (00.00–03.00) karena faktor kelelahan pengemudi.</li>`,
+        <li>Skor < 1 : <b>Risiko Kecelakaan Rendah,</b> yaitu ruas jalan berada dalam kondisi relatif aman dan tidak menunjukkan tanda-tanda potensi kecelakaan yang berarti.</li>
+        <li>Skor 1 – 2 : <b>Risiko Kecelakaan Sedang,</b> yaitu ruas jalan memiliki beberapa faktor yang perlu diwaspadai, seperti cuaca kurang baik, kepadatan kendaraan meningkat, atau ada riwayat kecelakaan ringan sebelumnya.</li>
+        <li>Skor > 2 : <b>Risiko Kecelakaan Tinggi,</b> yaitu ruas jalan menunjukkan banyak faktor yang meningkatkan potensi kecelakaan, misalnya lalu lintas sangat padat, cuaca ekstrem, riwayat kecelakaan berat, ataupun adanya lingkungan sekitar yang berisiko. Segmen dengan kategori ini membutuhkan perhatian khusus dan langkah mitigasi yang lebih cepat.</li>
+      </ul>`,
     source: "Hasil analisis model prediksi risiko"
   },
   speedlimit: {
