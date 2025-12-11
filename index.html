@@ -1220,6 +1220,11 @@ if (window.Chart) {
            </div>
 
           <div class="layer-row">
+            <button class="tab-btn active" data-layer="gerbang_tol">Gerbang Tol</button>
+            <button class="btn-info-layer" data-info="gerbang_tol" title="Info Gerbang Tol">i</button>
+          </div>
+
+          <div class="layer-row">
             <button class="tab-btn" data-layer="data_kecelakaan">Data Kecelakaan</button>
             <button class="btn-info-layer" data-info="data_kecelakaan" title="Info Data Kecelakaan">i</button>
           </div>
@@ -1299,7 +1304,8 @@ const URLS = {
   speedlimit:      'speedlimit',
   geofencing:      'geofencing',
   administrasi:    'kependudukan',
-  data_kecelakaan: 'data_kecelakaan'
+  data_kecelakaan: 'data_kecelakaan',
+  gerbang_tol:     'gerbang_tol'
 };
 
 const SATWIL_FIELD = {
@@ -1315,6 +1321,7 @@ const SATWIL_FIELD = {
   geofencing: 'Satwil',
   administrasi: 'Satwil',
   data_kecelakaan: 'Satwil',
+  gerbang_tol: 'Satwil',
 };
 
 let selectedSatwilName = null;
@@ -1397,6 +1404,8 @@ const ICON_SVGS = {
   'acc-ringan': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FFEB3B" stroke="#FBC02D" stroke-width="2" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`,
   'acc-sedang': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FF9800" stroke="#E65100" stroke-width="2" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`,
   'acc-berat':  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#D32F2F" stroke="#B71C1C" stroke-width="2" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`,
+  'gt-operasi': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#2E7D32" stroke="#fff" stroke-width="1.5" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4h2v4zm4 0h-2v-4h2v4zm-8 0H6v-4h2v4zm8-6H8V9h8v2z"/></svg>`,
+  'gt-konstruksi': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#FF6F00" stroke="#fff" stroke-width="1.5" d="M22 10V6a2 2 0 0 0-2-2H4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2zm-9-1h-2v2h2v-2zm4 0h-2v2h2v-2zM7 9H5v2h2V9zm15 3h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2H8v2H6v-2H4v2H2v7h20v-7h-2z"/></svg>`,
   'default': `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='#9e9e9e' stroke='#fff' stroke-width='1.5'/></svg>`
 };
 
@@ -1406,7 +1415,7 @@ const ALIAS_MAP = {
   Kab_Kot:'Kabupaten / Kota', SkorBS:'Skor Black Spot', Ket:'Keterangan',
   Coverage:'Keterangan Blindspot', tanggal:'Tanggal', Wilayah:'Wilayah',
   level:'Level Perlambatan', speedKMH:'Kecepatan', Nama:'Nama',
-  Keterangan:'Keterangan', nama_cctv:'Nama CCTV', status:'Status',
+  Keterangan:'Keterangan', nama_cctv:'Nama CCTV', status:'Status', ruas: 'Nama Ruas Jalan', kode_gt: "Kode Gerbang Tol", 
   sumber:'Sumber', nama_jalan:'Nama Jalan', risk_prediction:'Risiko Kecelakaan',
   nama_prop:'Nama Provinsi', nama_kab:'Nama Kabupaten / Kota', nama_kec:'Nama Kecamatan',
   jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)', speed_limit: 'Batas Kecepatan (km/jam)',
@@ -2257,7 +2266,7 @@ function initMap(polygon){
       }
       const titleMap = {
         troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
-        objek_vital:'Objek Vital', data_kecelakaan:'Data Kecelakaan', prediksi_risiko:'Prediksi Risiko Kecelakaan',
+        objek_vital:'Objek Vital', gerbang_tol:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', prediksi_risiko:'Prediksi Risiko Kecelakaan',
         administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
         blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
         geofencing: 'Geofencing Area'
@@ -2586,8 +2595,18 @@ const ACC_META = {
   sedang: { icon: 'acc-sedang', color: '#FF9800', textColor: '#000', label: 'Kecelakaan Sedang' },
   ringan: { icon: 'acc-ringan', color: '#FFEB3B', textColor: '#000', label: 'Kecelakaan Ringan' }
 };
+function normalizeGTStatus(props) {
+  const st = (props?.status || props?.Status || '').toString().trim().toLowerCase();
+  if (st.includes('operasi') || st === 'beroperasi') return 'operasi';
+  if (st.includes('konstruksi') || st === 'pembangunan') return 'konstruksi';
+  return 'operasi';
+}
+const GT_META = {
+  operasi:    { icon: 'gt-operasi',    color: '#2E7D32', textColor: '#fff', label: 'Gerbang Tol Operasi' },
+  konstruksi: { icon: 'gt-konstruksi', color: '#FF6F00', textColor: '#fff', label: 'Gerbang Tol Konstruksi' }
+};
 async function loadAllDataLayersBySatwil(satwilName, polygon) {
-  const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','prediksi_risiko','speedlimit','geofencing','administrasi'];
+  const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','gerbang_tol','data_kecelakaan','prediksi_risiko','speedlimit','geofencing','administrasi'];
   for (const p of prefixes) {
     (map.getStyle().layers || [])
       .map(l => l.id)
@@ -2599,7 +2618,7 @@ async function loadAllDataLayersBySatwil(satwilName, polygon) {
   }
 
   filteredLayerData = {};
-  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','data_kecelakaan','cctv','objek_vital','blackspot','troublespot'];
+  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','data_kecelakaan','gerbang_tol','cctv','objek_vital','blackspot','troublespot'];
 
 function applyVisibility(layerPrefix) {
   const isActive = document
@@ -2611,6 +2630,7 @@ function applyVisibility(layerPrefix) {
     id.startsWith(layerPrefix) ||
     (layerPrefix === 'cctv' && (id.startsWith('cctv-on') || id.startsWith('cctv-off'))) ||
     (layerPrefix === 'objek_vital' && id.startsWith('objek_vital-')) ||
+    (layerPrefix === 'gerbang_tol' && id.startsWith('gerbang_tol-')) ||
     (layerPrefix === 'data_kecelakaan' && id.startsWith('data_kecelakaan-'))
   );
 
@@ -2750,6 +2770,33 @@ function applyVisibility(layerPrefix) {
               id:`${d.key}-unclustered`, type:'symbol', source:d.key, filter:['!', ['has','point_count']],
               layout:{ 'icon-image':d.icon,'icon-size':0.15,'icon-allow-overlap':true }
             });
+            setLayerInteractivity(`${d.key}-cluster`);
+            setLayerInteractivity(`${d.key}-unclustered`);
+          }
+          break;
+        }
+        case 'gerbang_tol': {
+              const buckets = { operasi: [], konstruksi: [] };
+              for (const f of dataNorm.features) {
+                  const key = normalizeGTStatus(f.properties);
+                  if (buckets[key]) buckets[key].push(f);
+              }
+              const defs = Object.entries(buckets).map(([k, arr]) => ({
+                  key: `gerbang_tol-${k}`,
+                  fc: { type: 'FeatureCollection', features: arr },
+                  ...GT_META[k]
+              }));
+
+            for (const d of defs) {
+              if (!d.fc.features.length) continue;
+
+            map.addSource(d.key,{ type:'geojson', data:d.fc, cluster:true, clusterRadius:50, clusterMaxZoom:15 });
+            map.addLayer({
+              id:`${d.key}-cluster`, type:'symbol', source:d.key, filter:['has','point_count'],
+              layout:{ 'icon-image':d.icon,'icon-size':['interpolate',['linear'],['get','point_count'],2,0.2,50,0.3], 'icon-allow-overlap':true, 'text-field':['get','point_count'], 'text-font':['Noto Sans Bold'], 'text-size':12, 'text-allow-overlap':true },
+              paint:{ 'text-color':'#fff','text-halo-color':'#000','text-halo-width':1.2 }
+            });
+            map.addLayer({ id:`${d.key}-unclustered`, type:'symbol', source:d.key, filter:['!', ['has','point_count']], layout:{ 'icon-image':d.icon,'icon-size':0.15,'icon-allow-overlap':true } });
             setLayerInteractivity(`${d.key}-cluster`);
             setLayerInteractivity(`${d.key}-unclustered`);
           }
@@ -3120,6 +3167,12 @@ return `<div class="legend-item">
             <div class="legend-label">${label}</div>
           </div>`;
 }
+  if (show('gerbang_tol')) {
+    html += `<div class="legend-title">Gerbang Tol</div>`;
+    Object.values(GT_META).forEach(meta => {
+        html += legendRow(meta.icon, meta.label);
+    });
+  }
   if (show('data_kecelakaan')) {
       html += `<div class="legend-title">Data Kecelakaan</div>`;
       Object.values(ACC_META).forEach(meta => {
@@ -3337,7 +3390,7 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
     if (popup && popup.isOpen()) popup.remove();
     const titleMap = {
       troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
-      objek_vital:'Objek Vital', data_kecelakaan:'Data Kecelakaan', prediksi_risiko:'Prediksi Risiko Kecelakaan',
+      objek_vital:'Objek Vital', gerbang:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', prediksi_risiko:'Prediksi Risiko Kecelakaan',
       administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
       blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
       geofencing: 'Geofencing Area'
@@ -4680,6 +4733,16 @@ const LAYER_INFO_DATA = {
         <li><b>Mati:</b> CCTV sedang dalam gangguan dan tidak aktif.</li>
       </ul>`,
     source: "Smart City"
+  },
+    gerbang_tol: {
+    title: "Gerbang Tol",
+    desc: "Lokasi titik sebaran gerbang tol.",
+    detail: `Data gerbang tol diklasifikasikan berdasarkan status operasional:
+      <ul>
+        <li><b>Operasi (Hijau):</b> Gerbang tol yang sudah aktif beroperasi.</li>
+        <li><b>Konstruksi (Orange):</b> Gerbang tol yang masih dalam tahap pembangunan.</li>
+      </ul>`,
+    source: "Kementerian Pekerjaan Umum"
   },
   data_kecelakaan: {
     title: "Data Sebaran Kecelakaan",
