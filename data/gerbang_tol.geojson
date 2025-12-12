@@ -3,6 +3,7 @@
 "name": "gerbang_tol",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
+{ "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt", "nama": "GT PARBARAKAN", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 99.160754462000057, 3.386364284000024 ] } },
 { "type": "Feature", "properties": { "ruas": "Probolinggo - Banyuwangi", "kode_gt": " ", "nama": "GT KRAKSAAN", "status": "Konstruksi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 113.401203663000047, -7.77810580299996 ] } },
 { "type": "Feature", "properties": { "ruas": "Probolinggo - Banyuwangi", "kode_gt": " ", "nama": "GT PAITON", "status": "Konstruksi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 113.50267293200011, -7.732099539999979 ] } },
 { "type": "Feature", "properties": { "ruas": "Probolinggo - Banyuwangi", "kode_gt": " ", "nama": "GT BESUKI", "status": "Konstruksi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 113.72003789200005, -7.736873828999933 ] } },
@@ -612,7 +613,6 @@
 { "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt_perbaungan", "nama": "GT PERBAUNGAN", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 99.009824102000039, 3.548790387000054 ] } },
 { "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt_teluk_mengkudu", "nama": "GT TELUK MENGKUDU", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 99.095312722000074, 3.516177764000076 ] } },
 { "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt_sei_rampah", "nama": "GT SEI RAMPAH", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 99.140040789000068, 3.457403710000051 ] } },
-{ "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt", "nama": "GT PARBARAKAN", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 99.160754462000057, 3.386364284000024 ] } },
 { "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt_kemiri", "nama": "GT KEMIRI", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 98.853297022000049, 3.557826461000047 ] } },
 { "type": "Feature", "properties": { "ruas": "Medan - Kualanamu - Tebing Tinggi", "kode_gt": "mktt_kualanamu", "nama": "GT KUALANAMU", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 98.844831857000031, 3.588763792000066 ] } },
 { "type": "Feature", "properties": { "ruas": "Jakarta - Cikampek", "kode_gt": "japek", "nama": "GT HALIM 2", "status": "Operasi", "Satwil": null }, "geometry": { "type": "Point", "coordinates": [ 106.887378384000044, -6.246384143999933 ] } },
