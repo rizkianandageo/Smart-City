@@ -1195,6 +1195,11 @@ if (window.Chart) {
            </div>
 
            <div class="layer-row">
+             <button class="tab-btn" data-layer="traffic_point">Titik Perlambatan</button>
+             <button class="btn-info-layer" data-info="traffic_point" title="Info Titik Perlambatan">i</button>
+           </div>
+           
+           <div class="layer-row">
              <button class="tab-btn active" data-layer="traffic">Perlambatan</button>
              <button class="btn-info-layer" data-info="traffic" title="Info Perlambatan">i</button>
            </div>
@@ -1311,7 +1316,8 @@ const URLS = {
   administrasi:    'kependudukan',
   data_kecelakaan: 'data_kecelakaan',
   gerbang_tol:     'gerbang_tol',
-  rescue:          'rescue'
+  rescue:          'rescue',
+  traffic_point:   'traffic_point'
 };
 
 const SATWIL_FIELD = {
@@ -1329,6 +1335,7 @@ const SATWIL_FIELD = {
   data_kecelakaan: 'Satwil',
   gerbang_tol: 'Satwil',
   rescue: 'Satwil',
+  traffic_point: 'Satwil',
 };
 
 let selectedSatwilName = null;
@@ -2275,7 +2282,7 @@ function initMap(polygon){
         return;
       }
       const titleMap = {
-        troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
+        troublespot:'Troublespot', blackspot:'Black Spot', traffic_point:'Titik Perlambatan', cctv:'CCTV',
         objek_vital:'Objek Vital', gerbang_tol:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', 
         rescue: 'Kendaraan Rescue',
         prediksi_risiko:'Prediksi Risiko Kecelakaan',
@@ -2519,7 +2526,7 @@ function filterData(layerKey, geojsonData, filterPolygon) {
     return { type: 'FeatureCollection', features: [] };
   }
 
-  const pointLayers = ['cctv', 'objek_vital', 'troublespot', 'blackspot'];
+  const pointLayers = ['data_kecelakaan', 'cctv', 'objek_vital', 'traffic_point', 'troublespot', 'blackspot'];
 
   if (pointLayers.includes(layerKey)) {
     const points = toPointFeatureArray(geojsonData);
@@ -2618,7 +2625,7 @@ const GT_META = {
   konstruksi: { icon: 'gt-konstruksi', color: '#FF6F00', textColor: '#fff', label: 'Gerbang Tol Konstruksi' }
 };
 async function loadAllDataLayersBySatwil(satwilName, polygon) {
-  const prefixes = ['troublespot','blackspot','traffic','blacklink','blackarea','cctv','objek_vital','gerbang_tol','rescue','data_kecelakaan','prediksi_risiko','speedlimit','geofencing','administrasi'];
+  const prefixes = ['troublespot','blackspot','traffic_point','traffic','blacklink','blackarea','cctv','objek_vital','gerbang_tol','rescue','data_kecelakaan','prediksi_risiko','speedlimit','geofencing','administrasi'];
   for (const p of prefixes) {
     (map.getStyle().layers || [])
       .map(l => l.id)
@@ -2630,7 +2637,7 @@ async function loadAllDataLayersBySatwil(satwilName, polygon) {
   }
 
   filteredLayerData = {};
-  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','data_kecelakaan','rescue','gerbang_tol','cctv','objek_vital','blackspot','troublespot'];
+  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','data_kecelakaan','rescue','gerbang_tol','cctv','objek_vital','traffic_point','blackspot','troublespot'];
 
 function applyVisibility(layerPrefix) {
   const isActive = document
@@ -2640,6 +2647,7 @@ function applyVisibility(layerPrefix) {
   const ids = (map.getStyle().layers || []).map(l => l.id);
   const matches = ids.filter(id =>
     id.startsWith(layerPrefix) ||
+    (layerPrefix === 'traffic_point' && id.startsWith('traffic_point-')) ||
     (layerPrefix === 'cctv' && (id.startsWith('cctv-on') || id.startsWith('cctv-off'))) ||
     (layerPrefix === 'objek_vital' && id.startsWith('objek_vital-')) ||
     (layerPrefix === 'gerbang_tol' && id.startsWith('gerbang_tol-')) ||
@@ -2693,7 +2701,7 @@ function applyVisibility(layerPrefix) {
           map.addSource('troublespot', { type:'geojson', data:dataNorm });
           map.addLayer({
             id:'troublespot-symbol', type:'symbol', source:'troublespot',
-            layout:{ 'icon-image':['match',['get','keterangan'],'Jalan Ditutup','road-closed','Gangguan Jalan','construction','Titik Perlambatan','kecelakaan','Kecelakaan','crash','construction'], 'icon-size':0.15, 'icon-allow-overlap':true }
+            layout:{ 'icon-image':['match',['get','keterangan'],'Jalan Ditutup','road-closed','Gangguan Jalan','construction','Kecelakaan','crash','construction'], 'icon-size':0.15, 'icon-allow-overlap':true }
           });
           setLayerInteractivity('troublespot-symbol');
           break;
@@ -2705,6 +2713,21 @@ function applyVisibility(layerPrefix) {
             layout:{ 'icon-image':'blackspot','icon-size':0.15,'icon-allow-overlap':true }
           });
           setLayerInteractivity('blackspot-symbol');
+          break;
+        }
+        case 'traffic_point': {
+          map.addSource('traffic_point', { type: 'geojson', data: dataNorm });
+          map.addLayer({
+            id: 'traffic_point-symbol',
+            type: 'symbol',
+            source: 'traffic_point',
+            layout: {
+              'icon-image': 'kecelakaan', 
+              'icon-size': 0.15,
+              'icon-allow-overlap': true
+            }
+          });
+          setLayerInteractivity('traffic_point-symbol');
           break;
         }
         case 'traffic': {
@@ -3087,7 +3110,7 @@ function renderLegend(){
   const show = (id)=>document.querySelector(`.tab-btn[data-layer="${id}"]`)?.classList.contains('active');
   let html = '<h4>Legenda</h4>';
 
-  if (show('troublespot')) { html += `<div class="legend-title">Troublespot</div>${legendRow('road-closed','Jalan Ditutup')}${legendRow('construction','Gangguan Jalan')}${legendRow('kecelakaan','Titik Perlambatan')}${legendRow('crash','Kecelakaan')}`; }
+  if (show('troublespot')) { html += `<div class="legend-title">Troublespot</div>${legendRow('road-closed','Jalan Ditutup')}${legendRow('construction','Gangguan Jalan')}${legendRow('crash','Kecelakaan')}`; }
   if (show('blackspot')) { html += `<div class="legend-title">Black Spot</div>${legendRow('blackspot','Black Spot')}`; }
   if (show('prediksi_risiko')) {
     const colors = [
@@ -3111,6 +3134,9 @@ function renderLegend(){
       html += `<span style="flex: 1; text-align: center; white-space: nowrap;">${label}</span>`;
     }
       html += `</div>`;
+  }
+  if (show('traffic_point')) {
+    html += `<div class="legend-title">Titik Perlambatan</div>${legendRow('kecelakaan','Titik Perlambatan')}`;
   }
   if (show('traffic')) {
   const colors = [
@@ -3417,7 +3443,7 @@ function esc(s){ return String(s)
 function showFeaturePopup(map, feature, coordinates, layerKey) {
     if (popup && popup.isOpen()) popup.remove();
     const titleMap = {
-      troublespot:'Troublespot', blackspot:'Black Spot', cctv:'CCTV',
+      troublespot:'Troublespot', blackspot:'Black Spot', traffic_point: 'Titik Perlambatan', cctv:'CCTV',
       objek_vital:'Objek Vital', gerbang:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', 
       rescue: 'Kendaraan Rescue',
       prediksi_risiko:'Prediksi Risiko Kecelakaan',
@@ -3465,8 +3491,6 @@ function checkRouteForHazards(routeFeature) {
                 hazardReasons.add("Jalan Ditutup");
             } else if (keter === 'kecelakaan') {
                 hazardReasons.add("Kecelakaan");
-            } else if (keter === 'titik perlambatan') {
-                hazardReasons.add("Titik Perlambatan");
             }
         }
     }
@@ -4071,7 +4095,6 @@ function initSearchAndRouting() {
             const keter = (f.properties?.keterangan || '').toLowerCase().trim();
             let causeText = null;
             if (keter === 'jalan ditutup') causeText = 'jalan ditutup';
-            else if (keter === 'titik perlambatan') causeText = 'titik perlambatan';
             else if (keter === 'kecelakaan') causeText = 'Kecelakaan';
 
             if (causeText) {
@@ -4321,7 +4344,6 @@ function initSearchAndRouting() {
       const v = (k || '').toLowerCase().trim();
       if (v === 'jalan ditutup') return 'Jalan Ditutup';
       if (v === 'kecelakaan')    return 'Kecelakaan';
-      if (v === 'titik perlambatan') return 'Titik Perlambatan';
       return 'Gangguan Jalan';
     }
 
@@ -4697,7 +4719,6 @@ const LAYER_INFO_DATA = {
     detail: `Troublespot mencakup 4 jenis gangguan, yaitu:
       <ul>
         <li><b>Jalan Ditutup:</b> Area yang ditutup petugas dan tidak bisa dilewati kendaraan apapun.</li>
-        <li><b>Titik Perlambatan:</b> Lokasi perlambatan yang sulit terurai.</li>
         <li><b>Titik Kecelakaan:</b> Lokasi kecelakaan yang berpotensi menghambat arus lalu lintas.</li>
         <li><b>Gangguan Jalan:</b> Hambatan fisik seperti kendaraan mogok, jalan rusak/licin, atau sedang ada perbaikan.</li>
       </ul>`,
@@ -4713,6 +4734,12 @@ const LAYER_INFO_DATA = {
         <li><b>Luka Ringan:</b> bobot 1.</li>
       </ul>`,
     source: "Analisis data kecelakaan IRSMS"
+  },
+  traffic_point: {
+    title: "Titik Perlambatan",
+    desc: "Lokasi sebaran titik perlambatan lalu lintas.",
+    detail: "Data ini menampilkan titik-titik perlambatan yang yang terjadi di tiap segmen jalan secara real-time.",
+    source: "Waze"
   },
   traffic: {
     title: "Perlambatan",
