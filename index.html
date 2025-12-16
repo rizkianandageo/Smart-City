@@ -4590,16 +4590,25 @@ function initSearchAndRouting() {
         };
         
         map.addSource(routeSourceId, { type: 'geojson', data: routeCollection });
+        let layerDiAtasRute = null;
+        if (map.getLayer('traffic-outline')) {
+            layerDiAtasRute = 'traffic-outline';
+        } else if (map.getLayer('traffic-line')) {
+            layerDiAtasRute = 'traffic-line';
+        } 
+        else if (map.getLayer('blackspot-symbol')) {
+             layerDiAtasRute = 'blackspot-symbol';
+        }
         map.addLayer({
             id: 'route-line-inactive', type: 'line', source: routeSourceId,
             paint: { 'line-width': 4, 'line-color': '#2196f3', 'line-opacity': 0.3 },
             filter: ['!=', 'route_index', selectedIndex]
-        });
+        }, layerDiAtasRute);
         map.addLayer({
             id: routeLayerId, type: 'line', source: routeSourceId,
             paint: { 'line-width': 6, 'line-color': '#2196f3' },
             filter: ['==', 'route_index', selectedIndex]
-        });
+        }, layerDiAtasRute);
 
         document.querySelectorAll('.route-option-btn').forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.dataset.index) === selectedIndex);
