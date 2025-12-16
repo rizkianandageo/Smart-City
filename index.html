@@ -11,6 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js?v=99"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
 <script>
 if (window.Chart) {
@@ -937,6 +938,84 @@ if (window.Chart) {
     border: 1px solid #c5e1a5;
     margin-top: 5px;
   }
+
+    #download-control-container {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      z-index: 1550;
+      display: none;
+      flex-direction: column-reverse;
+      align-items: flex-end;
+      gap: 10px;
+  }
+
+  #btn-download-fab {
+      width: 48px;
+      height: 48px;
+      background: #ffffff;
+      color: var(--accent);
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.2s ease;
+  }
+
+  #btn-download-fab:hover {
+      background-color: var(--accent);
+      color: #ffffff;
+      transform: scale(1.08);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  }
+
+  #download-menu-list {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      padding: 8px 0;
+      display: none;
+      flex-direction: column;
+      width: 200px;
+      animation: slide-up-fade 0.3s ease-out;
+      margin-left: 5px;
+  }
+
+  #download-menu-list.visible {
+      display: flex;
+  }
+
+  .download-item-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 16px;
+      text-align: left;
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid #f0f0f0;
+  }
+
+  .download-item-btn:last-child {
+      border-bottom: none;
+  }
+
+  .download-item-btn:hover {
+      background-color: #e3f2fd;
+      color: var(--accent);
+  }
+
+  @keyframes slide-up-fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
@@ -1092,6 +1171,19 @@ if (window.Chart) {
 
 <div id="geofence-status-panel">
   <div id="geofence-alert-content"></div>
+</div>
+
+<div id="download-control-container">
+    <button id="btn-download-fab" title="Download Data Excel">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    </button>
+
+    <div id="download-menu-list">
+        <button class="download-item-btn" onclick="generateExcel('troublespot', 'Data_Troublespot')">Troublespot</button>
+        <button class="download-item-btn" onclick="generateExcel('blackspot', 'Data_Blackspot')">Black Spot</button>
+        <button class="download-item-btn" onclick="generateExcel('traffic_point', 'Data_Titik_Perlambatan')">Titik Perlambatan</button>
+        <button class="download-item-btn" onclick="generateExcel('prediksi_risiko', 'Data_Prediksi_Risiko')">Prediksi Risiko Bencana</button>
+    </div>
 </div>
 
 <div id="dashboard-panel">
@@ -1437,7 +1529,7 @@ const ALIAS_MAP = {
   tipe_zona: 'Tipe Zona Geofencing', nama_zona: 'Zona Geofencing', keterangan_status: 'Keterangan Zona Geofencing', geofence_limit: 'Batas Kecepatan (km/jam)',
   jam_mulai: 'Waktu Mulai Berlaku Batas Kecepatan', jam_selesai: 'Waktu Selesai Berlaku Batas Kecepatan', 
   vehicleName: 'Nama Kendaraan', nopol: 'Nomor Polisi', vehicleGroup: "Grup Kendaraan", merkName: 'Merk Kendaraan', tipeName: 'Tipe Kendaraan',
-  keterangan:'Keterangan', no_laka:'Nomor Kecelakaan', tanggal_kejadian:'Tanggal Kejadian', keterangan_kerugian:'Keterangan Kerugian'
+  keterangan:'Keterangan', no_laka:'Nomor Kecelakaan', tanggal_kejadian:'Tanggal Kejadian', keterangan_kerugian:'Keterangan Kerugian', last_update:'Data Terakhir Diperbarui'
 };
 
 let map;
@@ -1867,6 +1959,9 @@ function startAppWithSatwil(feature) {
   try { if (splashMap) { splashMap.remove(); splashMap = null; } } catch {}
   showOverlay();
   document.getElementById('filter-screen').style.display = 'none';
+
+  const dlBtn = document.getElementById('download-control-container');
+  if (dlBtn) dlBtn.style.display = 'flex';
 
   const panelSel = document.getElementById('wilayah-select');
   if (panelSel && sat) panelSel.value = sat;
@@ -4948,6 +5043,76 @@ function closeInfoModal() {
   if (modalOverlay) {
     modalOverlay.style.display = 'none';
   }
+}
+
+document.getElementById('btn-download-fab').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('download-menu-list');
+    menu.classList.toggle('visible');
+});
+
+document.addEventListener('click', function(e) {
+    const container = document.getElementById('download-control-container');
+    const menu = document.getElementById('download-menu-list');
+    if (!container.contains(e.target)) {
+        menu.classList.remove('visible');
+    }
+});
+
+function generateExcel(layerKey, fileName) {
+    const dataGeoJSON = filteredLayerData[layerKey];
+
+    if (!dataGeoJSON || !dataGeoJSON.features || dataGeoJSON.features.length === 0) {
+        alert("Tidak ada data untuk didownload pada layer ini di Satwil saat ini.");
+        return;
+    }
+
+    const exportData = [];
+
+    dataGeoJSON.features.forEach(feature => {
+        const props = feature.properties || {};
+        const geom = feature.geometry;
+        let row = {};
+        Object.keys(ALIAS_MAP).forEach(key => {
+            if (props.hasOwnProperty(key)) {
+                const headerName = ALIAS_MAP[key];
+                row[headerName] = props[key];
+            }
+        });
+        let coords = null;
+
+        if (geom.type === 'Point') {
+            coords = geom.coordinates;
+        } else {
+            try {
+                const centerPoint = turf.centroid(feature);
+                coords = centerPoint.geometry.coordinates;
+            } catch (e) {
+                console.warn('Gagal mengambil titik tengah geometri', e);
+            }
+        }
+
+        if (coords) {
+            row['Longitude'] = coords[0];
+            row['Latitude'] = coords[1];
+        }
+
+        exportData.push(row);
+    });
+
+    if (exportData.length === 0) {
+        alert("Data tersedia namun tidak memiliki atribut yang sesuai dengan konfigurasi Alias Map.");
+        return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    const dateStr = new Date().toISOString().slice(0,10);
+    const fullFileName = `${fileName}_${selectedSatwilName || 'Satwil'}_${dateStr}.xlsx`;
+
+    XLSX.writeFile(workbook, fullFileName);
+    
+    document.getElementById('download-menu-list').classList.remove('visible');
 }
 </script>
 <div id="info-modal-overlay">
