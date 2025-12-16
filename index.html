@@ -1532,6 +1532,176 @@ const ALIAS_MAP = {
   keterangan:'Keterangan', no_laka:'Nomor Kecelakaan', tanggal_kejadian:'Tanggal Kejadian', keterangan_kerugian:'Keterangan Kerugian', last_update:'Data Terakhir Diperbarui'
 };
 
+const HOST_CCTV = Object.freeze({
+    bali: "https://stream.elingbali.com",
+    solo: "https://stream.elingsolo.com",
+    yogya: "https://stream.elingjogja.com",
+    bandung: "https://stream.elingbandung.com",
+    medan: "https://stream.elingmedan.com",
+});
+
+const AUTH_CCTV = "Basic " + btoa("viewer:password123");
+let pc = null;
+
+function mapSatwilToRegion(satwilName) {
+    if (!satwilName) return null;
+    const s = satwilName.toLowerCase();
+    if (s.includes('bali')) return 'bali';
+    if (s.includes('surakarta') || s.includes('solo')) return 'solo';
+    if (s.includes('yogyakarta') || s.includes('jogja')) return 'yogya';
+    if (s.includes('bandung')) return 'bandung';
+    if (s.includes('medan')) return 'medan';
+    return null;
+}
+
+function getHost(region) {
+    return HOST_CCTV[region?.toLowerCase()] || null;
+}
+
+async function loadCamera(id, region) {
+    cleanupPC();
+
+    const host = getHost(region);
+    const videoEl = document.getElementById("video-" + id);
+
+    if (!host || !videoEl) {
+        console.warn("Host/Video Element missing");
+        return; 
+    }
+
+    videoEl.parentElement.style.background = '#000';
+    videoEl.style.opacity = '0.5';
+
+    const WHEP_URL = `${host}/transcode/${id}/whep`;
+    const TRIGGER_URL = `${host}/resolve-path`;
+    const INTERNAL_PATH = "http://localhost:15000/transcode/" + id;
+
+    try {
+        console.log(`[CCTV] Menyiapkan ${region} (ID: ${id})...`);
+        
+        try {
+            const triggerResp = await fetch(TRIGGER_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    path: INTERNAL_PATH,
+                    quality: "hd",
+                }),
+            });
+            
+            if (!triggerResp.ok) {
+                console.warn(`[CCTV] Trigger ditolak (${triggerResp.status}). Mencoba koneksi langsung...`);
+            } else {
+                console.log("[CCTV] Trigger Server Sukses.");
+            }
+        } catch (ign) {
+            console.warn("[CCTV] Gagal akses trigger, lanjut ke WHEP.");
+        }
+
+        console.log("[CCTV] Memulai handshake WebRTC...");
+        await playWHEP(WHEP_URL, videoEl);
+        
+        videoEl.style.opacity = '1';
+        console.log("[CCTV] Koneksi Terbentuk!");
+
+    } catch (e) {
+        console.error("Gagal memuat CCTV:", e);
+        if (e.message.includes("WHEP")) {
+             videoEl.parentElement.innerHTML = `<div style="color:salmon;text-align:center;padding:20px;font-size:12px;">Stream Offline / Tidak Dapat Dijangkau</div>`;
+        }
+    }
+}
+
+async function waitCameraReady(url) {
+    try {
+        await fetch(url, {
+            method: "OPTIONS",
+            headers: { Authorization: AUTH_CCTV },
+        });
+    } catch (e) {}
+}
+
+async function playWHEP(endpoint, videoEl) {
+    const ice = await getICE(endpoint);
+    pc = new RTCPeerConnection({ iceServers: ice });
+
+    pc.oniceconnectionstatechange = () => {
+        const state = pc.iceConnectionState;
+        console.log(`[CCTV] Status Koneksi: ${state}`);
+        if (state === 'failed' || state === 'disconnected') {
+             console.warn("[CCTV] Koneksi terputus/gagal. Cek firewall atau stream server.");
+        }
+    };
+
+    const stream = new MediaStream();
+    videoEl.srcObject = stream;
+
+    videoEl.play().catch(e => console.log("Autoplay prevent:", e));
+
+    pc.ontrack = (ev) => {
+        console.log("[CCTV] Data Video Diterima!");
+        stream.addTrack(ev.track);
+    };
+
+    pc.addTransceiver("video", { direction: "recvonly" });
+
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    await new Promise(resolve => {
+        if (pc.iceGatheringState === "complete") resolve();
+        else {
+            const check = () => {
+                if (pc.iceGatheringState === "complete") {
+                    pc.removeEventListener("icegatheringstatechange", check);
+                    resolve();
+                }
+            }
+            pc.addEventListener("icegatheringstatechange", check);
+            setTimeout(resolve, 1000); 
+        }
+    });
+
+    const resp = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/sdp",
+            Authorization: AUTH_CCTV,
+        },
+        body: pc.localDescription.sdp,
+    });
+
+    if (!resp.ok) {
+        throw new Error(`WHEP Handshake Gagal: ${resp.status}`);
+    }
+
+    const ansSDP = await resp.text();
+    if (!ansSDP || ansSDP.trim() === "") {
+        throw new Error("Server mengirim SDP kosong (Stream mungkin mati)");
+    }
+
+    await pc.setRemoteDescription({ type: "answer", sdp: ansSDP });
+}
+
+function cleanupPC() {
+    if (!pc) return;
+    try { pc.getSenders().forEach((s) => s.track && s.track.stop()); } catch (e) {}
+    try { pc.close(); } catch (e) {}
+    pc = null;
+}
+
+async function getICE(endpoint) {
+    const defaultIce = [{ urls: "stun:stun.l.google.com:19302" }];
+    try {
+        const r = await fetch(endpoint, { method: "OPTIONS", headers: { Authorization: AUTH_CCTV } });
+        if (!r.ok) return defaultIce;
+        const link = r.headers.get("Link");
+        return link ? [{ urls: "stun:stun.l.google.com:19302" }] : defaultIce;
+    } catch (e) {
+        return defaultIce;
+    }
+}
+
 let map;
 let wilayahData;
 let selectedPolygon = null;
@@ -2357,13 +2527,18 @@ function initMap(polygon){
       });
     }
 
-    map.on('click', (e)=>{
-      if (popup && popup.isOpen()) popup.remove();
+      map.on('click', (e)=>{
+      if (popup && popup.isOpen()) {
+          popup.remove();
+          cleanupPC();
+      }
+
       const features = map.queryRenderedFeatures(e.point);
       if (!features.length) return;
 
       const topFeature = features[0];
       const layerId = topFeature.layer.id;
+
       if (topFeature.properties?.cluster){
         const clusterId = topFeature.properties.cluster_id;
         const sourceId = topFeature.layer.source;
@@ -2401,6 +2576,7 @@ function initMap(polygon){
       if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
       const popupHtml = `<div class="popup-header">${title}</div><div class="popup-body">${bodyHtml}</div>`;
       popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map);
+      showFeaturePopup(map, topFeature, e.lngLat, layerId);
     });
 
     const panelMinimizeBtn = document.getElementById('panel-minimize-btn');
@@ -3559,39 +3735,76 @@ function esc(s){ return String(s)
   .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 function showFeaturePopup(map, feature, coordinates, layerKey) {
-    if (popup && popup.isOpen()) popup.remove();
+    if (popup && popup.isOpen()) {
+        popup.remove();
+        cleanupPC(); 
+    }
+
     const titleMap = {
-      troublespot:'Troublespot', blackspot:'Black Spot', traffic_point: 'Titik Perlambatan', cctv:'CCTV',
-      objek_vital:'Objek Vital', gerbang:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', 
-      rescue: 'Kendaraan Rescue',
-      prediksi_risiko:'Prediksi Risiko Kecelakaan',
-      administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
-      blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
-      geofencing: 'Geofencing Area'
+        troublespot:'Troublespot', blackspot:'Black Spot', traffic_point: 'Titik Perlambatan', cctv:'CCTV',
+        objek_vital:'Objek Vital', gerbang:'Gerbang Tol', data_kecelakaan:'Data Kecelakaan', 
+        rescue: 'Kendaraan Rescue', prediksi_risiko:'Prediksi Risiko Kecelakaan',
+        administrasi:'Wilayah Administrasi', traffic:'Perlambatan',
+        blacklink:'Black Link', blackarea:'Black Area', speedlimit: 'Batas Kecepatan',
+        geofencing: 'Geofencing Area'
     };
-    const prefix = layerKey; 
+    
+    let prefix = layerKey;
+    if(layerKey.startsWith('cctv')) prefix = 'cctv';
+    else if(layerKey.startsWith('objek_vital')) prefix = 'objek_vital';
+    
     if (!prefix || !titleMap[prefix]) {
-      console.warn('showFeaturePopup: Kunci layer tidak valid atau tidak ada.', layerKey);
-      return; 
+        prefix = Object.keys(titleMap).find(p => layerKey.startsWith(p));
     }
 
     let title = titleMap[prefix] || 'Informasi';
-
     if (prefix === 'objek_vital'){
-      const ovLabel = OV_META[ovKeyFromKeterangan(feature.properties)]?.label || 'Lainnya';
-      title = `Objek Vital • ${ovLabel}`;
+        const ovLabel = OV_META[ovKeyFromKeterangan(feature.properties)]?.label || 'Lainnya';
+        title = `Objek Vital • ${ovLabel}`;
     }
     
     let bodyHtml = '';
+    
+    if (prefix === 'cctv') {
+        const props = feature.properties || {};
+        console.log('Properti CCTV:', props);
+        const cctvId = props.rowid || props.id || props.cctv_id || props.id_cctv || props.ID; 
+        const satwil = props.Satwil || props.satwil;
+        const region = mapSatwilToRegion(satwil);
+
+        if (cctvId && region) {
+            bodyHtml += `
+                <div style="width:100%; height:auto; margin-bottom:10px; border-radius:6px; overflow:hidden; background:#000;">
+                    <video id="video-${cctvId}" 
+                           style="width:100%; aspect-ratio:16/9; display:block;" 
+                           autoplay playsinline muted controls>
+                    </video>
+                </div>
+                <div style="font-size:11px; text-align:center; color:#666; margin-bottom:8px;">
+                    Region: ${region.toUpperCase()} | ID: ${cctvId}
+                </div>`;
+            
+            setTimeout(() => {
+                loadCamera(cctvId, region);
+            }, 300);
+        } else {
+            bodyHtml += `<div style="color:red; font-size:12px; margin-bottom:5px;">ID CCTV atau Region tidak dikenali.</div>`;
+        }
+    }
     for (const key in ALIAS_MAP){
-      if (feature.properties.hasOwnProperty(key)){
-        bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> ${esc(feature.properties[key])}</div>`;
-      }
+        if (feature.properties.hasOwnProperty(key)){
+            bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> ${esc(feature.properties[key])}</div>`;
+        }
     }
     if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
     
     const popupHtml = `<div class="popup-header">${esc(title)}</div><div class="popup-body">${bodyHtml}</div>`;
+    
     popup.setLngLat(coordinates).setHTML(popupHtml).addTo(map);
+
+    popup.once('close', () => {
+        cleanupPC();
+    });
 }
 
 function checkRouteForHazards(routeFeature) {
