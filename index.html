@@ -3335,6 +3335,11 @@ function applyVisibility(layerPrefix) {
             'Terminal', '#81d4fa',
             'Pelabuhan', '#80cbc4',
             'Pariwisata', '#ffe082',
+            'Masjid', '#b39ddb',
+            'Gereja', '#ffab91',
+            'Vihara', '#80deea',
+            'Pura', '#c5e1a5',
+            'Klenteng', '#ffccbc',
             '#eeeeee'
           ];
           map.addLayer({
@@ -3490,6 +3495,11 @@ function renderLegend(){
     html += legendRowCustom('#81d4fa', 'Terminal');
     html += legendRowCustom('#80cbc4', 'Pelabuhan');
     html += legendRowCustom('#ffe082', 'Pariwisata');
+    html += legendRowCustom('#b39ddb', 'Masjid');
+    html += legendRowCustom('#ffab91', 'Gereja');
+    html += legendRowCustom('#80deea', 'Vihara');
+    html += legendRowCustom('#c5e1a5', 'Pura');
+    html += legendRowCustom('#ffccbc', 'Klenteng');
   }
 function legendRowCustom(color, label){
 return `<div class="legend-item">
