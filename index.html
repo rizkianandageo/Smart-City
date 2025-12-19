@@ -10,6 +10,8 @@
 <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js?v=99"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
@@ -1016,6 +1018,64 @@ if (window.Chart) {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
   }
+
+    #radius-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+      z-index: 20000; display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.3s;
+  }
+
+  #radius-modal-box {
+      background: #fff; width: 90%; max-width: 600px; max-height: 90vh;
+      border-radius: 12px; display: flex; flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5); overflow: hidden;
+  }
+
+  #radius-modal-header {
+      background: #1a237e; color: #fff; padding: 15px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 4px solid #ffc107;
+  }
+  #radius-modal-header h3 { margin: 0; font-size: 18px; }
+  #radius-modal-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+
+  #radius-modal-body { padding: 20px; overflow-y: auto; background: #f5f7fb; }
+
+  .radius-summary-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+  }
+  .summary-card {
+      background: #fff; padding: 10px; border-radius: 8px; text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
+  }
+  .summary-card .lbl { display: block; font-size: 11px; color: #666; margin-bottom: 4px; font-weight: 600; }
+  .summary-card .val { display: block; font-size: 20px; font-weight: 700; color: #1a237e; }
+
+  .chart-section { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee; }
+  .chart-section h4 { margin: 0 0 10px 0; font-size: 14px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+  .chart-wrapper { height: 200px; position: relative; }
+
+  #radius-modal-footer { padding: 15px; background: #fff; border-top: 1px solid #eee; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  #btn-screenshot-radius {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.2s;
+  }
+
+  #btn-screenshot-radius:hover {
+      background: rgba(255,255,255,0.2);
+  }
 </style>
 </head>
 <body>
@@ -1182,8 +1242,66 @@ if (window.Chart) {
         <button class="download-item-btn" onclick="generateExcel('troublespot', 'Data_Troublespot')">Titik Gangguan Lalu Lintas</button>
         <button class="download-item-btn" onclick="generateExcel('blackspot', 'Data_Blackspot')">Black Spot</button>
         <button class="download-item-btn" onclick="generateExcel('traffic_point', 'Data_Titik_Perlambatan')">Titik Perlambatan</button>
-        <button class="download-item-btn" onclick="generateExcel('prediksi_risiko', 'Data_Prediksi_Risiko')">Prediksi Risiko Bencana</button>
+        <button class="download-item-btn" onclick="generateExcel('prediksi_risiko', 'Data_Prediksi_Risiko')">Prediksi Risiko Kecelakaan</button>
     </div>
+</div>
+
+<div id="radius-analysis-btn-wrapper" style="position: absolute; bottom: 20px; right: 80px; z-index: 1550; display: none;">
+    <button id="btn-radius-analysis" class="btn-primary" style="box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        Informasi Lalu Lintas dalam Radius
+    </button>
+</div>
+
+<div id="radius-modal-overlay" style="display: none;">
+  <div id="radius-modal-box">
+    <div id="radius-modal-header">
+      <h3>Analisis Area Radius</h3>
+      <div style="display: flex; align-items: center; gap: 10px;">
+          <button id="btn-screenshot-radius" title="Screenshot Analisis">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </button>
+          <button id="radius-modal-close">&times;</button>
+      </div>
+    </div>
+    <div id="radius-modal-body">
+        
+        <div class="radius-summary-grid">
+            <div class="summary-card">
+                <span class="lbl">Titik Gangguan Lalu Lintas</span>
+                <span class="val" id="val-troublespot">0</span>
+            </div>
+            <div class="summary-card">
+                <span class="lbl">Titik Lokasi Black Spot</span>
+                <span class="val" id="val-blackspot">0</span>
+            </div>
+            <div class="summary-card">
+                <span class="lbl">Titik Lokasi Perlambatan</span>
+                <span class="val" id="val-trafficpoint">0</span>
+            </div>
+             <div class="summary-card">
+                <span class="lbl">Prediksi Risiko Kecelakaan Tinggi</span>
+                <span class="val" id="val-risk">0</span>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h4>Grafik Titik Gangguan Lalu Lintas</h4>
+            <div class="chart-wrapper"><canvas id="radius-chart-troublespot"></canvas></div>
+        </div>
+        
+        <div class="chart-section">
+            <h4>Grafik Prediksi Risiko Kecelakaan</h4>
+            <div class="chart-wrapper"><canvas id="radius-chart-risk"></canvas></div>
+        </div>
+
+    </div>
+    <div id="radius-modal-footer">
+        <button id="btn-download-radius" class="btn-primary" style="width: 100%;">
+            Download Data Selengkapnya (Excel)
+        </button>
+    </div>
+  </div>
 </div>
 
 <div id="dashboard-panel">
@@ -1392,6 +1510,7 @@ if (window.Chart) {
             <div id="measure-controls">
                 <button id="btn-measure-dist" class="measure-btn">Jarak</button>
                 <button id="btn-measure-area" class="measure-btn">Luas</button>
+                <button id="btn-measure-radius" class="measure-btn">Radius</button>
                 <button id="btn-measure-clear" class="measure-btn" title="Hapus Ukuran">X</button>
             </div>
             <div id="measure-result">Pilih tool untuk mulai</div>
@@ -4815,13 +4934,18 @@ function initSearchAndRouting() {
     };
 }
 
+let currentRadiusGeoJSON = null;
+
 function initMeasureTools(map) {
     const measurePanel = document.getElementById('measure-panel');
     const toggleBtn = document.getElementById('measure-toggle-btn');
     const btnDist = document.getElementById('btn-measure-dist');
     const btnArea = document.getElementById('btn-measure-area');
+    const btnRadius = document.getElementById('btn-measure-radius');
     const btnClear = document.getElementById('btn-measure-clear');
     const resultEl = document.getElementById('measure-result');
+    const radiusAnalysisBtnWrapper = document.getElementById('radius-analysis-btn-wrapper');
+
     const togglePanel = () => {
         const isMinimized = measurePanel.classList.toggle('minimized');
         toggleBtn.textContent = isMinimized ? '+' : '−';
@@ -4832,31 +4956,133 @@ function initMeasureTools(map) {
             togglePanel();
         }
     };
+
     let activeTool = null;
+    let radiusCenter = null;
     let geojson = { type: 'FeatureCollection', features: [] };
+    
     const sourceId = 'measure-source';
-    map.addSource(sourceId, { type: 'geojson', data: geojson });
-    map.addLayer({ id: 'measure-points', type: 'circle', source: sourceId, paint: { 'circle-radius': 5, 'circle-color': '#fff', 'circle-stroke-color': '#000', 'circle-stroke-width': 2 }, filter: ['in', '$type', 'Point'] });
-    map.addLayer({ id: 'measure-lines', type: 'line', source: sourceId, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffc107', 'line-width': 3, 'line-dasharray': [2, 2] }, filter: ['in', '$type', 'LineString'] });
-    map.addLayer({ id: 'measure-poly', type: 'fill', source: sourceId, paint: { 'fill-color': '#ffc107', 'fill-opacity': 0.3 }, filter: ['in', '$type', 'Polygon'] });
+    const previewSourceId = 'measure-preview-source'; 
+
+    if(!map.getSource(sourceId)) {
+        map.addSource(sourceId, { type: 'geojson', data: geojson });
+        map.addSource(previewSourceId, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+
+        map.addLayer({ id: 'measure-points', type: 'circle', source: sourceId, paint: { 'circle-radius': 5, 'circle-color': '#fff', 'circle-stroke-color': '#000', 'circle-stroke-width': 2 }, filter: ['in', '$type', 'Point'] });
+        map.addLayer({ id: 'measure-lines', type: 'line', source: sourceId, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffc107', 'line-width': 3, 'line-dasharray': [2, 2] }, filter: ['in', '$type', 'LineString'] });
+        map.addLayer({ id: 'measure-poly', type: 'fill', source: sourceId, paint: { 'fill-color': '#2196f3', 'fill-opacity': 0.3 }, filter: ['in', '$type', 'Polygon'] });
+        map.addLayer({ id: 'measure-poly-outline', type: 'line', source: sourceId, paint: { 'line-color': '#2196f3', 'line-width': 2 }, filter: ['in', '$type', 'Polygon'] });
+
+        map.addLayer({ id: 'measure-preview-poly', type: 'fill', source: previewSourceId, paint: { 'fill-color': '#00e676', 'fill-opacity': 0.2 } });
+        map.addLayer({ id: 'measure-preview-line', type: 'line', source: previewSourceId, paint: { 'line-color': '#00e676', 'line-width': 2, 'line-dasharray': [2, 2] } });
+    }
+
     const updateSource = () => map.getSource(sourceId).setData(geojson);
+    const updatePreview = (data) => map.getSource(previewSourceId).setData(data || { type: 'FeatureCollection', features: [] });
+
+    const finishRadius = (circlePoly, distKm) => {
+        circlePoly.properties = { type: 'radius', value: distKm + ' km' };
+        
+        geojson.features.push(circlePoly);
+        if(radiusCenter) geojson.features.push({ type: 'Feature', geometry: { type: 'Point', coordinates: radiusCenter } });
+
+        updateSource();
+        
+        currentRadiusGeoJSON = circlePoly;
+        
+        if(radiusAnalysisBtnWrapper) radiusAnalysisBtnWrapper.style.display = 'block';
+
+        radiusCenter = null; 
+        updatePreview(null);
+        resultEl.textContent = `Radius: ${typeof distKm === 'number' ? distKm.toFixed(3) : distKm} km`;
+    };
+
     const clearMeasure = () => {
         if (activeTool) {
-            document.getElementById(`btn-measure-${activeTool}`).classList.remove('active');
+            const btn = document.getElementById(`btn-measure-${activeTool}`);
+            if(btn) btn.classList.remove('active');
         }
         activeTool = null;
+        radiusCenter = null;
+        currentRadiusGeoJSON = null;
+
         geojson.features = [];
         updateSource();
+        updatePreview(null);
+        
+        if(radiusAnalysisBtnWrapper) radiusAnalysisBtnWrapper.style.display = 'none';
+
         map.getCanvas().style.cursor = '';
         resultEl.textContent = 'Pilih tool untuk mulai';
+        
         map.off('click', handleMapClick);
         map.off('dblclick', handleMapDblClick);
+        map.off('mousemove', handleMouseMove);
+        map.off('contextmenu', handleRightClick);
     };
+
+    const handleMouseMove = (e) => {
+        if (activeTool === 'radius' && radiusCenter) {
+            const currentPoint = [e.lngLat.lng, e.lngLat.lat];
+            const line = turf.lineString([radiusCenter, currentPoint]);
+            const dist = turf.length(line, { units: 'kilometers' });
+            const circlePoly = turf.circle(radiusCenter, dist, { steps: 64, units: 'kilometers' });
+            
+            updatePreview({
+                type: 'FeatureCollection',
+                features: [circlePoly, { type: 'Feature', geometry: line.geometry }]
+            });
+            resultEl.textContent = `Radius: ${dist.toFixed(3)} km`;
+        }
+    };
+
+    const handleRightClick = (e) => {
+        if (activeTool === 'radius' && radiusCenter) {
+            e.preventDefault();
+            const inputVal = prompt("Masukkan jarak radius (dalam Kilometer):", "1.0");
+            if (inputVal !== null) {
+                const distKm = parseFloat(inputVal.replace(',', '.'));
+                if (!isNaN(distKm) && distKm > 0) {
+                    const circlePoly = turf.circle(radiusCenter, distKm, { steps: 64, units: 'kilometers' });
+                    finishRadius(circlePoly, distKm);
+                } else {
+                    alert("Masukkan angka yang valid.");
+                }
+            }
+        }
+    };
+
     const handleMapClick = (e) => {
         const coords = [e.lngLat.lng, e.lngLat.lat];
+
+        if (activeTool === 'radius') {
+            if (!radiusCenter) {
+                radiusCenter = coords;
+                updatePreview({
+                    type: 'FeatureCollection',
+                    features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: coords } }]
+                });
+                resultEl.innerHTML = 'Gerakkan mouse atau <br><b>Klik Kanan</b> input manual.';
+                
+                if(radiusAnalysisBtnWrapper) radiusAnalysisBtnWrapper.style.display = 'none';
+                currentRadiusGeoJSON = null;
+                
+            } else {
+                const line = turf.lineString([radiusCenter, coords]);
+                const dist = turf.length(line, { units: 'kilometers' });
+                const circlePoly = turf.circle(radiusCenter, dist, { steps: 64, units: 'kilometers' });
+                
+                finishRadius(circlePoly, dist);
+            }
+            return; 
+        }
+
         const points = geojson.features.filter(f => f.geometry.type === 'Point');
         points.push({ type: 'Feature', geometry: { type: 'Point', coordinates: coords } });
         geojson.features = [...points];
+
+        if(radiusAnalysisBtnWrapper) radiusAnalysisBtnWrapper.style.display = 'none';
+
         if (activeTool === 'dist') {
             if (points.length > 1) {
                 const line = turf.lineString(points.map(p => p.geometry.coordinates));
@@ -4872,41 +5098,353 @@ function initMeasureTools(map) {
                 const area = turf.area(polygon);
                 resultEl.textContent = `Luas: ${(area / 1000000).toFixed(3)} km²`;
                 geojson.features.push(polygon);
-            } else {
-                resultEl.textContent = 'Klik min. 3 titik...';
             }
         }
         updateSource();
     };
+
     const handleMapDblClick = () => {
         const points = geojson.features.filter(f => f.geometry.type === 'Point');
         if ((activeTool === 'area' && points.length > 2) || (activeTool === 'dist' && points.length > 1)) {
-            map.getCanvas().style.cursor = '';
-            map.off('click', handleMapClick);
-            map.off('dblclick', handleMapDblClick);
+            radiusCenter = null;
+            updatePreview(null);
         }
     };
+
     const startMeasure = (tool) => {
         if (activeTool === tool) return clearMeasure();
         clearMeasure();
         activeTool = tool;
-
         document.getElementById(`btn-measure-${tool}`).classList.add('active');
-
         map.getCanvas().style.cursor = 'crosshair';
         map.on('click', handleMapClick);
         map.on('dblclick', handleMapDblClick);
-
+        map.on('mousemove', handleMouseMove);
+        map.on('contextmenu', handleRightClick);
         map.doubleClickZoom.disable();
+        
+        if (tool === 'radius') resultEl.textContent = 'Klik peta untuk titik tengah';
+        else resultEl.textContent = 'Klik peta untuk mulai';
     };
 
     btnDist.onclick = () => startMeasure('dist');
     btnArea.onclick = () => startMeasure('area');
+    btnRadius.onclick = () => startMeasure('radius');
     btnClear.onclick = clearMeasure;
 
-    const _enableDbl = () => { try{ map.doubleClickZoom.enable(); }catch{} };
+    const _enableDbl = () => { try { map.doubleClickZoom.enable(); } catch {} };
     measurePanel.addEventListener('transitionend', _enableDbl);
     window.addEventListener('beforeunload', _enableDbl);
+}
+
+let radiusChartInstances = {};
+
+document.getElementById('btn-radius-analysis').addEventListener('click', () => {
+    if (!currentRadiusGeoJSON) {
+        alert("Area radius belum terbentuk.");
+        return;
+    }
+    analyzeRadiusData(currentRadiusGeoJSON);
+    document.getElementById('radius-modal-overlay').style.display = 'flex';
+});
+
+document.getElementById('radius-modal-close').addEventListener('click', () => {
+    document.getElementById('radius-modal-overlay').style.display = 'none';
+});
+
+document.getElementById('btn-download-radius').addEventListener('click', () => {
+    if (!currentRadiusGeoJSON) return;
+    downloadRadiusExcel(currentRadiusGeoJSON);
+});
+
+document.getElementById('btn-screenshot-radius').addEventListener('click', function() {
+    const modalBox = document.getElementById('radius-modal-box');
+    
+    const btnClose = document.getElementById('radius-modal-close');
+    const modalFooter = document.getElementById('radius-modal-footer');
+    const btnScreenshot = this;
+
+    const origBtnDisplay = btnScreenshot.style.display;
+    const origCloseDisplay = btnClose.style.display;
+    const origFooterDisplay = modalFooter.style.display;
+
+    btnScreenshot.style.display = 'none';
+    btnClose.style.display = 'none';
+    modalFooter.style.display = 'none';
+
+    html2canvas(modalBox, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true
+    }).then(canvas => {
+        btnScreenshot.style.display = origBtnDisplay;
+        btnClose.style.display = origCloseDisplay;
+        modalFooter.style.display = origFooterDisplay;
+
+        const imageURL = canvas.toDataURL("image/png");
+        const link = document.createElement('a');
+        link.href = imageURL;
+        const dateStr = new Date().toISOString().slice(0,10);
+        link.download = `Screenshot_Analisis_Radius_${dateStr}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    }).catch(err => {
+        btnScreenshot.style.display = origBtnDisplay;
+        btnClose.style.display = origCloseDisplay;
+        modalFooter.style.display = origFooterDisplay;
+        console.error("Gagal mengambil screenshot:", err);
+        alert("Gagal mengambil screenshot.");
+    });
+});
+
+function getCurrentSliderDateYMD() {
+    const slider = document.getElementById('time-slider');
+    if (!slider || !timeSliderData.uniqueDates.length) return null;
+    
+    const idx = parseInt(slider.value, 10);
+    const dateObj = timeSliderData.uniqueDates[idx];
+    return toYMD(dateObj);
+}
+
+function analyzeRadiusData(polygon) {
+    const selectedDateYMD = getCurrentSliderDateYMD();
+
+    const troublespotData = filterPointsInPoly(filteredLayerData.troublespot, polygon);
+    const trafficData = filterPointsInPoly(filteredLayerData.traffic_point, polygon);
+    const riskData = filterLinesInPoly(filteredLayerData.prediksi_risiko, polygon);
+
+    let blackspotData = filterPointsInPoly(filteredLayerData.blackspot, polygon);
+    if (selectedDateYMD) {
+        blackspotData = blackspotData.filter(f => f.properties.tanggal === selectedDateYMD);
+    }
+
+    document.getElementById('val-troublespot').textContent = troublespotData.length;
+    document.getElementById('val-blackspot').textContent = blackspotData.length;
+    document.getElementById('val-trafficpoint').textContent = trafficData.length;
+    const highRiskCount = riskData.filter(f => f.properties.risk_prediction === 2).length;
+    document.getElementById('val-risk').textContent = highRiskCount;
+
+    renderRadiusCharts({
+        troublespot: troublespotData,
+        prediksi_risiko: riskData
+    });
+}
+
+function filterPointsInPoly(featureCollection, polygon) {
+    if (!featureCollection || !featureCollection.features) return [];
+    return featureCollection.features.filter(f => {
+        if (f.geometry.type === 'Point') {
+            return turf.booleanPointInPolygon(f, polygon);
+        }
+        return false; 
+    });
+}
+
+function filterLinesInPoly(featureCollection, polygon) {
+    if (!featureCollection || !featureCollection.features) return [];
+    return featureCollection.features.filter(f => {
+        return turf.booleanIntersects(f, polygon);
+    });
+}
+
+function renderRadiusCharts(data) {
+    const tsCtx = document.getElementById('radius-chart-troublespot').getContext('2d');
+    
+    let countJalanDitutup = 0;
+    let countKecelakaan = 0;
+    let countGangguan = 0;
+
+    data.troublespot.forEach(f => {
+        const ket = (f.properties.keterangan || f.properties.Keterangan || '').toLowerCase();
+        if (ket.includes('tutup')) countJalanDitutup++;
+        else if (ket.includes('celaka') || ket.includes('accident')) countKecelakaan++;
+        else countGangguan++;
+    });
+
+    if (radiusChartInstances.troublespot) radiusChartInstances.troublespot.destroy();
+
+    radiusChartInstances.troublespot = new Chart(tsCtx, {
+        type: 'bar',
+        plugins: [ChartDataLabels], 
+        data: {
+            labels: ['Total Kejadian'],
+            datasets: [
+                { label: `Jalan Ditutup (${countJalanDitutup})`, data: [countJalanDitutup], backgroundColor: '#d32f2f', barPercentage: 0.6, categoryPercentage: 0.8 },
+                { label: `Titik Kecelakaan (${countKecelakaan})`, data: [countKecelakaan], backgroundColor: '#5b5b5b', barPercentage: 0.6, categoryPercentage: 0.8 },
+                { label: `Gangguan Jalan (${countGangguan})`, data: [countGangguan], backgroundColor: '#ffc107', barPercentage: 0.6, categoryPercentage: 0.8 }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: true, position: 'bottom', labels: { color: '#333' } },
+                
+                datalabels: {
+                    color: '#333', anchor: 'end', align: 'end', offset: 4, font: { weight: 'bold', size: 12 },
+                    formatter: (value) => value > 0 ? value : ''
+                },
+
+                tooltip: { 
+                    enabled: true,
+                    callbacks: {
+                        title: () => '', 
+                        label: function(context) {
+                            const rawLabel = context.dataset.label;
+                            const cleanLabel = rawLabel.replace(/\s\(\d+\)$/, '');
+                            return cleanLabel;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    display: true, ticks: { color: '#333', stepSize: 1, beginAtZero: true }, grid: { color: '#eee' },
+                    afterDataLimits: (scale) => { scale.max += 1; } 
+                },
+                y: { display: false }
+            }
+        }
+    });
+
+    const riskCtx = document.getElementById('radius-chart-risk').getContext('2d');
+    
+    let countSedang = 0;
+    let countTinggi = 0;
+
+    data.prediksi_risiko.forEach(f => {
+        const val = f.properties.risk_prediction;
+        if (val === 1) countSedang++;
+        else if (val === 2) countTinggi++;
+    });
+
+    const totalRisk = countSedang + countTinggi;
+
+    if (radiusChartInstances.risk) radiusChartInstances.risk.destroy();
+
+    radiusChartInstances.risk = new Chart(riskCtx, {
+        type: 'doughnut',
+        plugins: [ChartDataLabels],
+        data: {
+            labels: [`Risiko Sedang (${countSedang})`, `Risiko Tinggi (${countTinggi})`],
+            datasets: [{
+                data: [countSedang, countTinggi],
+                backgroundColor: ['#bfb100', '#b8005c'],
+                borderWidth: 1,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: 10 },
+            plugins: {
+                legend: { display: true, position: 'right', labels: { color: '#333', font: { size: 11 }, boxWidth: 12 } },
+                
+                datalabels: {
+                    color: '#fff', font: { weight: 'bold', size: 14 }, textAlign: 'center',
+                    formatter: (value, ctx) => {
+                        if (value === 0) return '';
+                        let percentage = ((value / totalRisk) * 100).toFixed(0) + "%";
+                        return value + '\n(' + percentage + ')';
+                    }
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const rawLabel = context.label;
+                            const cleanLabel = rawLabel.replace(/\s\(\d+\)$/, '');
+                            return cleanLabel;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function downloadRadiusExcel(polygon) {
+    const wb = XLSX.utils.book_new();
+    let hasData = false;
+    const selectedDateYMD = getCurrentSliderDateYMD();
+
+    const layersToProcess = [
+        { key: 'troublespot', name: 'Gangguan Lalu Lintas', type: 'point' },
+        { key: 'traffic_point', name: 'Titik Perlambatan', type: 'point' },
+        { key: 'blackspot', name: 'Black Spot', type: 'point_date' },
+        { key: 'prediksi_risiko', name: 'Prediksi Risiko', type: 'line' }
+    ];
+
+    layersToProcess.forEach(layer => {
+        const sourceData = filteredLayerData[layer.key];
+        
+        let filteredFeatures = [];
+        if (layer.type === 'line') {
+            filteredFeatures = filterLinesInPoly(sourceData, polygon);
+        } else {
+            filteredFeatures = filterPointsInPoly(sourceData, polygon);
+            
+            if (layer.key === 'blackspot' && selectedDateYMD) {
+                filteredFeatures = filteredFeatures.filter(f => f.properties.tanggal === selectedDateYMD);
+            }
+        }
+
+        if (filteredFeatures.length > 0) {
+            hasData = true;
+            const exportData = [];
+
+            filteredFeatures.forEach(feature => {
+                const props = feature.properties || {};
+                const geom = feature.geometry;
+                let row = {};
+
+                Object.keys(ALIAS_MAP).forEach(key => {
+                    if (props.hasOwnProperty(key)) {
+                        const headerName = ALIAS_MAP[key];
+                        row[headerName] = props[key];
+                    }
+                });
+
+                let coords = null;
+                if (geom.type === 'Point') {
+                    coords = geom.coordinates;
+                } else {
+                    try {
+                        const centerPoint = turf.centroid(feature);
+                        coords = centerPoint.geometry.coordinates;
+                    } catch (e) {
+                    }
+                }
+
+                if (coords) {
+                    row['Longitude'] = coords[0];
+                    row['Latitude'] = coords[1];
+                }
+
+                if (Object.keys(row).length > 0) {
+                    exportData.push(row);
+                }
+            });
+
+            if (exportData.length > 0) {
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                XLSX.utils.book_append_sheet(wb, ws, layer.name);
+            }
+        }
+    });
+
+    if (!hasData) {
+        alert("Tidak ada data dalam radius ini untuk diekspor.");
+        return;
+    }
+
+    const dateStr = new Date().toISOString().slice(0,10);
+    const bsDateInfo = selectedDateYMD ? `_BS-${selectedDateYMD}` : '';
+    XLSX.writeFile(wb, `Analisis_Radius${bsDateInfo}_${dateStr}.xlsx`);
 }
 function isTimeActive(startStr, endStr) {
   if (!startStr || !endStr) return true;
