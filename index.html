@@ -1271,6 +1271,26 @@ if (window.Chart) {
             <button class="tab-btn" data-value="google_hybrid">Google Hybrid</button>
             <button class="btn-info-layer" data-info="basemap_hybrid" title="Info Google Hybrid">i</button>
           </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="google_dark">Google Dark Mode</button>
+            <button class="btn-info-layer" data-info="basemap_google_dark" title="Info Google Dark">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="esri_dark">ESRI Gray (Dark)</button>
+            <button class="btn-info-layer" data-info="basemap_esri_dark" title="Info ESRI Dark Gray">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="esri_light">ESRI Gray (Light)</button>
+            <button class="btn-info-layer" data-info="basemap_esri_light" title="Info ESRI Light Gray">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="carto_dark">CartoDB Dark Matter</button>
+            <button class="btn-info-layer" data-info="basemap_carto_dark" title="Info CartoDB Dark">i</button>
+          </div>
+          <div class="layer-row">
+            <button class="tab-btn" data-value="stadia">Stadia Maps</button>
+            <button class="btn-info-layer" data-info="basemap_stadia" title="Info Stadia Maps">i</button>
+          </div>
         </div>
       </div>
       <div id="layer-content" class="panel-content">
@@ -1485,7 +1505,12 @@ const basemapTiles = {
   esri:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'], tileSize:256 },
   google: { tiles:['https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'], tileSize: 256 },  
   imagery:{ tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize:256 },
-  google_hybrid: { tiles:['https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'], tileSize: 256 }
+  google_hybrid: { tiles:['https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'], tileSize: 256 },
+  google_dark: { tiles: ['https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&apistyle=s.e%3Ag%7Cp.c%3A%23242f3e%2Cs.e%3Aw%7Cp.c%3A%2317263c%2Cs.t%3A3%7Cs.e%3Ag.f%7Cp.c%3A%2338414e%2Cs.t%3A3%7Cs.e%3Ag.s%7Cp.c%3A%23212a37%2Cs.e%3Al.t.f%7Cp.c%3A%239ca5b3%2Cs.e%3Al.t.s%7Cp.c%3A%23000000'], tileSize: 256  },
+  esri_dark: { tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'], tileSize: 256 },
+  esri_light: { tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'], tileSize: 256 },
+  carto_dark: { tiles:['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'], tileSize:256 },
+  stadia: { tiles:['https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png'], tileSize:256 }
   };
 
 const ICON_SVGS = {
@@ -5050,7 +5075,7 @@ if (originalLocBtn) {
     });
 }
 const LAYER_INFO_DATA = {
-    basemap_osm: {
+  basemap_osm: {
     title: "OpenStreetMap (OSM)",
     desc: "Peta Detail Berbasis Komunitas.",
     detail: `OpenStreetMap merupakan peta digital yang dibangun secara kolaboratif oleh komunitas di seluruh dunia. Keunggulan utamanya terletak pada tingkat detail yang sangat tinggi, terutama untuk area perkotaan. Peta ini tidak hanya menampilkan jalan raya utama, tetapi sering kali mencakup detail spesifik seperti jalan setapak, jejak bangunan (building footprints), hingga fasilitas umum yang kecil.`,
@@ -5060,7 +5085,7 @@ const LAYER_INFO_DATA = {
     title: "ESRI World Topographic Map",
     desc: "Peta Topografi & Kontur.",
     detail: `Peta ini dirancang oleh Esri dengan estetika yang sangat rapi dan profesional. Fokus utamanya adalah menampilkan bentuk permukaan bumi—seperti kontur ketinggian tanah, tutupan lahan (hutan, taman, area terbangun), dan hidrografi (sungai/danau), namun dengan tampilan yang diredam (muted). Label jalan dan nama tempat tetap ada, tetapi tidak mendominasi tampilan peta.`,
-    source: "ESRI, HERE, Garmin, FAO, USGS"
+    source: "ESRI"
   },
   basemap_google: {
     title: "Google Maps",
@@ -5080,7 +5105,36 @@ const LAYER_INFO_DATA = {
     detail: `Basemap ini menampilkan lapisan jalan transparan, nama tempat dan batas wilayah di atas citra satelit. User bisa melihat kondisi fisik lapangan yang nyata, namun tetap tahu nama jalan dan lokasi daerah tersebut.`,
     source: "Google Maps"
   },
-  
+  basemap_google_dark: {
+    title: "Google Maps - Dark Mode",
+    desc: "Tampilan mode gelap dari Google Maps.",
+    detail: `Basemap ini menyajikan data Google dengan skema warna gelap. Ideal untuk penggunaan di ruangan minim cahaya karena mengurangi ketegangan mata dan membuat layer data berwarna (seperti kemacetan lalu lintas atau titik kecelakaan) terlihat lebih kontras dan tajam.`,
+    source: "Google Maps"
+  },
+  basemap_esri_dark: {
+    title: "ESRI Dark Gray Canvas",
+    desc: "Peta dasar bernuansa gelap yang minimalis.",
+    detail: `Peta ini dirancang untuk meminimalkan gangguan visual dari latar belakang. Warna gelap sangat cocok untuk menonjolkan overlay data yang berwarna cerah (seperti jalur lalu lintas berwarna merah/kuning) agar lebih kontras dan mudah dibaca.`,
+    source: "ESRI"
+  },
+  basemap_esri_light: {
+    title: "ESRI Light Gray Canvas",
+    desc: "Peta dasar bernuansa abu-abu terang dan netral.",
+    detail: `Peta ini memberikan konteks geografis (jalan atau batas wilayah) dengan warna yang sangat halus dan diredam. Tujuannya adalah agar lapisan data operasional di atasnya menjadi fokus utama tanpa bertabrakan dengan warna peta dasar.`,
+    source: "ESRI"
+  },
+  basemap_carto_dark: {
+    title: "CartoDB Dark Matter",
+    desc: "Peta tema gelap dengan kontras tinggi.",
+    detail: `Didesain khusus untuk visualisasi data geografis. Penggunaan warna dasar hitam pekat dan abu-abu gelap membuat layer informasi di atasnya (seperti garis kemacetan traffic atau rute) terlihat sangat mencolok dan mudah dianalisis.`,
+    source: "CartoDB"
+  },
+  basemap_stadia: {
+    title: "Stadia Alidade Smooth Dark",
+    desc: "Peta dasar bertema gelap dengan desain modern dan minimalis.",
+    detail: `Dirancang untuk keterbacaan tinggi dengan palet warna yang halus dan tidak menyilaukan. Peta ini menonjolkan fitur geografis utama tanpa gangguan visual, sehingga sangat efektif sebagai latar belakang untuk menonjolkan visualisasi data operasional.`,
+    source: "Stadia Maps"
+  },  
   troublespot: {
     title: "Titik Gangguan Lalu Lintas",
     desc: "Titik gangguan lalu lintas yang dipantau dan dilaporkan secara langsung (real-time).",
