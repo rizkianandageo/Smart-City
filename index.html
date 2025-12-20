@@ -1076,6 +1076,179 @@ if (window.Chart) {
   #btn-screenshot-radius:hover {
       background: rgba(255,255,255,0.2);
   }
+
+    #severe-traffic-alert {
+      position: absolute;
+      top: 52px;
+      right: 345px; 
+      z-index: 1550;
+      
+      background: rgba(211, 47, 47, 0.95);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      border: 2px solid #ff5252;
+      animation: slide-in-top 0.5s ease-out;
+      
+      width: 280px; 
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+  }
+
+  #severe-traffic-alert.minimized {
+      width: auto;
+      padding: 6px 12px;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: #b71c1c;
+  }
+
+  #severe-traffic-alert.minimized .alert-content-wrapper,
+  #severe-traffic-alert.minimized #btn-severe-minimize {
+      display: none;
+  }
+
+  #severe-traffic-alert.minimized .alert-minimized-label {
+      display: block !important;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+  }
+
+  #severe-traffic-alert.minimized .alert-icon-box {
+      width: 24px; height: 24px; font-size: 16px;
+  }
+
+  .alert-header-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      width: 100%; margin-bottom: 6px;
+  }
+
+  .alert-icon-box {
+      position: relative; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+
+  .alert-icon-animate {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid #fff; animation: ripple 1.5s infinite;
+  }
+
+  #btn-severe-minimize {
+      background: transparent; border: none; color: rgba(255,255,255,0.7);
+      font-weight: 800; font-size: 14px; cursor: pointer; padding: 0 4px; line-height: 1;
+  }
+  #btn-severe-minimize:hover { color: #fff; }
+
+  .alert-content-wrapper { width: 100%; }
+  .alert-title { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #ffcdd2; margin-bottom: 2px; text-transform: uppercase; }
+  .alert-desc { font-size: 13px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+
+  #btn-severe-details {
+      background: #fff; color: #d32f2f; border: none;
+      padding: 8px; border-radius: 6px; font-size: 12px;
+      font-weight: 700; cursor: pointer; width: 100%;
+      transition: background 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  #btn-severe-details:hover { background: #ffebee; }
+
+  @keyframes slide-in-top {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes ripple {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+  }
+
+  @media (max-width: 1000px) {
+      #severe-traffic-alert { top: 110px; right: 10px; width: auto; max-width: 250px; }
+  }
+
+  #severe-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+      z-index: 20000; display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+  }
+  #severe-modal-box {
+      background: #fff; width: 90%; max-width: 450px; max-height: 80vh;
+      border-radius: 12px; display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  #severe-modal-header {
+      background: #d32f2f; color: #fff; padding: 15px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+  }
+  #severe-modal-header h3 { margin: 0; font-size: 16px; }
+  #severe-modal-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+  #severe-modal-body { padding: 20px; overflow-y: auto; background: #fafafa; }
+
+  .severe-summary {
+      display: flex; gap: 15px; margin-bottom: 15px; align-items: center;
+      background: #ffebee; padding: 10px; border-radius: 8px; border: 1px solid #ffcdd2;
+  }
+  .severe-summary .count-box {
+      background: #fff; padding: 10px; border-radius: 8px; text-align: center;
+      min-width: 70px; border: 1px solid #ef9a9a;
+  }
+  .severe-summary .count-box span { display: block; font-size: 24px; font-weight: 800; color: #d32f2f; line-height: 1; }
+  .severe-summary .count-box small { font-size: 10px; color: #666; }
+  .severe-summary .desc-box { font-size: 13px; color: #333; line-height: 1.4; }
+
+  .severe-list-header { font-weight: 700; font-size: 13px; color: #555; margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+
+  #severe-street-list { list-style: none; padding: 0; margin: 0; }
+  #severe-street-list li {
+      padding: 10px 12px;
+      background: #fff; border-bottom: 1px solid #eee;
+      font-size: 13px; color: #333;
+      display: flex; justify-content: space-between;
+      align-items: center;
+  }
+  #severe-street-list li:hover { background: #f5f5f5; }
+
+  .street-name { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .street-name::before { content: "🔴"; font-size: 10px; }
+
+  .street-count {
+      background: #ffebee; color: #c62828;
+      padding: 2px 8px; border-radius: 10px;
+      font-size: 11px; font-weight: 700;
+      border: 1px solid #ef9a9a; white-space: nowrap;
+  }
+
+.alert-controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+#btn-severe-minimize, #btn-severe-mute {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+#btn-severe-minimize:hover, #btn-severe-mute:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
+#severe-traffic-alert.minimized #btn-severe-minimize,
+#severe-traffic-alert.minimized #btn-severe-mute {
+    display: none;
+}
 </style>
 </head>
 <body>
@@ -1131,6 +1304,54 @@ if (window.Chart) {
 </div>
 
 <div id="map"></div>
+
+<div id="severe-traffic-alert" style="display: none;">
+    <div class="alert-header-row">
+        <div class="alert-icon-box">
+            <div class="alert-icon-animate"></div>
+            <span>⚠️</span>
+        </div>
+        
+        <div class="alert-controls">
+            <button id="btn-severe-mute" title="Matikan Suara">🔊</button>
+            <button id="btn-severe-minimize" title="Minimize">_</button>
+        </div>
+    </div>
+    
+    <div class="alert-content-wrapper">
+        <div class="alert-title">PERINGATAN LALU LINTAS</div>
+        <div class="alert-desc">Terdapat Perlambatan Parah di Wilayah ini</div>
+        <button id="btn-severe-details">Informasi Lengkap Perlambatan Parah</button>
+    </div>
+    
+    <div class="alert-minimized-label" style="display:none;">Level 4 Terdeteksi</div>
+
+    <audio id="severe-alert-sound" loop preload="auto">
+        <source src="./assets/traffic-alert.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<div id="severe-modal-overlay" style="display: none;">
+    <div id="severe-modal-box">
+        <div id="severe-modal-header">
+            <h3>Detail Perlambatan Parah</h3>
+            <button id="severe-modal-close">&times;</button>
+        </div>
+        <div id="severe-modal-body">
+            <div class="severe-summary">
+                <div class="count-box">
+                    <span id="severe-count-val">0</span>
+                    <small>Titik/Ruas</small>
+                </div>
+                <div class="desc-box">
+                    Daftar ruas jalan yang mengalami kemacetan tinggi saat ini.
+                </div>
+            </div>
+            <div class="severe-list-header">Daftar Jalan:</div>
+            <ul id="severe-street-list"></ul>
+        </div>
+    </div>
+</div>
 
 <div id="search-routing-panel">
   <div class="field-wrap" id="search-box">
@@ -1862,6 +2083,9 @@ let riskExclamationMarkers = [];
 let isExclamationAnimationRunning = false;
 let exclamationAnimationStartTime = 0;
 let isRiskAnimationRunning = false;
+let isLevel4AnimationRunning = false;
+let level4AnimationStartTime = 0;
+let isAlertMuted = false;
 let riskAnimationStartTime = 0;
 let filteredLayerData = {};
 let timeSliderData = {
@@ -3172,28 +3396,38 @@ function applyVisibility(layerPrefix) {
         }
         case 'traffic': {
           map.addSource('traffic',{ type:'geojson', data:dataNorm });
+          
           map.addLayer({
-            id:'traffic-outline',
-            type:'line', 
-            source:'traffic',
+            id:'traffic-outline', type:'line', source:'traffic',
             layout:{ 'line-join':'round', 'line-cap':'round' },
-            paint:{ 
-              'line-width': 4,
-              'line-opacity': 0.75,
-              'line-color': '#000000'
-            }
+            paint:{ 'line-width': 4, 'line-opacity': 0.75, 'line-color': '#000000' }
           });
+
           map.addLayer({
-            id:'traffic-line',
-            type:'line', 
-            source:'traffic',
+            id:'traffic-line', type:'line', source:'traffic',
             layout:{ 'line-join':'round', 'line-cap':'round' },
             paint:{ 
-              'line-width': 3,
-              'line-opacity': 1,
+              'line-width': 3, 
+              'line-opacity': 1, 
               'line-color':['interpolate',['linear'],['get','level'],1,'#ffeb3b',3,'#f44336',5,'#5d4037'] 
             }
           });
+          map.addLayer({
+            id: 'traffic-level4-highlight',
+            type: 'line',
+            source: 'traffic',
+            filter: ['==', ['to-number', ['get', 'level']], 4], 
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: {
+                'line-color': '#d50000',
+                'line-width': 4,
+                'line-opacity': 0.8,
+                'line-blur': 1
+            }
+          });
+          
+          checkAndNotifySevereTraffic(dataNorm);
+
           setLayerInteractivity('traffic-line');
           setLayerInteractivity('traffic-outline'); 
           break;
@@ -4097,6 +4331,26 @@ function animateRiskSpotlight(timestamp) {
   requestAnimationFrame(animateRiskSpotlight);
 }
 
+function animateSevereTraffic(timestamp) {
+    if (!isLevel4AnimationRunning) return;
+
+    if (!level4AnimationStartTime) level4AnimationStartTime = timestamp;
+    const elapsed = timestamp - level4AnimationStartTime;
+    
+    const pulse = (Math.sin(elapsed / 300) + 1) / 2; 
+    const width = 4 + pulse * 6;
+    const opacity = 0.5 + pulse * 0.5;
+
+    try {
+        if (map.getLayer('traffic-level4-highlight')) {
+            map.setPaintProperty('traffic-level4-highlight', 'line-width', width);
+            map.setPaintProperty('traffic-level4-highlight', 'line-opacity', opacity);
+        }
+    } catch (e) {}
+    
+    requestAnimationFrame(animateSevereTraffic);
+}
+
 function animateExclamationMarkers(timestamp) {
   if (!isExclamationAnimationRunning) return;
 
@@ -4118,6 +4372,157 @@ riskExclamationMarkers.forEach(marker => {
 
   requestAnimationFrame(animateExclamationMarkers);
 }
+
+function checkAndNotifySevereTraffic(geojson) {
+    const alertEl = document.getElementById('severe-traffic-alert');
+    const btnDetails = document.getElementById('btn-severe-details');
+    const minBtn = document.getElementById('btn-severe-minimize');
+    const muteBtn = document.getElementById('btn-severe-mute');
+    const audioEl = document.getElementById('severe-alert-sound');
+    
+    alertEl.style.display = 'none';
+    alertEl.classList.remove('minimized');
+    isLevel4AnimationRunning = false;
+    
+    if(audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        audioEl.volume = 1.0; 
+        
+        audioEl.onerror = () => {
+            console.error("ERROR AUDIO: File 'traffic-alert.mp3' tidak ditemukan atau format tidak didukung.");
+            console.error("Pastikan file mp3 ada di folder yang sama dengan file HTML dan server berjalan.");
+        };
+    }
+    
+    if (!geojson || !geojson.features) return;
+
+    const severeFeatures = geojson.features.filter(f => {
+        const lvl = parseInt(f.properties.level || f.properties.Level || 0);
+        return lvl === 4;
+    });
+
+    if (severeFeatures.length > 0) {
+        alertEl.style.display = 'flex';
+        
+        const playSoundSmart = () => {
+            if (!audioEl) return;
+            if (!isAlertMuted && !alertEl.classList.contains('minimized')) {
+                const playPromise = audioEl.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log("Audio sedang berputar.");
+                    }).catch(error => {
+                        console.warn("Autoplay diblokir. Menunggu klik user...");
+                        const onUserInteract = () => {
+                            if (!isAlertMuted && !alertEl.classList.contains('minimized')) {
+                                audioEl.play().catch(e => console.error("Masih gagal play:", e));
+                            }
+                            document.removeEventListener('click', onUserInteract);
+                            document.removeEventListener('keydown', onUserInteract);
+                        };
+                        document.addEventListener('click', onUserInteract);
+                        document.addEventListener('keydown', onUserInteract);
+                    });
+                }
+            } else {
+                audioEl.pause();
+                audioEl.currentTime = 0;
+            }
+        };
+        playSoundSmart();
+
+        if (!isLevel4AnimationRunning) {
+            isLevel4AnimationRunning = true;
+            level4AnimationStartTime = 0;
+            requestAnimationFrame(animateSevereTraffic);
+        }
+        btnDetails.onclick = () => showSevereTrafficModal(severeFeatures);
+
+        if (muteBtn) {
+            muteBtn.textContent = isAlertMuted ? '🔇' : '🔊';
+            muteBtn.title = isAlertMuted ? 'Hidupkan Suara' : 'Matikan Suara';
+            muteBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                isAlertMuted = !isAlertMuted; 
+                muteBtn.textContent = isAlertMuted ? '🔇' : '🔊';
+                muteBtn.title = isAlertMuted ? 'Hidupkan Suara' : 'Matikan Suara';
+                if (isAlertMuted) {
+                    audioEl.pause();
+                    audioEl.currentTime = 0;
+                } else {
+                    playSoundSmart();
+                }
+            };
+        }
+
+        if(minBtn) {
+            minBtn.onclick = (e) => {
+                e.stopPropagation();
+                alertEl.classList.add('minimized');
+                if(audioEl) {
+                    audioEl.pause(); 
+                    audioEl.currentTime = 0;
+                }
+            };
+        }
+
+        alertEl.onclick = (e) => {
+            if (e.target.tagName === 'BUTTON') return; 
+            if(alertEl.classList.contains('minimized')) {
+                alertEl.classList.remove('minimized');
+                if (!isAlertMuted) playSoundSmart();
+            }
+        };
+    }
+}
+
+function showSevereTrafficModal(features) {
+    const modal = document.getElementById('severe-modal-overlay');
+    const countEl = document.getElementById('severe-count-val');
+    const listEl = document.getElementById('severe-street-list');
+    
+    countEl.textContent = features.length;
+    listEl.innerHTML = '';
+    const streetCounts = {};
+
+    features.forEach(f => {
+        let rawName = f.properties.Jalan || 
+                      f.properties.jalan || 
+                      f.properties.street || 
+                      f.properties.nama_jalan || 
+                      f.properties.Nm_Ruas || 
+                      'Jalan Tanpa Nama';
+        const cleanName = rawName.toString().trim();
+        
+        if (streetCounts[cleanName]) {
+            streetCounts[cleanName]++;
+        } else {
+            streetCounts[cleanName] = 1;
+        }
+    });
+    const sortedStreets = Object.entries(streetCounts).sort((a, b) => b[1] - a[1]);
+    sortedStreets.forEach(([name, count]) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div class="street-name">${name}</div>
+            <div class="street-count">${count} Titik</div>
+        `;
+        listEl.appendChild(li);
+    });
+
+    modal.style.display = 'flex';
+}
+
+document.getElementById('severe-modal-close').addEventListener('click', () => {
+    document.getElementById('severe-modal-overlay').style.display = 'none';
+});
+document.getElementById('severe-modal-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'severe-modal-overlay') {
+        document.getElementById('severe-modal-overlay').style.display = 'none';
+    }
+});
 
 function createRiskMarker(coordinates, properties) {
   try {
