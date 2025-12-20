@@ -4485,7 +4485,8 @@ function showSevereTrafficModal(features) {
     
     countEl.textContent = features.length;
     listEl.innerHTML = '';
-    const streetCounts = {};
+    
+    const streetData = {};
 
     features.forEach(f => {
         let rawName = f.properties.Jalan || 
@@ -4496,19 +4497,52 @@ function showSevereTrafficModal(features) {
                       'Jalan Tanpa Nama';
         const cleanName = rawName.toString().trim();
         
-        if (streetCounts[cleanName]) {
-            streetCounts[cleanName]++;
-        } else {
-            streetCounts[cleanName] = 1;
+        if (!streetData[cleanName]) {
+            streetData[cleanName] = {
+                count: 0,
+                feature: f 
+            };
         }
+        streetData[cleanName].count++;
     });
-    const sortedStreets = Object.entries(streetCounts).sort((a, b) => b[1] - a[1]);
-    sortedStreets.forEach(([name, count]) => {
+
+    const sortedStreets = Object.entries(streetData).sort((a, b) => b[1].count - a[1].count);
+
+    sortedStreets.forEach(([name, data]) => {
         const li = document.createElement('li');
+        li.style.cursor = 'pointer'; 
+        li.title = "Klik untuk zoom ke lokasi";
+
         li.innerHTML = `
             <div class="street-name">${name}</div>
-            <div class="street-count">${count} Titik</div>
+            <div class="street-count">${data.count} Titik</div>
         `;
+        
+        li.addEventListener('click', () => {
+            modal.style.display = 'none';
+
+            const targetFeature = data.feature;
+
+            if (targetFeature) {
+                try {
+                    const centerPoint = turf.centroid(targetFeature);
+                    const coords = centerPoint.geometry.coordinates;
+                    map.flyTo({
+                        center: coords,
+                        zoom: 17,
+                        speed: 1.5,
+                        curve: 1
+                    });
+                    setTimeout(() => {
+                        showFeaturePopup(map, targetFeature, coords, 'traffic');
+                    }, 1200);
+
+                } catch (e) {
+                    console.error("Gagal mendapatkan koordinat untuk zoom:", e);
+                }
+            }
+        });
+
         listEl.appendChild(li);
     });
 
