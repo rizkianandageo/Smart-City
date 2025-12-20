@@ -2717,9 +2717,19 @@ function initMap(polygon){
         title = `Objek Vital • ${ovLabel}`;
       }
       let bodyHtml = '';
-      for (const key in ALIAS_MAP){
-        if (topFeature.properties.hasOwnProperty(key)){
-          bodyHtml += `<div><strong>${ALIAS_MAP[key]}:</strong> ${topFeature.properties[key]}</div>`;
+      for (const key in ALIAS_MAP) {
+        if (topFeature.properties.hasOwnProperty(key)) {
+          let val = topFeature.properties[key];
+          let labelStyle = ''; 
+          let valueStyle = '';
+          if (key === 'level') {
+            const numVal = parseInt(val, 10);
+            if (!isNaN(numVal) && numVal >= 3) {
+              labelStyle = 'color: #d32f2f;'; 
+              valueStyle = 'color: #d32f2f; font-weight: 800;'; 
+            }
+          }
+          bodyHtml += `<div><strong style="${labelStyle}">${ALIAS_MAP[key]}:</strong> <span style="${valueStyle}">${val}</span></div>`;
         }
       }
       if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
@@ -3963,9 +3973,22 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
             bodyHtml += `<div style="color:red; font-size:12px; margin-bottom:5px;">ID CCTV atau Region tidak dikenali.</div>`;
         }
     }
-    for (const key in ALIAS_MAP){
-        if (feature.properties.hasOwnProperty(key)){
-            bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> ${esc(feature.properties[key])}</div>`;
+    for (const key in ALIAS_MAP) {
+        if (feature.properties.hasOwnProperty(key)) {
+            let rawVal = feature.properties[key];
+            let displayVal = esc(rawVal);
+            
+            let labelStyle = '';
+            let valueStyle = '';
+            if (key === 'level') {
+                const numVal = parseInt(rawVal, 10);
+                if (!isNaN(numVal) && numVal >= 3) {
+                    labelStyle = 'color: #d32f2f;';
+                    valueStyle = 'color: #d32f2f; font-weight: 800;';
+                }
+            }
+
+            bodyHtml += `<div><strong style="${labelStyle}">${esc(ALIAS_MAP[key])}:</strong> <span style="${valueStyle}">${displayVal}</span></div>`;
         }
     }
     if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
