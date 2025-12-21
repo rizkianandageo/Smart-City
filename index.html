@@ -6246,9 +6246,9 @@ const LAYER_INFO_DATA = {
     detail: `Model prediksi ini menggunakan metode <b>Random Forest</b> dengan memanfaatkan data historis kecelakaan dan kondisi lingkungan jalan. Sistem akan menganalisis hubungan antara kondisi lalu lintas, kepadatan penduduk di sekitar jalan, keberadaan fasilitas penting, cuaca dan waktu kejadian serta riwayat kecelakaan yang pernah terjadi di sekitar lokasi tersebut untuk menemukan faktor penyebab utama kecelakaan. Hasil analisis tersebut digunakan untuk memprediksi risiko kecelakaan dengan tingkat klasifikasi sebagai berikut:
       <br><br><b>Klasifikasi Risiko:</b>
       <ul>
-        <li>Skor < 1 : <b>Risiko Kecelakaan Rendah,</b> yaitu ruas jalan berada dalam kondisi relatif aman dan tidak menunjukkan tanda-tanda potensi kecelakaan yang berarti.</li>
-        <li>Skor 1 – 2 : <b>Risiko Kecelakaan Sedang,</b> yaitu ruas jalan memiliki beberapa faktor yang perlu diwaspadai, seperti cuaca kurang baik, kepadatan kendaraan meningkat, atau ada riwayat kecelakaan ringan sebelumnya.</li>
-        <li>Skor > 2 : <b>Risiko Kecelakaan Tinggi,</b> yaitu ruas jalan menunjukkan banyak faktor yang meningkatkan potensi kecelakaan, misalnya lalu lintas sangat padat, cuaca ekstrem, riwayat kecelakaan berat, ataupun adanya lingkungan sekitar yang berisiko. Segmen dengan kategori ini membutuhkan perhatian khusus dan langkah mitigasi yang lebih cepat.</li>
+        <li>Skor 0 : <b>Risiko Kecelakaan Rendah,</b> yaitu ruas jalan berada dalam kondisi relatif aman dan tidak menunjukkan tanda-tanda potensi kecelakaan yang berarti.</li>
+        <li>Skor 1 : <b>Risiko Kecelakaan Sedang,</b> yaitu ruas jalan memiliki beberapa faktor yang perlu diwaspadai, seperti cuaca kurang baik, kepadatan kendaraan meningkat, atau ada riwayat kecelakaan ringan sebelumnya.</li>
+        <li>Skor 2 : <b>Risiko Kecelakaan Tinggi,</b> yaitu ruas jalan menunjukkan banyak faktor yang meningkatkan potensi kecelakaan, misalnya lalu lintas sangat padat, cuaca ekstrem, riwayat kecelakaan berat, ataupun adanya lingkungan sekitar yang berisiko. Segmen dengan kategori ini membutuhkan perhatian khusus dan langkah mitigasi yang lebih cepat.</li>
       </ul>`,
     source: "Hasil analisis model prediksi risiko"
   },
