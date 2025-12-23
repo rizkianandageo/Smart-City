@@ -8,8 +8,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -296,8 +295,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -584,8 +582,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736,8 +733,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -888,8 +884,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -1176,8 +1171,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -6864,8 +6858,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -19104,8 +19097,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -20056,8 +20048,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -23024,8 +23015,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -26004,8 +25994,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:30",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -349560,8 +349549,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:30",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -558242,8 +558230,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:30",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -573474,8 +573461,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:30",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -624320,8 +624306,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
-        "jam_selesai": "14:30",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "14:30"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -690140,8 +690125,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -691072,8 +691056,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -692096,8 +692079,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -693048,8 +693030,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -694504,8 +694485,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -695648,8 +695628,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "17:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "17:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -697216,8 +697195,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "17:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "17:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -698156,8 +698134,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "17:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "17:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -698460,8 +698437,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "17:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "17:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -698836,8 +698812,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "17:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "17:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -699216,8 +699191,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -704128,8 +704102,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -705512,8 +705485,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -705960,8 +705932,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -708280,8 +708251,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -709448,8 +709418,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -709752,8 +709721,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -709912,8 +709880,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710144,8 +710111,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710232,8 +710198,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -711612,8 +711577,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -712996,8 +712960,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -713948,8 +713911,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -715548,8 +715510,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -716572,8 +716533,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
-        "jam_selesai": "18:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "18:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -720908,8 +720868,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
-        "jam_selesai": "18:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "18:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -723444,8 +723403,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
-        "jam_selesai": "18:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "18:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -724324,8 +724282,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
-        "jam_selesai": "18:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "18:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -725596,8 +725553,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
-        "jam_selesai": "18:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "18:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -726512,8 +726468,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -727616,8 +727571,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -728040,8 +727994,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -728328,8 +728281,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -729856,8 +729808,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730304,8 +730255,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730464,8 +730414,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730624,8 +730573,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730860,8 +730808,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -731828,8 +731775,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -732388,8 +732334,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -732948,8 +732893,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -733508,8 +733452,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -734340,8 +734283,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -735172,8 +735114,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -735596,8 +735537,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736156,8 +736096,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
-        "jam_selesai": "23:59",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "23:59"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736580,8 +736519,7 @@
         "Satwil": "Polda Bali",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737028,8 +736966,7 @@
         "Satwil": "Polda DI Yogyakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737404,8 +737341,7 @@
         "Satwil": "Polresta Surakarta",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737636,8 +737572,7 @@
         "Satwil": "Polrestabes Bandung",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737920,8 +737855,7 @@
         "Satwil": "Polrestabes Medan",
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
-        "jam_selesai": "21:00",
-        "last_update": "2025-12-23T10:26:26+07:00"
+        "jam_selesai": "21:00"
       },
       "geometry": {
         "type": "MultiPolygon",
