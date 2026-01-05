@@ -1676,6 +1676,11 @@ if (window.Chart) {
            </div>
 
           <div class="layer-row">
+            <button class="tab-btn" data-layer="cctv_coverage">Area Pantauan CCTV</button>
+            <button class="btn-info-layer" data-info="cctv_coverage" title="Info Area Coverage CCTV">i</button>
+          </div>
+
+          <div class="layer-row">
             <button class="tab-btn active" data-layer="gerbang_tol">Gerbang Tol</button>
             <button class="btn-info-layer" data-info="gerbang_tol" title="Info Gerbang Tol">i</button>
           </div>
@@ -1769,7 +1774,8 @@ const URLS = {
   data_kecelakaan: 'data_kecelakaan',
   gerbang_tol:     'gerbang_tol',
   rescue:          'rescue',
-  traffic_point:   'traffic_point'
+  traffic_point:   'traffic_point',
+  cctv_coverage:   'cctv_coverage'
 };
 
 const SATWIL_FIELD = {
@@ -1788,6 +1794,7 @@ const SATWIL_FIELD = {
   gerbang_tol: 'Satwil',
   rescue: 'Satwil',
   traffic_point: 'Satwil',
+  cctv_coverage: 'Satwil',
 };
 
 let selectedSatwilName = null;
@@ -1891,6 +1898,7 @@ const ICON_SVGS = {
   'ov-towing': `<svg fill="#3fbec9" stroke="#000000" stroke-width="1" width="150px" height="150px" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M4.96875 4C4.726563 4.007813 4.464844 4.097656 4.28125 4.28125L3.28125 5.28125C2.917969 5.644531 2.890625 6.226563 3.21875 6.625L17 23.34375L17 26L27 26L27 23C27 22.707031 26.878906 22.441406 26.65625 22.25L5.65625 4.25C5.457031 4.082031 5.210938 3.992188 4.96875 4 Z M 4 10.71875L4 19C4 19.550781 4.449219 20 5 20C5.550781 20 6 20.449219 6 21C6 21.550781 5.550781 22 5 22C4.449219 22 4 21.550781 4 21L2 21C2 22.652344 3.347656 24 5 24C6.652344 24 8 22.652344 8 21C8 19.695313 7.164063 18.570313 6 18.15625L6 13.15625 Z M 32 13C30.347656 13 29 14.347656 29 16L29 38L33.09375 38C33.574219 40.832031 36.03125 43 39 43C41.96875 43 44.429688 40.832031 44.90625 38L47 38C48.652344 38 50 36.652344 50 35L50 25.375C50 23.363281 48.550781 21.308594 48.375 21.0625L44.21875 15.5C43.265625 14.351563 41.773438 13 40 13 Z M 38 19L44.34375 19L46.78125 22.25C47.085938 22.675781 47.816406 23.902344 47.96875 25L38 25C37.550781 25 37 24.449219 37 24L37 20C37 19.445313 37.546875 19 38 19 Z M 0 28L0 35C0 36.652344 1.347656 38 3 38L7.09375 38C7.574219 40.832031 10.03125 43 13 43C15.96875 43 18.425781 40.832031 18.90625 38L27 38L27 28 Z M 13 33C15.207031 33 17 34.792969 17 37C17 39.207031 15.207031 41 13 41C10.792969 41 9 39.207031 9 37C9 34.792969 10.792969 33 13 33 Z M 39 33C41.207031 33 43 34.792969 43 37C43 39.207031 41.207031 41 39 41C36.792969 41 35 39.207031 35 37C35 34.792969 36.792969 33 39 33Z"/></svg>`,
   'default': `<svg xmlns="http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='#9e9e9e' stroke='#fff' stroke-width='1.5'/></svg>`
 };
+
 const ALIAS_MAP = {
   city:'Kabupaten / Kota', street:'Jalan', 
   Nm_Ruas:'Nama Ruas Jalan', nm_ruas:'Nama Ruas Jalan', Status:'Status Jalan', Propinsi:'Provinsi',
@@ -1903,7 +1911,7 @@ const ALIAS_MAP = {
   jumlah_pen: 'Jumlah Penduduk', luas: 'Luas (ha)', kepadatan: 'Kepadatan (Jiwa/ha)', speed_limit: 'Batas Kecepatan (km/jam)',
   tipe_zona: 'Tipe Zona Geofencing', nama_zona: 'Zona Geofencing', keterangan_status: 'Keterangan Zona Geofencing', geofence_limit: 'Batas Kecepatan (km/jam)',
   jam_mulai: 'Waktu Mulai Berlaku Batas Kecepatan', jam_selesai: 'Waktu Selesai Berlaku Batas Kecepatan', 
-  vehicleName: 'Nama Kendaraan', nopol: 'Nomor Polisi', vehicleGroup: "Grup Kendaraan", merkName: 'Merk Kendaraan', tipeName: 'Tipe Kendaraan',
+  vehicleName: 'Nama Kendaraan', nopol: 'Nomor Polisi', vehicleGroup: "Grup Kendaraan", merkName: 'Merk Kendaraan', tipeName: 'Tipe Kendaraan', arah_cctv: 'Arah Pantauan', radius: 'Jarak Pandang',
   keterangan:'Keterangan', no_laka:'Nomor Kecelakaan', tanggal_kejadian:'Tanggal Kejadian', keterangan_kerugian:'Keterangan Kerugian', last_update:'Data Terakhir Diperbarui'
 };
 
@@ -3314,7 +3322,7 @@ const GT_META = {
   konstruksi: { icon: 'gt-konstruksi', color: '#FF6F00', textColor: '#fff', label: 'Gerbang Tol Konstruksi' }
 };
 async function loadAllDataLayersBySatwil(satwilName, polygon) {
-  const prefixes = ['troublespot','blackspot','traffic_point','traffic','blacklink','blackarea','cctv','objek_vital','gerbang_tol','rescue','data_kecelakaan','prediksi_risiko','speedlimit','geofencing','administrasi'];
+  const prefixes = ['troublespot','blackspot','traffic_point','traffic','blacklink','blackarea','cctv','cctv_coverage','objek_vital','gerbang_tol','rescue','data_kecelakaan','prediksi_risiko','speedlimit','geofencing','administrasi'];
   for (const p of prefixes) {
     (map.getStyle().layers || [])
       .map(l => l.id)
@@ -3326,7 +3334,7 @@ async function loadAllDataLayersBySatwil(satwilName, polygon) {
   }
 
   filteredLayerData = {};
-  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink','data_kecelakaan','rescue','gerbang_tol','cctv','objek_vital','traffic_point','blackspot','troublespot'];
+  const layerOrder = ['administrasi','geofencing','blackarea','speedlimit','traffic','prediksi_risiko','blacklink', 'cctv_coverage', 'data_kecelakaan','rescue','gerbang_tol','cctv','objek_vital','traffic_point','blackspot','troublespot'];
 
 function applyVisibility(layerPrefix) {
   const isActive = document
@@ -3334,15 +3342,19 @@ function applyVisibility(layerPrefix) {
     ?.classList.contains('active');
 
   const ids = (map.getStyle().layers || []).map(l => l.id);
-  const matches = ids.filter(id =>
-    id.startsWith(layerPrefix) ||
+  const matches = ids.filter(id => {
+    if (layerPrefix === 'cctv' && id.startsWith('cctv_coverage')) {
+      return false; 
+    }
+    return id.startsWith(layerPrefix) ||
     (layerPrefix === 'traffic_point' && id.startsWith('traffic_point-')) ||
+    (layerPrefix === 'cctv_coverage' && (id.startsWith('cctv_coverage-'))) ||
     (layerPrefix === 'cctv' && (id.startsWith('cctv-on') || id.startsWith('cctv-off'))) ||
     (layerPrefix === 'objek_vital' && id.startsWith('objek_vital-')) ||
     (layerPrefix === 'gerbang_tol' && id.startsWith('gerbang_tol-')) ||
     (layerPrefix === 'rescue' && (id.startsWith('rescue-'))) ||
     (layerPrefix === 'data_kecelakaan' && id.startsWith('data_kecelakaan-'))
-  );
+  });
 
   matches.forEach(id => {
     map.setLayoutProperty(id, 'visibility', isActive ? 'visible' : 'none');
@@ -3487,6 +3499,30 @@ function applyVisibility(layerPrefix) {
             setLayerInteractivity(`${d.key}-cluster`);
             setLayerInteractivity(`${d.key}-unclustered`);
           }
+          break;
+        }
+        case 'cctv_coverage': {
+          map.addSource('cctv_coverage', { type: 'geojson', data: dataNorm });
+          map.addLayer({
+            id: 'cctv_coverage-fill',
+            type: 'fill',
+            source: 'cctv_coverage',
+            paint: {
+              'fill-color': '#00FF00',
+              'fill-opacity': 0.7
+            }
+          });
+          map.addLayer({
+            id: 'cctv_coverage-outline',
+            type: 'line',
+            source: 'cctv_coverage',
+            paint: {
+              'line-color': '#006400',
+              'line-width': 1,
+              'line-opacity': 0.8
+            }
+          });
+          setLayerInteractivity('cctv_coverage-fill');
           break;
         }
         case 'objek_vital': {
@@ -4011,7 +4047,21 @@ return `<div class="legend-item">
       ${legendRow('ov-mosque','Masjid')} ${legendRow('ov-church','Gereja')}
       ${legendRow('ov-vihara','Vihara')} ${legendRow('ov-temple','Pura')}
       ${legendRow('ov-klenteng','Klenteng')}`;
-  }  
+  }
+  if (show('cctv_coverage')) {
+    html += `
+      <div class="legend-title">Area Pantauan CCTV</div>
+      <div class="legend-item">
+        <div class="legend-icon" style="
+          background: #00FF00; 
+          opacity: 0.7; 
+          border: 1px solid #006400; 
+          width: 20px; height: 20px; 
+          border-radius: 3px;">
+        </div>
+        <div class="legend-label">Area Pantauan</div>
+      </div>`;
+  }    
   if (show('cctv')) {
     html += `<div class="legend-title">CCTV</div> ${legendRow('cctv-on','Hidup')} ${legendRow('cctv-off','Mati')}`;
   }
@@ -6297,7 +6347,13 @@ const LAYER_INFO_DATA = {
       </ul>`,
     source: "Smart City"
   },
-    gerbang_tol: {
+  cctv_coverage: {
+    title: "Area Pantauan CCTV",
+    desc: "Visualisasi area jangkauan pandang kamera CCTV.",
+    detail: "Layer ini menggambarkan estimasi area yang dapat dilihat oleh kamera CCTV berdasarkan arah hadap kamera dan radius jangkauan lensa (Field of View). Warna hijau menunjukkan area yang tercover.",
+    source: "Analisis Spasial CCTV"
+  },
+  gerbang_tol: {
     title: "Gerbang Tol",
     desc: "Lokasi titik sebaran gerbang tol.",
     detail: `Data gerbang tol diklasifikasikan berdasarkan status operasional:
