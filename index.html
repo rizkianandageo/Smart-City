@@ -112,7 +112,20 @@ if (window.Chart) {
   #my-location-btn { width: 46px; height: 46px; background: var(--panel-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
   #my-location-btn:hover { background: #e9eef5; }
   #scale-box { background:var(--panel-bg); border-radius:8px; padding:6px 8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); pointer-events:auto; }
-  .maplibregl-popup-content { font-family:'Fira Sans', sans-serif; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); padding:0; max-width:280px!important; }
+  .maplibregl-popup-content { 
+      font-family: 'Fira Sans', sans-serif; 
+      border-radius: 8px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+      padding: 0; 
+      max-width: 380px !important;
+      width: 380px !important;
+  }
+  @media (max-width: 480px) {
+      .maplibregl-popup-content {
+          max-width: 300px !important;
+          width: 300px !important;
+      }
+  }
   .maplibregl-popup-close-button { font-size:20px; color:#fff; background:rgba(0,0,0,0.2); border-radius:50%; width:24px; height:24px; margin:6px 6px 0 0; line-height:24px; text-align:center; }
   .popup-header { background:var(--accent); color:#fff; padding:8px 36px 8px 12px; font-weight:600; font-size:15px; border-top-left-radius:8px; border-top-right-radius:8px; }
   .popup-body { padding:10px 12px; font-size:13px; max-height:180px; overflow-y:auto; }
@@ -4823,6 +4836,7 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
                         <div style="font-size: 20px; font-weight: 800; color: #1a237e; line-height: 1.2;">
                             ${persenLokal}%
                         </div>
+                        <div style="font-size: 11px; color: #555; font-weight: 600;">Berdasarkan Plat Nomor Kendaraan</div>
                      </div>`;
 
         setTimeout(() => {
