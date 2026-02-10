@@ -4805,7 +4805,7 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
         bodyHtml += `<div><strong>Kecamatan:</strong> ${props.nama_kec || props.KECAMATAN || '-'}</div>`;
         bodyHtml += `<div><strong>Penduduk:</strong> ${Number(props.jumlah_pen || 0).toLocaleString('id-ID')} Jiwa</div>`;
         bodyHtml += `<div><strong>Kepadatan:</strong> ${Number(props.kepadatan || 0).toLocaleString('id-ID')} Jiwa/ha</div>`;
-        bodyHtml += `<div><strong>Total Laka:</strong> ${props.jumlah_laka || 0} Kejadian</div>`;
+        bodyHtml += `<div><strong>Jumlah Kecelakaan:</strong> ${props.jumlah_laka || 0} Kejadian</div>`;
         
         bodyHtml += `<hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd;">`;
 
@@ -4819,7 +4819,7 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
 
         const persenLokal = props.persen_lokal || 0;
         bodyHtml += `<div style="margin-top: 12px; text-align: center; background: #f5f7fb; padding: 8px; border-radius: 6px; border: 1px solid #e0e0e0;">
-                        <div style="font-size: 11px; color: #555; font-weight: 600;">Persentase Orang Lokal Terlibat Laka</div>
+                        <div style="font-size: 11px; color: #555; font-weight: 600;">Persentase Orang Lokal Terlibat Kejadian Kecelakaan</div>
                         <div style="font-size: 20px; font-weight: 800; color: #1a237e; line-height: 1.2;">
                             ${persenLokal}%
                         </div>
@@ -4990,7 +4990,7 @@ function renderAdministrasiCharts(props) {
                     },
                     title: { 
                         ...commonOptions.plugins.title,
-                        text: 'Jenis Kelamin', 
+                        text: 'Jenis Kelamin Korban', 
                         position: 'left' 
                     },
                     tooltip: {
