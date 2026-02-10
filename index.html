@@ -4766,10 +4766,10 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
     }
     
     let bodyHtml = '';
-    
+    const props = feature.properties || {};
+
+    // --- LOGIKA KHUSUS UNTUK CCTV ---
     if (prefix === 'cctv') {
-        const props = feature.properties || {};
-        console.log('Properti CCTV:', props);
         const cctvId = props.rowid || props.id || props.cctv_id || props.id_cctv || props.ID; 
         const satwil = props.Satwil || props.satwil;
         const region = mapSatwilToRegion(satwil);
@@ -4792,25 +4792,74 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
         } else {
             bodyHtml += `<div style="color:red; font-size:12px; margin-bottom:5px;">ID CCTV atau Region tidak dikenali.</div>`;
         }
-    }
-    for (const key in ALIAS_MAP) {
-        if (feature.properties.hasOwnProperty(key)) {
-            let rawVal = feature.properties[key];
-            let displayVal = esc(rawVal);
-            
-            let labelStyle = '';
-            let valueStyle = '';
-            if (key === 'level') {
-                const numVal = parseInt(rawVal, 10);
-                if (!isNaN(numVal) && numVal >= 3) {
-                    labelStyle = 'color: #d32f2f;';
-                    valueStyle = 'color: #d32f2f; font-weight: 800;';
-                }
+        
+        // Tampilkan info atribut standar CCTV
+        for (const key in ALIAS_MAP) {
+            if (props.hasOwnProperty(key)) {
+                let rawVal = props[key];
+                bodyHtml += `<div><strong>${esc(ALIAS_MAP[key])}:</strong> <span>${esc(rawVal)}</span></div>`;
             }
+        }
 
-            bodyHtml += `<div><strong style="${labelStyle}">${esc(ALIAS_MAP[key])}:</strong> <span style="${valueStyle}">${displayVal}</span></div>`;
+    // --- LOGIKA KHUSUS UNTUK ADMINISTRASI (KEPENDUDUKAN) DENGAN GRAFIK ---
+    } else if (prefix === 'administrasi') {
+        // 1. Informasi Dasar (Teks Biasa)
+        bodyHtml += `<div><strong>Provinsi:</strong> ${props.nama_prop || '-'}</div>`;
+        bodyHtml += `<div><strong>Kab/Kota:</strong> ${props.nama_kab || '-'}</div>`;
+        bodyHtml += `<div><strong>Kecamatan:</strong> ${props.nama_kec || props.KECAMATAN || '-'}</div>`;
+        bodyHtml += `<div><strong>Penduduk:</strong> ${Number(props.jumlah_pen || 0).toLocaleString('id-ID')} Jiwa</div>`;
+        bodyHtml += `<div><strong>Kepadatan:</strong> ${Number(props.kepadatan || 0).toLocaleString('id-ID')} Jiwa/ha</div>`;
+        bodyHtml += `<div><strong>Total Laka:</strong> ${props.jumlah_laka || 0} Kejadian</div>`;
+        
+        bodyHtml += `<hr style="margin: 8px 0; border: 0; border-top: 1px solid #ddd;">`;
+
+        // 2. Container Canvas untuk Grafik
+        // Grafik Korban (MD, LB, LR)
+        bodyHtml += `<div style="height: 140px; width: 100%; position: relative;">
+                        <canvas id="popup-chart-severity"></canvas>
+                     </div>`;
+        
+        // Grafik Gender (L, P)
+        bodyHtml += `<div style="height: 140px; width: 100%; position: relative; margin-top: 10px;">
+                        <canvas id="popup-chart-gender"></canvas>
+                     </div>`;
+
+        // 3. Informasi Persentase (Bold & Besar)
+        const persenLokal = props.persen_lokal || 0;
+        bodyHtml += `<div style="margin-top: 12px; text-align: center; background: #f5f7fb; padding: 8px; border-radius: 6px; border: 1px solid #e0e0e0;">
+                        <div style="font-size: 11px; color: #555; font-weight: 600;">Persentase Orang Lokal Terlibat Laka</div>
+                        <div style="font-size: 20px; font-weight: 800; color: #1a237e; line-height: 1.2;">
+                            ${persenLokal}%
+                        </div>
+                     </div>`;
+
+        // Trigger render grafik setelah popup muncul di DOM
+        setTimeout(() => {
+            renderAdministrasiCharts(props);
+        }, 150);
+
+    // --- LOGIKA GENERIK UNTUK LAYER LAIN ---
+    } else {
+        for (const key in ALIAS_MAP) {
+            if (props.hasOwnProperty(key)) {
+                let rawVal = props[key];
+                let displayVal = esc(rawVal);
+                
+                let labelStyle = '';
+                let valueStyle = '';
+                if (key === 'level') {
+                    const numVal = parseInt(rawVal, 10);
+                    if (!isNaN(numVal) && numVal >= 3) {
+                        labelStyle = 'color: #d32f2f;';
+                        valueStyle = 'color: #d32f2f; font-weight: 800;';
+                    }
+                }
+
+                bodyHtml += `<div><strong style="${labelStyle}">${esc(ALIAS_MAP[key])}:</strong> <span style="${valueStyle}">${displayVal}</span></div>`;
+            }
         }
     }
+
     if (bodyHtml === '') bodyHtml = '<div>Tidak ada informasi detail.</div>';
     
     const popupHtml = `<div class="popup-header">${esc(title)}</div><div class="popup-body">${bodyHtml}</div>`;
@@ -4820,6 +4869,103 @@ function showFeaturePopup(map, feature, coordinates, layerKey) {
     popup.once('close', () => {
         cleanupPC();
     });
+}
+
+function renderAdministrasiCharts(props) {
+    // Override warna teks default Chart.js agar terlihat di popup putih (karena default global Anda putih untuk dashboard gelap)
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: { color: '#333', boxWidth: 10, font: { size: 10 } }
+            },
+            title: {
+                display: true,
+                color: '#1a237e',
+                font: { size: 12, weight: 'bold' }
+            },
+            tooltip: {
+                bodyColor: '#fff',
+                titleColor: '#fff',
+                backgroundColor: 'rgba(0,0,0,0.8)'
+            }
+        },
+        scales: {
+            x: { 
+                ticks: { color: '#555', font: { size: 10 } }, 
+                grid: { display: false } 
+            },
+            y: { 
+                ticks: { color: '#555', font: { size: 10 }, precision: 0 }, 
+                grid: { color: '#eee' } 
+            }
+        }
+    };
+
+    // 1. Grafik Tingkat Keparahan (Bar Chart)
+    const ctxSev = document.getElementById('popup-chart-severity');
+    if (ctxSev) {
+        new Chart(ctxSev, {
+            type: 'bar',
+            data: {
+                labels: ['MD', 'LB', 'LR'],
+                datasets: [{
+                    label: 'Jumlah Korban',
+                    data: [
+                        parseInt(props.jumlah_md || 0), 
+                        parseInt(props.jumlah_lb || 0), 
+                        parseInt(props.jumlah_lr || 0)
+                    ],
+                    backgroundColor: [
+                        '#d32f2f', // Merah untuk MD
+                        '#ff9800', // Orange untuk LB
+                        '#fbc02d'  // Kuning untuk LR
+                    ],
+                    borderWidth: 0,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                ...chartOptions,
+                plugins: {
+                    ...chartOptions.plugins,
+                    legend: { display: false }, // Sembunyikan legenda karena label sudah jelas di sumbu X
+                    title: { display: true, text: 'Tingkat Keparahan Korban', color: '#333', font: {size: 11, weight:'bold'} }
+                }
+            }
+        });
+    }
+
+    // 2. Grafik Gender (Doughnut Chart)
+    const ctxGen = document.getElementById('popup-chart-gender');
+    if (ctxGen) {
+        const lk = parseInt(props.korban_l || 0);
+        const pr = parseInt(props.korban_p || 0);
+        
+        new Chart(ctxGen, {
+            type: 'doughnut',
+            data: {
+                labels: ['Laki-laki', 'Perempuan'],
+                datasets: [{
+                    data: [lk, pr],
+                    backgroundColor: ['#1976d2', '#ec407a'],
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '50%',
+                scales: { x: { display: false }, y: { display: false } }, // Hapus axis untuk pie/doughnut
+                plugins: {
+                    legend: { position: 'right', labels: { color: '#333', boxWidth: 10, font: { size: 10 } } },
+                    title: { display: true, text: 'Jenis Kelamin Korban', color: '#333', font: {size: 11, weight:'bold'}, position: 'left' }
+                }
+            }
+        });
+    }
 }
 
 function checkRouteForHazards(routeFeature) {
