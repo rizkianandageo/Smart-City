@@ -118,7 +118,9 @@ if (window.Chart) {
     box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
     padding: 0; 
     max-width: 320px !important; 
-    width: 320px !important;     
+    width: 320px !important;
+    overflow: visible !important;
+    margin-bottom: 10px !important;     
   }
   #splash-right .maplibregl-popup-content {
     max-width: 280px !important;
@@ -136,6 +138,21 @@ if (window.Chart) {
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     cursor: pointer;
+  }
+  #map .maplibregl-popup-content::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 0 10px;
+    border-color: #fff transparent transparent transparent;
+    
+    z-index: 1;
+    filter: drop-shadow(0 2px 1px rgba(0,0,0,0.1));
   }
   .popup-body { 
     padding: 10px 12px; 
@@ -2582,7 +2599,12 @@ let map;
 let wilayahData;
 let selectedPolygon = null;
 let administrasiColorMap = {};
-let popup = new maplibregl.Popup({ closeButton:true, closeOnClick:true, offset:12 });
+let popup = new maplibregl.Popup({ 
+    closeButton: true, 
+    closeOnClick: true, 
+    offset: 15,
+    anchor: 'bottom'
+});
 let troublespotChart, cctvChart;
 let highlightMarker = null;
 let riskExclamationMarkers = [];
@@ -5002,7 +5024,7 @@ function renderAdministrasiCharts(props) {
         new Chart(ctxGen, {
             type: 'doughnut',
             data: {
-                labels: ['Laki-laki', 'Perempuan'],
+                labels: ['L', 'P'],
                 datasets: [{
                     data: [lk, pr],
                     backgroundColor: ['#1976d2', '#ec407a'],
