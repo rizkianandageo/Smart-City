@@ -9,7 +9,7 @@
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -297,7 +297,7 @@
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -585,7 +585,7 @@
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737,7 +737,7 @@
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -889,7 +889,7 @@
         "geofence_limit": 60.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -1177,7 +1177,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -6865,7 +6865,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -19125,7 +19125,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -20077,7 +20077,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -23045,7 +23045,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -26025,7 +26025,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
         "jam_selesai": "14:30",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -349701,7 +349701,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
         "jam_selesai": "14:30",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -558499,7 +558499,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
         "jam_selesai": "14:30",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -573763,7 +573763,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
         "jam_selesai": "14:30",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -624677,7 +624677,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "06:30",
         "jam_selesai": "14:30",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -690533,7 +690533,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -691469,7 +691469,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -692493,7 +692493,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -693445,7 +693445,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -694901,7 +694901,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -696045,7 +696045,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
         "jam_selesai": "17:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -697617,7 +697617,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
         "jam_selesai": "17:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -698557,7 +698557,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
         "jam_selesai": "17:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -698861,7 +698861,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
         "jam_selesai": "17:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -699237,7 +699237,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "07:00",
         "jam_selesai": "17:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -699621,7 +699621,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -704533,7 +704533,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -705917,7 +705917,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -706365,7 +706365,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -708685,7 +708685,7 @@
         "geofence_limit": 40.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -709853,7 +709853,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710157,7 +710157,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710317,7 +710317,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710549,7 +710549,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -710637,7 +710637,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -712017,7 +712017,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -713401,7 +713401,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -714353,7 +714353,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -715953,7 +715953,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "04:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -716977,7 +716977,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
         "jam_selesai": "18:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -721313,7 +721313,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
         "jam_selesai": "18:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -723849,7 +723849,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
         "jam_selesai": "18:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -724729,7 +724729,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
         "jam_selesai": "18:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -726001,7 +726001,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "08:00",
         "jam_selesai": "18:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -726917,7 +726917,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -728021,7 +728021,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -728445,7 +728445,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -728733,7 +728733,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730261,7 +730261,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730709,7 +730709,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -730869,7 +730869,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -731029,7 +731029,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -731265,7 +731265,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -732233,7 +732233,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -732793,7 +732793,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -733353,7 +733353,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -733913,7 +733913,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -734745,7 +734745,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -735577,7 +735577,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736001,7 +736001,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736561,7 +736561,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "00:00",
         "jam_selesai": "23:59",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -736985,7 +736985,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737433,7 +737433,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -737809,7 +737809,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -738041,7 +738041,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -738325,7 +738325,7 @@
         "geofence_limit": 30.0,
         "jam_mulai": "07:00",
         "jam_selesai": "21:00",
-        "last_update": "2026-03-09T23:25:08+07:00"
+        "last_update": "2026-03-10T07:25:08+07:00"
       },
       "geometry": {
         "type": "MultiPolygon",
